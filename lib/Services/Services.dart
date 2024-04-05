@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../Screens/Wrapper.dart';
+import 'package:web3/allHomes/all_homes.dart';
 import 'User.dart';
 
 
@@ -11,8 +10,10 @@ class AuthService{
 
   // String url ="http://192.168.0.111:3000";
   // String url ="http://192.168.1.117:3000";
-  // String url ="http://192.168.100.19:3000";
-  String url ="http://192.168.1.102:3000";
+  String url ="http://192.168.1.103:3000";
+  // String url ="https://192.168.100.19:3000";
+  // String url ="https://30f2-197-248-34-79.ngrok-free.app";
+  // String url ="http://192.168.1.102:3000";
 
   Map<String, String> headers = {
     "Access-Control-Allow-Origin": "*",
@@ -29,9 +30,6 @@ class AuthService{
       "pass": password
     };
     var send = jsonEncode(data);
-
-    print(send);
-
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     print('here is ${response.body} jj');
     var responseData = jsonDecode(response.body);
@@ -59,11 +57,49 @@ class AuthService{
     }
   }
 
+
+  delete(id,endpoinr)async{
+    String res = "$url/api$endpoinr";
+    Map data = {
+      "id": id,
+    };
+    var send = jsonEncode(data);
+    print(send);
+    var response = await http.post(Uri.parse(res), body: send, headers: headers);
+    var responseData = jsonDecode(response.body);
+    print(responseData);
+    return responseData;
+  }
+
+  getUsers()async{
+    String getcompanies = "$url/api/user/list";
+    print(getcompanies);
+    try{
+      var response =  await get(Uri.parse(getcompanies));
+      var jsondata = jsonDecode(response.body);
+      return jsondata['data'];
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+  getcompany()async{
+    String getcompanies = "$url/api/company/list?companyId=$companyIdInView";
+    print(getcompanies);
+    try{
+      var response =  await get(Uri.parse(getcompanies));
+      var jsondata = jsonDecode(response.body);
+      return jsondata['data'];
+    }catch(e){
+      return e.toString();
+    }
+  }
+
   createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType)async{
 
     var all = '$url/api/client/add';
     Map data = {
-        "clientId":id,
+        "id":id,
         "clientName":clientName,
         "clientEmail":clientEmail,
         "clientPhone":clientPhone,
@@ -73,7 +109,8 @@ class AuthService{
         "industry":industry,
         "clientType":custType,
         "location":location,
-        "postalAdd":postalAdd
+        "postalAdd":postalAdd,
+        "companyId":companyIdInView
   };
     var send = jsonEncode(data);
     print(send);
@@ -84,15 +121,17 @@ class AuthService{
   }
 
 
-  saveMany(val)async{
-    var all = '$url/api/client/add';
+  saveMany(val,endpoint)async{
     // print(val);
+    var all = '${url}${endpoint}';
+    print(all);
+
     var send = jsonEncode(val);
     // print(send);
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     var responseData = jsonDecode(response.body);
     print(" response is ${responseData}");
-    // return responseData;
+    return responseData;
   }
 
 
@@ -100,7 +139,7 @@ class AuthService{
 
     var all = '$url/api/project/add';
     Map data = {
-      "projectId":id,
+      "id":id,
       "projectName":projectName,
       "projDescription":projDescription,
       "personInCharge":personInCharge,
@@ -113,15 +152,26 @@ class AuthService{
       // "postalAdd":postalAdd
     };
     var send = jsonEncode(data);
-    print(send);
+    // print(send);
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     var responseData = jsonDecode(response.body);
-    print(responseData);
-
+    return responseData;
   }
 
   getProjects()async{
     String getcompanies = "$url/api/project/list";
+    print(getcompanies);
+    try{
+      var response =  await get(Uri.parse(getcompanies));
+      var jsondata = jsonDecode(response.body);
+      return jsondata['data'];
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+  getRequests(endpoint)async{
+    String getcompanies = "$url/api/${endpoint}";
     print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -149,7 +199,6 @@ class AuthService{
 
   getProjectsColumns()async{
     String getcompanies = "$url/api/project/list";
-    print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
       var jsondata = jsonDecode(response.body);

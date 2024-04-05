@@ -36,7 +36,6 @@ class _WrapperState extends State<Wrapper> {
 
     }else{
 
-      // print(jsonDecode(data));
       setState(() {
         Userdata = jsonDecode(data);
         // currentUser = "${Userdata['firstName']} ${Userdata['otherNames']}";

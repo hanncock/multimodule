@@ -30,15 +30,19 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
 
   client()async{
     var resu = await auth.getclients();
-    setState(() {
+    if(resu.length == 0){
+      print('empty');
+    }else{
       clients = resu;
-    });
+
+      setState(() {});
+    }
   }
 
   @override
   void initState(){
+    super.initState();
     client();
-    // super.initState();
   }
 
   editDetails(var detail){
@@ -60,7 +64,7 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
         });
   }
 
-  upload(){
+  upload(List? value,String todo){
     showDialog(
         context: context,
         builder: (BuildContext context){
@@ -72,7 +76,10 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                     padding: const EdgeInsets.all(8.0),
                     // child: Text('Editing'),
                     child: ImportCust(
-                      expectedVals: ["clientName","clientEmail"],
+                      todo: todo,
+                      title: 'ClientData',
+                      expectedVals: value,
+                      endpoint: "/api/client/add",
                     ),
                     // child: detail == null? Card(child: AddCustomer()) : Card(child: AddCustomer(custDetails: [detail],)),
                     // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),
@@ -141,25 +148,26 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                       label: 'Customer',
                       icona: Icon(Icons.add),
                       onclick: (){
-                        // var title = 'Add Customer';
-                        // if(openScreenstitles.contains(title)){
-                        //   print('${openScreenstitles},${openScreensWidgets}');
-                        //   var activeIndex = openScreenstitles.indexOf(title);
-                        //   print("contains ${activeIndex}");
-                        //   // DefaultTabController.of(context).animateTo(activeIndex);
-                        // }else{
-                        //   setState(() {
-                            // openScreenstitles.add(title);
-                            // openScreensWidgets.add(AddCustomer());
+                        var title = 'Add Customer';
+                        if(openScreenstitles.contains(title)){
+                          print('${openScreenstitles},${openScreensWidgets}');
+                          var activeIndex = openScreenstitles.indexOf(title);
+                          print("contains ${activeIndex}");
+                          DefaultTabController.of(context).animateTo(activeIndex);
+                        }else{
+                          setState(() {
+                            openScreenstitles.add(title);
+                            openScreensWidgets.add(AddCustomer());
                             // activetab = index;
-                        //   });
-                        //   print('${openScreenstitles},${openScreensWidgets}');
-                        //   var activeIndex = openScreenstitles.indexOf(title);
-                        //   print("added ${activeIndex}");
-                        //
-                        //   // DefaultTabController.of(context).animateTo(activeIndex);
-                        // }
-                        editDetails(null);
+                          });
+                          print('${openScreenstitles},${openScreensWidgets}');
+                          var activeIndex = openScreenstitles.indexOf(title);
+                          print("added ${activeIndex}");
+
+                          controller2.animateTo(activeIndex);
+                          setState(() {});
+                        }
+                        // editDetails(null);
                       },),
                   ),
                   Container(
@@ -190,10 +198,13 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                       itemBuilder: (BuildContext context) {
                         return [
                           PopupMenuItem(
+
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,onclick:(){upload();}),
+                                  btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,
+                                      onclick:(){
+                                    upload(["clientName","clientEmail"],"Import");}),
                                   SizedBox(height: 8),
                                   btns(label:'Export CSV',icona: Icon(Icons.comment_sharp),color: Colors.amber,onclick: (){
                                     downloadCSV('test');
@@ -201,7 +212,12 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                                   SizedBox(height: 8),
                                   btns(label:'Export PDF',icona: Icon(Icons.picture_as_pdf_outlined),color: Colors.purple,),
                                   SizedBox(height: 8),
-                                  btns(label:'Print',icona: Icon(Icons.print),)
+                                  btns(label:'Print',icona: Icon(Icons.print),),
+                                  SizedBox(height: 8),
+                                  btns(label:'Download Import Sheet',
+                                    color: Colors.cyan,
+                                    icona: Icon(Icons.download),
+                                    onclick: (){upload(["clientName","clientEmail"],'Download');},)
 
                                 ],
                               )
@@ -253,122 +269,143 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                 },
                 rightSideItemBuilder: (BuildContext context, index){
                   var clientdata = clients[index];
-                  return Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        // height: 68,
-                        child:  Row(
-                          children: [
-                            Icon(Icons.phone,color: Colors.green,size: 14,),
-                            SizedBox(width: 10,),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0,bottom: 15),
-                              child: Text('${clientdata['clientPhone']}'),
-                            ),
-                          ],
-                        )
-                      ),
-                      Container(
-                        width: 200,
-                        // height: 68,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15,bottom: 15),
-                          child: Text('${clientdata['clientEmail']}',textAlign: TextAlign.start),
-                        ),
-                      ),
-                      Container(
-                        width: 200,
-                        // height: 68,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${clientdata['contPersonName']}',style: boldfont,textAlign: TextAlign.start,),
-                            Row(
-                              children: [
-                                SizedBox(width: 20,),
-                                Icon(Icons.phone,color: Colors.green,size: 14,),
-                                SizedBox(width: 5,),
-                                Text('${clientdata['contPersonPhone']}'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 200,
-                        // height: 68,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30,top: 15),
-                          child: Text('${clientdata['postalAdd']}',textAlign: TextAlign.start),
-                        ),
-                      ),
-                      Container(
-                        width: 200,
-                        // height: 68,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30,top: 15),
-                          child: Text('${clientdata['clientAddress']}',textAlign: TextAlign.start),
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        // height: 68,
-                        child: PopupMenuButton(
-                          // offset: Offset(width * 0.3, appBarHeight),
-                          // color: darkmode ? Colors.black: Colors.grey[100],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                                width: 1,
-                                color: Colors.grey.shade200
-                            ),
-                          ),
-                          icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              PopupMenuItem(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: (){
-                                          print('editing');
-                                          editDetails(clients[index]);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.edit,color: Colors.blue,),
-
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text('Edit'),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: (){
-
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.delete,color: Colors.red,),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text('Delete'),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )
+                  return SingleChildScrollView(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 150,
+                          // height: 68,
+                          child:  Row(
+                            children: [
+                              Icon(Icons.phone,color: Colors.green,size: 14,),
+                              SizedBox(width: 10,),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15.0,bottom: 15),
+                                child: Text('${clientdata['clientPhone']}'),
                               ),
-                            ];
-                          },
+                            ],
+                          )
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15,bottom: 15),
+                            child: Text('${clientdata['clientEmail']}',textAlign: TextAlign.start),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${clientdata['contPersonName']}',style: boldfont,textAlign: TextAlign.start,),
+                              Row(
+                                children: [
+                                  SizedBox(width: 20,),
+                                  Icon(Icons.phone,color: Colors.green,size: 14,),
+                                  SizedBox(width: 5,),
+                                  Text('${clientdata['contPersonPhone']}'),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30,top: 15),
+                            child: Text('${clientdata['postalAdd']}',textAlign: TextAlign.start),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30,top: 15),
+                            child: Text('${clientdata['clientAddress']}',textAlign: TextAlign.start),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15,bottom: 15),
+                            child: Text('${clientdata['clientType']}',textAlign: TextAlign.start),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          // height: 68,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15,bottom: 15),
+                            child: Text('${clientdata['industry']}',textAlign: TextAlign.start),
+                          ),
+                        ),
+                        Container(
+                          width: 100,
+                          // height: 68,
+                          child: PopupMenuButton(
+                            // offset: Offset(width * 0.3, appBarHeight),
+                            // color: darkmode ? Colors.black: Colors.grey[100],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey.shade200
+                              ),
+                            ),
+                            icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                PopupMenuItem(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: (){
+                                            print('editing');
+                                            editDetails(clients[index]);
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.edit,color: Colors.blue,),
+                    
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text('Edit'),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        GestureDetector(
+                                          onTap: ()async{
+                                            // print(clientdata['id']);
+                                            var resu = await auth.delete(clientdata['id'],'/client/del');
+                                            print(resu);
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.delete,color: Colors.red,),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text('Delete'),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                ),
+                              ];
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
 
@@ -393,7 +430,7 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
       ),
       Container(
           color: Theme.of(context).primaryColor,
-          width: 200,
+          width: 150,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
             child: Text('Phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
@@ -430,6 +467,22 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
             child: Text('Products Acquired',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
+          )
+      ),
+      Container(
+          color: Theme.of(context).primaryColor,
+          width: 200,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
+            child: Text('Client Type',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
+          )
+      ),
+      Container(
+          color: Theme.of(context).primaryColor,
+          width: 200,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
+            child: Text('Industry',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
           )
       ),
       Container(

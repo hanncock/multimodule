@@ -1,58 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
-import 'package:web3/Screens/crm/Projects/addproject.dart';
-import '../../../Constants/Reusableswidgets/btns.dart';
-import '../../../Constants/Theme.dart';
-import '../customers/importcustomers.dart';
+import 'package:web3/Constants/Theme.dart';
 
-class Projects extends StatefulWidget {
-  const Projects({Key? key}) : super(key: key);
+import '../../Constants/Reusableswidgets/btns.dart';
+import '../crm/customers/importcustomers.dart';
+
+class Users extends StatefulWidget {
+  const Users({Key? key}) : super(key: key);
 
   @override
-  State<Projects> createState() => _ProjectsState();
+  State<Users> createState() => _UsersState();
 }
 
-class _ProjectsState extends State<Projects> {
-
-  late List projects = [];
-
-  project()async{
-    var resu = await auth.getProjects();
-    setState(() {
-      projects = resu;
-    });
-  }
-
-  @override
-  void initState(){
-    project();
-    // super.initState();
-  }
-
-  List excelVals = ["projectName","startDate","endDate","inchargeMail","inchargeContact","personInCharge","designation","projDescription","projectStatus"];
+class _UsersState extends State<Users> {
 
 
-  editDetails(proj){
-    showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState){
-                return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Card(
-                    // color: Colors.redAccent,
-                    // child: Text('soke'),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AddProjects(Listproject:[proj]),
-                      // child: Text('Editing'),
-                      // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),
-                    ),
-                  ),
-                );
-              });
-        });
+  late List users = [];
+  var name;
+
+  getusers()async{
+    var resu = await auth.getUsers();
+    print(resu);
+    if(resu.length == 0){
+      print('empty');
+    }else{
+      users = resu;
+
+      setState(() {});
+    }
   }
 
 
@@ -69,18 +44,20 @@ class _ProjectsState extends State<Projects> {
                     // child: Text('Editing'),
                     child: ImportCust(
                       todo: todo,
-                      title: 'Projects',
+                      title: 'Users',
                       expectedVals: value,
-                      endpoint: "/api/project/add",
+                      endpoint: "/api/user/add",
                     ),
                   ),
                 );
               });
         });
   }
-
-
-
+  @override
+  void initState(){
+    super.initState();
+    getusers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,14 +107,14 @@ class _ProjectsState extends State<Projects> {
             Row(
               children: [
                 btns(label: '',icona: Icon(Icons.refresh,color: Colors.green,),color:Colors.transparent,onclick: (){
-                  project();
+                  getusers();
                 },),
                 SizedBox(width: 5,),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: btns(
                     color: Colors.green,
-                    label: 'Project',
+                    label: 'Users',
                     icona: Icon(Icons.add),
                     onclick: (){
                       // editDetails(null);
@@ -173,7 +150,7 @@ class _ProjectsState extends State<Projects> {
                               children: [
                                 btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,
                                     onclick:(){
-                                      upload(excelVals,"Import");
+                                      upload(["firstName","otherNames","phone","idNo","gender","postalAdd","email"],"Import");
                                     }),
                                 SizedBox(height: 8),
                                 btns(label:'Export CSV',icona: Icon(Icons.comment_sharp),color: Colors.amber,onclick: (){
@@ -188,7 +165,7 @@ class _ProjectsState extends State<Projects> {
                                   color: Colors.cyan,
                                   icona: Icon(Icons.download),
                                   onclick: (){
-                                    upload(excelVals,'Download');
+                                    upload(["firstName","otherNames","phone","idNo","gender","postalAdd","email"],'Download');
                                   },)
 
                               ],
@@ -205,13 +182,13 @@ class _ProjectsState extends State<Projects> {
         Divider(color: Colors.black12,height: 0.5,),
         SizedBox(height: 10,),
 
-        projects.isEmpty ?  Center(child: Text('We have no data')):Flexible(
+        users.isEmpty ?  Center(child: Text('We have no data')):Flexible(
           child: Container(
             child: HorizontalDataTable(
 
               elevationColor: Colors.redAccent,
               isFixedHeader: true,
-              itemCount: projects.length,
+              itemCount: users.length,
               leftHandSideColumnWidth: 250,
               rowSeparatorWidget: const Divider(
                 color: Colors.black38,
@@ -221,46 +198,59 @@ class _ProjectsState extends State<Projects> {
               headerWidgets: _headerwidgets(),
               rightHandSideColumnWidth: MediaQuery.of(context).size.width -450,
               leftSideItemBuilder: (BuildContext context, index){
-                var clientdata = projects[index];
-                return Container(
-                  width: 250,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0,bottom: 15,left: 10),
-                    child: Text('${clientdata['projectName'].toUpperCase()}.',style: boldfont,textAlign: TextAlign.start),
+                var clientdata = users[index];
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0,bottom: 8),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 17,
+                        backgroundColor: Colors.brown,
+                        child: Icon(Icons.person_2_rounded,color: Colors.white,),
+                      ),
+                      SizedBox(width: 20,),
+                      Row(
+                        children: [
+                          Text('${clientdata['firstName'].toUpperCase()}.',style: boldfont,),
+                          Text('${clientdata['otherNames'].toUpperCase()}.',style: boldfont,),
+                        ],
+                      ),
+                      // SizedBox(height: 10,),
+                    ],
                   ),
                 );
               },
               rightSideItemBuilder: (BuildContext context, index){
-                var clientdata = projects[index];
+                var clientdata = users[index];
                 return Row(
                   children: [
                     Container(
                         width: 200,
                         // height: 68,
                         child:  Padding(
-                          padding: const EdgeInsets.only(top: 12.0,bottom: 15),
-                          child: Text('${clientdata['startDate']}',textAlign: TextAlign.start),
+                          padding: const EdgeInsets.only(top: 15.0,bottom: 15),
+                          child: Text('${clientdata['phone']}'),
                         )
                     ),
                     Container(
                       width: 200,
                       // height: 68,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 10,bottom: 12),
-                        child: Text('${clientdata['endDate']}',textAlign: TextAlign.start),
+                        padding: const EdgeInsets.only(top: 15,bottom: 15),
+                        child: Text('${clientdata['idNo']}',textAlign: TextAlign.start),
                       ),
                     ),
                     Container(
                       width: 200,
                       // height: 68,
-                      child: Text('${clientdata['personInCharge']}',style: boldfont,textAlign: TextAlign.start,),
+                      child: Text('${clientdata['postalAdd']}',style: boldfont,textAlign: TextAlign.start,),
                     ),
                     Container(
                       width: 200,
                       // height: 68,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 30,top: 15),
-                        child: Text('${clientdata['designation']}',textAlign: TextAlign.start),
+                        child: Text('${clientdata['gender']}',textAlign: TextAlign.start),
                       ),
                     ),
                     Container(
@@ -268,7 +258,7 @@ class _ProjectsState extends State<Projects> {
                       // height: 68,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 30,top: 15),
-                        child: Text('${clientdata['projectStatus']}',textAlign: TextAlign.start),
+                        child: Text('${clientdata['email']}',textAlign: TextAlign.start),
                       ),
                     ),
                     Container(
@@ -293,11 +283,13 @@ class _ProjectsState extends State<Projects> {
                                   children: [
                                     GestureDetector(
                                       onTap: (){
-                                        editDetails(clientdata);
+                                        // print('editing');
+                                        // editDetails(clients[index]);
                                       },
                                       child: Row(
                                         children: [
                                           Icon(Icons.edit,color: Colors.blue,),
+
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text('Edit'),
@@ -305,12 +297,9 @@ class _ProjectsState extends State<Projects> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 20,),
                                     GestureDetector(
-                                      onTap: ()async{
-                                        print(clientdata['id']);
-                                        var resu = await auth.delete(clientdata['id'],'/project/del');
-                                        print(resu);
+                                      onTap: (){
+
                                       },
                                       child: Row(
                                         children: [
@@ -343,62 +332,66 @@ class _ProjectsState extends State<Projects> {
   List<Widget> _headerwidgets() {
     return [
       Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
+
           width: 250,
           child: Padding(
             padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 8),
-            child: Text('Project'),
+            child: Text('Names',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Start Date'),
+            child: Text('phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
+          width: 200,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
+            child: Text('Id No.',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+          )
+      ),
+      Container(
+          color: Theme.of(context).primaryColor,
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('End Date'),
+            child: Text('Postal Address',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
+
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('In-Charge'),
+            child: Text('gender',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Designation'),
+            child: Text('email',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
           )
       ),
       Container(
-          color: Colors.grey[200],
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Status'),
-          )
-      ),
-      Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColor,
+
           width: 100,
           child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Icon(Icons.edit,color: Colors.deepOrange,),
+            padding: const EdgeInsets.all(6.0),
+            child: Icon(Icons.more_horiz_outlined,color: Colors.white,),
           )
       ),
       // Text(''),
     ];
   }
+
 }

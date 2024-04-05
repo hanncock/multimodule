@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/Services/Services.dart';
-
+import 'package:intl/intl.dart';
 
 const defaultPadding = 16.0;
 
 final AuthService auth = AuthService();
 
+final ft = new DateFormat('dd-MMM-yyyy | hh:mm a ');
+final f = new DateFormat('yyyy-MM-dd');
+const dateFormat4 = 'yyyy-MM-dd';
+
+clearlogs()async{
+    SharedPreferences prefs = await  SharedPreferences.getInstance();
+    prefs.get('Userdata');
+    prefs.clear();
+
+    // Navigator.pushAndRemoveUntil(
+    //     context, MaterialPageRoute(builder: (context) => LocationScreen()), (
+    //     route) => false);
+
+
+}
+
+
 class Themes {
     final lightTheme = ThemeData.light().copyWith(
         primaryColor: Color.fromRGBO(0,87,255,1),
-        useMaterial3: true,
+        // useMaterial3: true,
         cardColor: Color(0xFFFFFFFF),
         // textTheme: GoogleFonts.poppinsTextTheme(),
         textTheme: (GoogleFonts.poppinsTextTheme().copyWith()),
@@ -24,7 +42,7 @@ class Themes {
     final darkTheme = ThemeData.light().copyWith(
         primaryColor: Colors.black,
         cardColor: Colors.white,
-        useMaterial3: true,
+        // useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
         iconTheme: IconThemeData(
             color: Color(0xFFFFFFFF),

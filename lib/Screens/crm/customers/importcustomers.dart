@@ -91,10 +91,12 @@
 
 import 'dart:convert';
 
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_excel/excel.dart';
 import 'package:get/get.dart';
@@ -105,7 +107,10 @@ import '../../../Constants/Theme.dart';
 
 class ImportCust extends StatefulWidget {
   final List? expectedVals;
-  const ImportCust({super.key,this.expectedVals});
+  final String? title;
+  final String todo;
+  final String endpoint;
+  const ImportCust({super.key,this.expectedVals, this.title, required this.todo,required this.endpoint});
 
   @override
   State<ImportCust> createState() => _ImportCustState();
@@ -205,28 +210,38 @@ class _ImportCustState extends State<ImportCust> {
   }
 
 
+  convert(){
 
-  // String csv = const ListToCsvConverter().convert(
-  //   [
-  //     ["Column1", "Column2"],
-  //     ["Column1", "Column2"],
-  //     ["Column1", "Column2"],
-  //   ],
-  // );
-  //
-  // // Download and save CSV to your Device
-  // downloadCSV(String file) async {
-  //   // Convert your CSV string to a Uint8List for downloading.
-  //   Uint8List bytes = Uint8List.fromList(utf8.encode(file));
-  //
-  //   // This will download the file on the device.
-  //   await FileSaver.instance.saveFile(
-  //     name: 'document_name', // you can give the CSV file name here.
-  //     bytes: bytes,
-  //     ext: 'csv',
-  //     mimeType: MimeType.csv,
-  //   );
-  // }
+  }
+
+  String csv = const ListToCsvConverter().convert(
+    [
+      ["Column1", "Column2"],
+      ["Column1", "Column2"],
+      ["Column1", "Column2"],
+    ],
+  );
+
+  // Download and save CSV to your Device
+  downloadCSV(String file) async {
+    var excel = Excel.createExcel();
+    Sheet sheetObject = excel['Sheet1'];
+    sheetObject.appendRow(widget.expectedVals!);
+    var fileBytes = excel.save(fileName: '${widget.title ?? 'My file'}.xlsx');
+    // List<CellValue> dataList = [TextCellValue('Google'), TextCellValue('loves'), TextCellValue('Flutter'), TextCellValue('and'), TextCellValue('Flutter'), TextCellValue('loves'), TextCellValue('Excel')];
+
+
+    // Convert your CSV string to a Uint8List for downloading.
+    // Uint8List bytes = Uint8List.fromList(utf8.encode(file));
+    //
+    // // This will download the file on the device.
+    // await FileSaver.instance.saveFile(
+    //   name: 'document_name', // you can give the CSV file name here.
+    //   bytes: bytes,
+    //   ext: 'xlsx',
+    //   // mimeType: MimeType.csv,
+    // );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -241,19 +256,27 @@ class _ImportCustState extends State<ImportCust> {
                 children: [
                   Text('${fileName ?? ''}'),
                   SizedBox(width: 20,),
-                  // Container(
-                  //   child: Center(
-                  //       child: btns(
-                  //         label: 'Pick file',
-                  //         onclick: ()async {
-                  //           //When the download button is pressed, call `downloadCSV` function and pass the CSV string in it.
-                  //           await downloadCSV(csv);
-                  //         },)
-                  //   ),
-                  // ),
+                  widget.todo == 'Download' ? Container(
+                    child: Center(
+                        child: btns(
+                          color: Colors.cyan,
+                          icona: Icon(Icons.download),
+                          label: 'Download Excel',
+                          onclick: ()async {
+                            // String vals = ListToCsvConverter().convert(widget.expectedVals!.cast<List?>());
+                            String vals = widget.expectedVals.toString();
+                            // print(widget.expectedVals);
+                            //When the download button is pressed, call `downloadCSV` function and pass the CSV string in it.
+                            await downloadCSV(vals);
+                          },)
+                    ),
+                  ):
                   Container(
                       width: 150,
-                      child: Center(child: btns(label: 'Pick file',onclick: _pickFile,icona: Icon(Icons.bubble_chart_outlined),))),
+                      child: Center(child: btns(
+                        label: 'Pick file',
+                        color: Colors.brown,
+                        onclick: _pickFile,icona: Icon(Icons.bubble_chart_outlined),))),
                 ],
               ),
             ),
@@ -350,7 +373,10 @@ class _ImportCustState extends State<ImportCust> {
       combined.add(mapval);
     }
     // print(combined.runtimeType);
-    var resu = await auth.saveMany(combined);
+    var resu = await auth.saveMany(combined,widget.endpoint);
+    if(resu == 'success'){
+      Navigator.of(context).pop();
+    }
     // print("here is ${resu}");
 
     // print(combined);

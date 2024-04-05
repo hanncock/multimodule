@@ -15,7 +15,10 @@ class AddCustomer extends StatefulWidget {
 
 class _AddCustomerState extends State<AddCustomer> {
 
-  late var id =  widget.custDetails?[0]['clientId'];
+
+
+
+  late var id =  widget.custDetails?[0]['id'];
   late var clientName = widget.custDetails?[0]['clientName'];
   late var clientEmail = widget.custDetails?[0]['clientEmail'];
   late var clientPhone = widget.custDetails?[0]['clientPhone'];

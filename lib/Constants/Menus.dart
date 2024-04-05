@@ -4,10 +4,12 @@ class Menus{
 
   String title;
   Widget widget;
+  final Icon? icona;
 
 
   Menus({
     required this.title,
-    required this.widget
+    required this.widget,
+    this.icona
   });
 }

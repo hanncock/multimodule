@@ -13,6 +13,33 @@ void main() {
   runApp(MyApp());
 }
 
+
+
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       builder: (context, child) {
+//         return Theme(
+//           data: Theme.of(context).copyWith(
+//             textTheme: Theme.of(context).textTheme.apply(
+//               fontSizeFactor: .75,
+//               fontSizeDelta: 1.0,
+//             ),
+//           ),
+//           child: child!,
+//         );
+//       },
+//       home: Wrapper(), // Replace this with your home screen widget
+//       // other MaterialApp properties...
+//     );
+//   }
+// }
+
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
@@ -73,50 +100,26 @@ class MyApp extends StatelessWidget {
         sessionConfig: sessionConfig,
         sessionStateStream: sessionStateStream.stream,
         child: GetMaterialApp(
+          builder: (context, child){
+            return Theme(
+                data: Theme.of(context).copyWith(
+                  textTheme: Theme.of(context).textTheme.apply(
+                    fontSizeFactor: .95,
+                    // fontSizeDelta: 1.2,
+                  ),
+                ),
+                child: child!
+            );
+          },
           themeMode: ThemeMode.system,
           theme: Themes().lightTheme,
           darkTheme: Themes().darkTheme,
-
-          // theme: lightTheme(context),
-          // darkTheme: darkTheme(context),
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           // home: widtest(),
           home: Wrapper(sessionStateStream: sessionStateStream,),
-          // home: AllHomes(sessionStateStream: sessionStateStream,),
-          // home: Login(sessionStateStream: sessionStateStream,),
-          // home: CRMDash(),
-          // home: Companies(),
-          // home: MultiProvider(
-          //   providers: [
-          //     ChangeNotifierProvider(create: (context)=>MenuController(),)
-          //     // ChangeNotifierProvider(create: (context) => MenuController())
-          //   ],
-          //   child: homeScreen(),
-          // ),
         )
     );
-    // return GetMaterialApp(
-    //   themeMode: ThemeMode.system,
-    //   theme: Themes().lightTheme,
-    //   darkTheme: Themes().darkTheme,
-    //   // theme: lightTheme(context),
-    //   // darkTheme: darkTheme(context),
-    //   debugShowCheckedModeBanner: false,
-    //   title: 'Flutter Demo',
-    //   // home: homeScreen(),
-    //   // home: AllHomes(),
-    //   home: AllHomes(),
-    //   // home: Login(),
-    //   // home: CRMDash(),
-    //   // home: Companies(),
-    //   // home: MultiProvider(
-    //   //   providers: [
-    //   //     ChangeNotifierProvider(create: (context)=>MenuController(),)
-    //   //     // ChangeNotifierProvider(create: (context) => MenuController())
-    //   //   ],
-    //   //   child: homeScreen(),
-    //   // ),
-    // );
+
   }
 }
