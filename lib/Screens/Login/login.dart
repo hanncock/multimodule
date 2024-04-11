@@ -138,10 +138,10 @@ class _LoginState extends State<Login> {
     var resu = await auth.login(username, password);
     print(resu);
     if (resu is User) {
-      const SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('Login Success'),
-      );
+      // const SnackBar(
+      //   backgroundColor: Colors.green,
+      //   content: Text('Login Success'),
+      // );
       // var showToast = Fluttertoast.showToast(
       //     msg: 'Login Success',
       //     toastLength: Toast.LENGTH_SHORT,
@@ -162,7 +162,8 @@ class _LoginState extends State<Login> {
     } else {
       SnackBar(
         backgroundColor: Colors.red,
-        content: Text('${resu["data"]}'),
+        // content: Text('${resu["data"]}'),
+        content: Text(''),
       );
 
       // Navigator.push(context, MaterialPageRoute(builder: (_) =>  Modules()));

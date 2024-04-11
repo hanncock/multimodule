@@ -9,11 +9,8 @@ import 'User.dart';
 class AuthService{
 
   // String url ="http://192.168.0.111:3000";
-  // String url ="http://192.168.1.117:3000";
-  String url ="http://192.168.1.103:3000";
-  // String url ="https://192.168.100.19:3000";
-  // String url ="https://30f2-197-248-34-79.ngrok-free.app";
-  // String url ="http://192.168.1.102:3000";
+  String url ="http://0.0.0.0:3000";
+  // String url ="https://106e-41-209-57-162.ngrok-free.app";
 
   Map<String, String> headers = {
     "Access-Control-Allow-Origin": "*",
@@ -45,9 +42,13 @@ class AuthService{
     }
   }
 
-  getclients()async{
-    String getcompanies = "$url/api/client/list";
-    print(getcompanies);
+  getclients(var projId)async{
+    // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
+    String getcompanies ;
+
+    projId == null ?  getcompanies = "$url/api/client/list?companyId=${companyIdInView}":
+        getcompanies = "$url/api/client/list?companyId=${companyIdInView}&projectId=${projId}";
+    // print("here are thr resposnses "+getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
       var jsondata = jsonDecode(response.body);
@@ -95,7 +96,7 @@ class AuthService{
     }
   }
 
-  createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType)async{
+  createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType,leadId,projectId)async{
 
     var all = '$url/api/client/add';
     Map data = {
@@ -110,7 +111,9 @@ class AuthService{
         "clientType":custType,
         "location":location,
         "postalAdd":postalAdd,
-        "companyId":companyIdInView
+        "companyId":companyIdInView,
+        "leadId":leadId,
+        "projectId":projectId,
   };
     var send = jsonEncode(data);
     print(send);

@@ -5,9 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Reusableswidgets/dropdown.dart';
+import 'package:web3/Constants/loading.dart';
 
 import '../../../Constants/Reusableswidgets/textfield.dart';
 import '../../../Constants/Theme.dart';
+import '../customers/addcustomer.dart';
 
 class Leads extends StatefulWidget {
   const Leads({super.key});
@@ -19,9 +21,14 @@ class Leads extends StatefulWidget {
 class _LeadsState extends State<Leads> {
 
   late List projects =[] ;
+  late List combined = [];
+
+  var leadId;
   var projoInView;
   var projoId;
   final _textNameController = TextEditingController();
+
+  late List clients = [];
 
   // List  projoPrams = ["Potemtial","Reached Out","In Comm","Meeting Set","Presentation","Deal & Agreemnet","Deal Sent"];
   List  projoPrams = [];
@@ -30,6 +37,7 @@ class _LeadsState extends State<Leads> {
 
   List toSend = [];
 
+  bool loading = false;
   project()async{
     var resu = await auth.getProjects();
     setState(() {
@@ -42,6 +50,35 @@ class _LeadsState extends State<Leads> {
     setState(() {
       projoPrams = resu;
     });
+  }
+
+  client()async{
+    var resu = await auth.getclients(projoId);
+    print(resu);
+    if(resu.length == 0){
+      print('empty');
+    }else{
+      setState(() {clients = resu;});
+    }
+  }
+
+  editDetails(var detail){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState){
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    // child: Text('Editing'),
+                    child: detail == null? Card(child: AddCustomer(projectId: projoId,leadId: leadId,)) : Card(child: AddCustomer(custDetails: [detail],)),
+                    // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),
+                  ),
+                );
+              });
+        });
   }
 
   upload(){
@@ -106,9 +143,9 @@ class _LeadsState extends State<Leads> {
                                             )
                                         ),
                                         SizedBox(width: 5,),
-                                        btns(label: '',icona: Icon(Icons.add),color: Colors.green,
-
-
+                                        btns(label: '',
+                                          icona: Icon(Icons.add),
+                                          color: Colors.green,
                                           onclick: (){
                                           setState((){cols.add(colName);});
                                           _textNameController.clear();
@@ -117,6 +154,7 @@ class _LeadsState extends State<Leads> {
                                     )
                                   ]
                               ),
+
                               Divider(thickness: 0.5,),
                               cols.isEmpty ? SizedBox(): Expanded(
                                 child: Column(
@@ -139,7 +177,6 @@ class _LeadsState extends State<Leads> {
                                                   InkWell(
                                                       onTap: (){
                                                         setState((){
-                                                          // cols.removeAt(cols[index]);
                                                           cols.removeWhere((element) => element == cols[index]);
                                                         });
                                                       },
@@ -175,8 +212,6 @@ class _LeadsState extends State<Leads> {
                                   ],
                                 ),
                               ),
-
-
                             ],
                           )
                       )
@@ -236,10 +271,23 @@ class _LeadsState extends State<Leads> {
                                   var vals = val as List;
                                   projoInView = vals[0].toString() ;
                                   projoId = vals[1] ;
+                                  loading = true;
                                 });
                                 projectColumns();
+                                combined.clear();
+                                client().whenComplete((){
+                                  for(int i=0; i<projoPrams.length; i++){
+                                    var idtocheck = projoPrams[i]['id'];
+                                    Map<String, dynamic> grouping = {};
+                                    combined.add(grouping[idtocheck] = clients.where((element) => element['leadId'] == idtocheck).toList());
+                                  }
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  print(combined);
+                                });
+                                // print(clients);
                               }
-
                           ),
                         ),
                       ),
@@ -261,57 +309,225 @@ class _LeadsState extends State<Leads> {
               ))
             ],
           ),
-
-          projoInView==null ? Text(''):Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          loading ? LoadingSpinCircle() : Text(''),
+          projoInView==null ? Text(''):Column(
             children: [
-              Expanded(
-                child: Row(
-                  
-                  children: List.generate(
-                      growable: true,
-                      projoPrams.length, (index) => Expanded(
-                        child: Container(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      width: 70,
+                      child: btns(label: 'Add',onclick: (){upload();},)),
+                ],
+              ),
+              Row(
+
+                children: List.generate(
+                    growable: true,
+                    projoPrams.length, (index) => Expanded(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / projoPrams.length,
+                    child: Column(
+                      children: [
+                        Container(
                           width: MediaQuery.of(context).size.width / projoPrams.length,
-                          child: Column(
+                          color: Colors.greenAccent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / projoPrams.length,
-                                color: Colors.greenAccent,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text('${projoPrams[index]['projColName']}'),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('${projoPrams[index]['projColName']}'),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                // height: 30,
-                                // margin: EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(width: 1,color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)
-                                ),
-                                child: Row(
-                                  children: [
-                                    forms(
-                                      // label: 'Enter to add to column',
-                                      value: 'test',
-                                      onChanged: (String value) {  },),
-                                    Icon(Icons.add,color: Colors.blue,)
-
-                                  ],
+                              InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    leadId = projoPrams[index]['id'];
+                                  });
+                                  editDetails(null);
+                                },
+                                child: Container(
+                                  // height: 30,
+                                  // margin: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(width: 1,color: Colors.black12),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.add,color: Colors.blue,),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      )),
-                  // children: [
-                  //
-                  // ],
-                ),
+                      ],
+                    ),
+                  ),
+                )),
               ),
-              btns(label: 'Add',onclick: (){upload();},)
+              // projoPrams.isEmpty ? Text('loading'): Container(
+              //   width: MediaQuery.of(context).size.width - 200,
+              //   // color: Colors.brown,
+              //   child: DataTable(
+              //     // dataRowHeight: 600,
+              //     columns: List.generate(projoPrams.length, (index) => DataColumn(label:Text('${projoPrams[index]['projColName']}'), )),
+              //     // rows: List.generate(projoPrams.length, (index) => DataRow(cells: [DataCell(Text(''))])),
+              //     rows: List.generate(1, (index) => DataRow(
+              //         cells:List<DataCell>.generate(
+              //             projoPrams.length, (index) => DataCell(
+              //           Container(
+              //             color: Colors.white,
+              //             // width: 400,
+              //             // width: (MediaQuery.of(context).size.width - 380) / projoPrams.length,
+              //             width: 400,
+              //             child: ListView.builder(
+              //                 itemCount: combined[index].length,
+              //                 itemBuilder: (context, num){
+              //                   var dats = combined[index];
+              //                   var dat = dats[num];
+              //                   return Row(
+              //                     children: [
+              //                       Padding(
+              //                         padding: const EdgeInsets.all(8.0),
+              //                         child: Column(
+              //                           mainAxisAlignment: MainAxisAlignment.start,
+              //                           crossAxisAlignment: CrossAxisAlignment.start,
+              //                           children: [
+              //                             Row(
+              //                               children: [
+              //                                 Text('${dat['clientName']}',style: boldfont,),
+              //                               ],
+              //                             ),
+              //                             SizedBox(height: 10,),
+              //                             Row(
+              //                               children: [
+              //                                 Icon(Icons.call,color: Colors.green,),
+              //                                 Padding(
+              //                                   padding: const EdgeInsets.all(8.0),
+              //                                   child: Text('${dat['clientPhone']}'),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                             SizedBox(height: 10,),
+              //                             Row(
+              //                               children: [
+              //                                 Icon(Icons.mail,color: Colors.brown,),
+              //                                 Padding(
+              //                                   padding: const EdgeInsets.all(8.0),
+              //                                   child: Text('${dat['clientEmail']}'),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                           ],
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   );
+              //             }),
+              //           )
+              //             // Text('${
+              //             //     combined[index]}')
+              //         )
+              //         )
+              //     )
+              //     ),
+              //     // rows: [
+              //     //   DataRow(cells: [
+              //     //     DataCell(Text('soke')),
+              //     //     DataCell(Text('soke')),
+              //     //     DataCell(Text('soke')),
+              //     //     DataCell(Text('soke')),
+              //     //     DataCell(Text('soke'))
+              //     //   ]
+              //     //   )
+              //     // ],
+              //   ),
+              // ),
+
+
+
+
+              clients.isEmpty ? Text('') :Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                      growable: true,
+                      projoPrams.length, (index){
+                    var value = combined[index];
+                    return Container(
+                      width: MediaQuery.of(context).size.width / projoPrams.length - 50,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                          itemCount: combined[index].length,
+                          itemBuilder: (context,num){
+                          var dat = combined[index][num];
+                          return Container(
+                            width: MediaQuery.of(context).size.width /projoPrams.length -50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(width: 0.5,color: Colors.black12)
+                            ),
+                            child:Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text('${dat['clientName']}',style: boldfont,),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10,),
+                                            Row(
+                                              children: [
+                                                Icon(Icons.call,color: Colors.green,),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text('${dat['clientPhone']}'),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10,),
+                                            Row(
+                                              children: [
+                                                Icon(Icons.mail,color: Colors.brown,),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text('${dat['clientEmail']}'),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(Icons.more_vert_rounded,color: Colors.black,)
+                              ],
+                            )
+                          );
+                      }),
+                    );
+                  }),
+                )
             ],
           ),
           Divider()

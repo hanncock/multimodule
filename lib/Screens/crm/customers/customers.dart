@@ -1,18 +1,12 @@
 import 'dart:convert';
-
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Screens/crm/customers/importcustomers.dart';
 import '../../../Constants/Reusableswidgets/btns.dart';
-import '../../../Constants/Reusableswidgets/dropdown.dart';
-import '../../../Constants/Reusableswidgets/textfield.dart';
-import '../screen display.dart';
 import 'addcustomer.dart';
 
 class Customers extends StatefulWidget {
@@ -29,7 +23,7 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
   var name;
 
   client()async{
-    var resu = await auth.getclients();
+    var resu = await auth.getclients(null);
     if(resu.length == 0){
       print('empty');
     }else{
@@ -148,25 +142,26 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                       label: 'Customer',
                       icona: Icon(Icons.add),
                       onclick: (){
-                        var title = 'Add Customer';
-                        if(openScreenstitles.contains(title)){
-                          print('${openScreenstitles},${openScreensWidgets}');
-                          var activeIndex = openScreenstitles.indexOf(title);
-                          print("contains ${activeIndex}");
-                          DefaultTabController.of(context).animateTo(activeIndex);
-                        }else{
-                          setState(() {
-                            openScreenstitles.add(title);
-                            openScreensWidgets.add(AddCustomer());
-                            // activetab = index;
-                          });
-                          print('${openScreenstitles},${openScreensWidgets}');
-                          var activeIndex = openScreenstitles.indexOf(title);
-                          print("added ${activeIndex}");
-
-                          controller2.animateTo(activeIndex);
-                          setState(() {});
-                        }
+                        editDetails(null);
+                        // var title = 'Add Customer';
+                        // if(openScreenstitles.contains(title)){
+                        //   print('${openScreenstitles},${openScreensWidgets}');
+                        //   var activeIndex = openScreenstitles.indexOf(title);
+                        //   print("contains ${activeIndex}");
+                        //   DefaultTabController.of(context).animateTo(activeIndex);
+                        // }else{
+                        //   setState(() {
+                        //     openScreenstitles.add(title);
+                        //     openScreensWidgets.add(AddCustomer());
+                        //     // activetab = index;
+                        //   });
+                        //   print('${openScreenstitles},${openScreensWidgets}');
+                        //   var activeIndex = openScreenstitles.indexOf(title);
+                        //   print("added ${activeIndex}");
+                        //
+                        //   controller2.animateTo(activeIndex);
+                        //   setState(() {});
+                        // }
                         // editDetails(null);
                       },),
                   ),

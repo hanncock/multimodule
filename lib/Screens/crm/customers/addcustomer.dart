@@ -6,17 +6,16 @@ import '../../../Constants/Reusableswidgets/textfield.dart';
 import '../../../Constants/Theme.dart';
 
 class AddCustomer extends StatefulWidget {
+  final String? leadId;
+  final String? projectId;
   final List? custDetails;
-  const AddCustomer({Key? key,this.custDetails}) : super(key: key);
+  const AddCustomer({Key? key,this.custDetails,this.leadId,this.projectId}) : super(key: key);
 
   @override
   State<AddCustomer> createState() => _AddCustomerState();
 }
 
 class _AddCustomerState extends State<AddCustomer> {
-
-
-
 
   late var id =  widget.custDetails?[0]['id'];
   late var clientName = widget.custDetails?[0]['clientName'];
@@ -29,6 +28,8 @@ class _AddCustomerState extends State<AddCustomer> {
   late var postalAdd = widget.custDetails?[0]['postalAdd'];
   late var industry = widget.custDetails?[0]['industry'];
   late var custType = widget.custDetails?[0]['clientType'];
+  late var leadId = widget.custDetails == null ? widget.leadId :widget.custDetails?[0]['leadId'];
+  late var projectId = widget.custDetails == null ? widget.projectId :widget.custDetails?[0]['projectId'];
 
 
   @override
@@ -44,7 +45,6 @@ class _AddCustomerState extends State<AddCustomer> {
               Row(
                 children: [
                   Expanded(child: btns(label: 'Add Customer'))
-                  // Text('Add Customer'),
                 ],
               ),
               Divider(thickness: 0.5,),
@@ -196,7 +196,7 @@ class _AddCustomerState extends State<AddCustomer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   btns(label: 'Create Customer',color: Colors.green,onclick: ()async{
-                    var resu = await auth.createCust(id, clientName, clientEmail, clientPhone, contPersonName, contPersonPhone, referral, location, postalAdd, industry, custType);
+                    var resu = await auth.createCust(id, clientName, clientEmail, clientPhone, contPersonName, contPersonPhone, referral, location, postalAdd, industry, custType,leadId,projectId);
                     if(resu == 'success'){
                       Navigator.of(context).pop();
                     }else{
