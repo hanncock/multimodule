@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Theme.dart';
-import 'package:web3/allHomes/all_homes.dart';
+import 'package:web3/all_homes.dart';
 
 import '../../Services/User.dart';
 import '../Wrapper.dart';
@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
                   Container(
                     width:450,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                     ),
                     child: TextFormField(
@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                   Container(
                     width:450,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                     ),
                     child: TextFormField(

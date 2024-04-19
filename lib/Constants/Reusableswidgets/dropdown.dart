@@ -47,7 +47,8 @@ class dropdwn extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10)
+                borderRadius: BorderRadius.circular(10),
+              border: Border.all(width: 0.5,color: Colors.black)
             ),
             width: widthh ?? 300,
             child: DropdownButtonHideUnderline(

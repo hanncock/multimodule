@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web3/Screens/Companies/CompaniesUI.dart';
+import 'package:web3/Screens/settings/CompaniesUI.dart';
+import 'package:web3/Screens/settings/modulesetup.dart';
 import 'package:web3/Services/User.dart';
 import '../../Constants/Theme.dart';
 import '../crm/Leads/Leads.dart';
@@ -28,28 +29,33 @@ late final SettingsMenuList = [
   AllMenus(
     title: 'Profile',
     widget: Leads(),
-    icona: Icon(Icons.person_2_outlined),
+    icona: Icon(Icons.person_2_outlined,color: Colors.black,),
   ),
 
   AllMenus(
     title: 'Users',
     widget: Users(),
-    icona: Icon(Icons.people),
+    icona: Icon(Icons.people,color: Colors.black,),
   ),
   AllMenus(
     title: 'Companies',
     widget: Companies(),
-    icona: Icon(Icons.factory),
+    icona: Icon(Icons.factory,color: Colors.black,),
   ),
   AllMenus(
     title: 'Mail Setup',
     widget: Leads(),
-    icona: Icon(Icons.email_outlined),
+    icona: Icon(Icons.email_outlined,color: Colors.black,),
   ),
   AllMenus(
     title: 'Messaging Setup',
     widget: Leads(),
-    icona: Icon(Icons.message),
+    icona: Icon(Icons.message,color: Colors.black,),
+  ),
+  AllMenus(
+    title: 'Module Setup',
+    widget: ModuleSetup(),
+    icona: Icon(Icons.message,color: Colors.black,),
   ),
 ];
 
@@ -83,7 +89,7 @@ class SettingMenus extends StatelessWidget {
         children: [
           allmenus.icona ,
           SizedBox(width: 20,),
-          Flexible(child: Text(allmenus.title.toUpperCase(),style: menutitle,softWrap: true,))
+          Flexible(child: Text(allmenus.title,style: boldfont,softWrap: true,))
         ],
       ),
     );

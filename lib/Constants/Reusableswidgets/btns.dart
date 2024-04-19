@@ -31,7 +31,7 @@ class _btnsState extends State<btns> {
         decoration: BoxDecoration(
             // color:  Theme.of(context).primaryColor,
             color: widget.color ?? Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(10)
+            borderRadius: BorderRadius.circular(8)
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

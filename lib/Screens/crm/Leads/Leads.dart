@@ -54,7 +54,6 @@ class _LeadsState extends State<Leads> {
 
   client()async{
     var resu = await auth.getclients(projoId);
-    print(resu);
     if(resu.length == 0){
       print('empty');
     }else{

@@ -34,7 +34,6 @@ class _AddCustomerState extends State<AddCustomer> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.custDetails);
     return Container(
       height: 500,
       child: Padding(

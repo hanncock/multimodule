@@ -12,13 +12,14 @@ import 'package:web3/Constants/Menus.dart';
 import 'package:web3/Screens/dashboard.dart';
 import 'package:web3/Screens/homeScreen.dart';
 import 'package:web3/custom_display/keepAlive.dart';
-import '../Screens/Wrapper.dart';
-import '../Screens/crm/crm_menus.dart';
+import 'Screens/Wrapper.dart';
+import 'Screens/crm/crm_menus.dart';
 
 import 'package:web3/Screens/crm/screen%20display.dart';
 import 'package:web3/Screens/crm/CrmsMenuList.dart';
 
-import '../Screens/settings/settings.dart';
+import 'Screens/school/school_alldisps.dart';
+import 'Screens/settings/settings.dart';
 
 class AllHomes extends StatefulWidget {
   final StreamController<SessionState> sessionStateStream;
@@ -40,7 +41,10 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
         title: 'AllDash',
-        widget: allDash()
+        widget: allDash(),
+        // widget: Settings()
+        // widget: ScreenDispSchl()
+        // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
   ];
 
@@ -52,15 +56,17 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       widget: Settings()
   );
 
-  List menus = [
+
+
+  List menusListed = [
 
     Menus(
         icona: Icon(Icons.school,size: 40,),
         title: 'School',
-        widget: homeScreen()
+        widget: ScreenDispSchl()
     ),
     Menus(
-      icona: Icon(Icons.house,size: 40,),
+        icona: Icon(Icons.house,size: 40,),
         title: 'Home',
         widget: Dashboard()
     ),
@@ -70,8 +76,57 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),),
     ),
 
+
   ];
 
+  final List menus = [
+
+
+  ];
+
+  List modulesaccquired = [];
+  List modsacq = [];
+  List modules = [];
+
+  getCompanyModules()async{
+    var resu = await auth.getvalues('companymodule/list?companyId=${companyIdInView}');
+    modsacq = resu;
+    modulesaccquired.clear();
+    for(int i=0; i<resu.length; i++){
+      modulesaccquired.add(resu[i]['moduleId']);
+    }
+    setState(() {});
+  }
+
+  getModules()async{
+    var resu = await auth.getvalues('module/list');
+    setState(() {
+      modules = resu;
+    });
+  }
+
+  fetchmods(){
+    for(int i=0; i<menusListed.length; i++){
+      if(modules.where((element) => element['moduName'].toString() == menusListed[i].title).isNotEmpty){
+        for(int j=0; j<modulesaccquired.length; j++){
+          if(modules.where((element) => element['id'].toString() == modulesaccquired[j]).isNotEmpty){
+            if(menus.contains(menusListed[i])){
+            }else{
+              menus.add(menusListed[i]);
+            }
+          }
+        }
+      }
+    }
+
+    return menus;
+  }
+
+
+  Future _calculation = Future.delayed(
+    const Duration(seconds: 1),
+        () => 'soke'
+  );
   @override
   void initState() {
     super.initState();
@@ -81,14 +136,15 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       vsync: this,
       // initialIndex: tab_index,
     );
+    getCompanyModules();
+    getModules().whenComplete((){
+      fetchmods();});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[200],
       body: DefaultTabController(
         length: openScreens.length,
         initialIndex: 0,
@@ -96,7 +152,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
+              child:Container(
                 width:MediaQuery.of(context).size.width,
                 height:MediaQuery.of(context).size.height -100 ,
                 child: TabBarView(
@@ -120,31 +176,28 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                             tabs: List.generate(
                               growable:true,
                               openScreens.length, (index) => Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                               // child: Text('${openScreens[index].title}',style: TextStyle(color: Colors.white),),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0,right: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('${openScreens[index].title}',style: header2Dash,),
-                                    SizedBox(width: 10,),
-                                    index == 0? SizedBox() : InkWell(
-                                        onTap: (){
-                                          setState(() {
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('${openScreens[index].title}',style: header2Dash,),
+                                  SizedBox(width: 10,),
+                                  index == 0? SizedBox() : InkWell(
+                                      onTap: (){
+                                        setState(() {
 
-                                            if(openScreens[index].title == settings.title){
-                                              currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                              openScreens.removeAt(currentIndex);
-                                            }else{
-                                              currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
-                                              openScreens.removeAt(currentIndex);
-                                            }
-                                          });
-                                        },
-                                        child: Icon(Icons.close,size: 10,color: Colors.red,))
-                                  ],
-                                ),
+                                          if(openScreens[index].title == settings.title){
+                                            currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                            openScreens.removeAt(currentIndex);
+                                          }else{
+                                            currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
+                                            openScreens.removeAt(currentIndex);
+                                          }
+                                        });
+                                      },
+                                      child: Icon(Icons.close,size: 10,color: Colors.red,))
+                                ],
                               ),
                             ),
                             )
@@ -159,14 +212,12 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                           ),
                           child: Row(
                             children: [
-                              // btns(label: 'Print',icona: Icon(Icons.manage_search_sharp),),
+
                               btns(label: 'More',icona: Icon(Icons.arrow_drop_up_outlined),),
-                              // Icon(Icons.arrow_drop_down,)
+
                             ],
                           ),
 
-                          // child: Text(''),
-                          // icon: Icon(Icons.open_with_rounded,color: Colors.blue,),
                           itemBuilder: (BuildContext context) {
                             return [
                               PopupMenuItem(
@@ -174,8 +225,10 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SizedBox(height: 8),
-                                      btns(label:'Logout',icona: Icon(Icons.logout),color: Colors.red,
+                                      SizedBox(height: 10),
+                                      btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add,size: 14,),),
+                                      SizedBox(height: 10),
+                                      btns(label:'Logout',icona: Icon(Icons.logout,size: 14,),color: Colors.red,
                                         onclick: (){
                                         clearlogs();
                                         Navigator.pushAndRemoveUntil(
@@ -185,7 +238,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                       ),
                                       SizedBox(height: 8),
                                       btns(label: '${Userdata['firstName']}',
-                                        icona: Icon(Icons.settings),
+                                        icona: Icon(Icons.settings,size: 14,),
                                         onclick: (){
                                           if(openScreens.contains(settings)){
                                             setState(() {
@@ -217,14 +270,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                           }
                                         },
                                       ),
-                                      SizedBox(height: 8),
-                                      // btns(label:'Logount',
-                                      //   color: Colors.cyan,
-                                      //   icona: Icon(Icons.logout),
-                                      //   onclick: (){
-                                      //     // upload(["clientName","clientId","clientEmail"],'Download');
-                                      //     },)
-
+                                      SizedBox(height: 10),
                                     ],
                                   )
                               ),
@@ -246,70 +292,70 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
   Padding allDash() {
     return Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Container(
-              child: GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: menus.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisSpacing: defaultPadding,
-                      mainAxisSpacing: defaultPadding,
-                      crossAxisCount: 4,
-                      childAspectRatio: 1.5
-                  ),
-                  itemBuilder: (context,index) => GestureDetector(
-                    onTap: (){
-                      if(openScreens.contains(menus[index])){
-                        print(openScreens);
-                        var activeIndex;
-                          currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                          // activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                          module = menus[index].title;
-                        setState(() {});
-                        DefaultTabController.of(context).animateTo(currentIndex);
+      padding: const EdgeInsets.all(8.0),
+      child: FutureBuilder(
+          future: _calculation,
+          builder: (context,snapshot){
+        return Container(
+            child:GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: menus.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: defaultPadding,
+                    mainAxisSpacing: defaultPadding,
+                    crossAxisCount: 4,
+                    childAspectRatio: 1.5
+                ),
+                itemBuilder: (context,index) => GestureDetector(
+                  onTap: (){
+                    if(openScreens.contains(menus[index])){
+                      print(openScreens);
+                      var activeIndex;
+                      currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                      // activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                      module = menus[index].title;
+                      setState(() {});
+                      DefaultTabController.of(context).animateTo(currentIndex);
+                    }else{
+                      openScreens.add(menus[index]);
+                      currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                      setState(() {});
 
+                      var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                      DefaultTabController.of(context).animateTo(activeIndex - 1);
 
-                      }else{
-                        print(openScreens);
-                          openScreens.add(menus[index]);
-                          currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                          print(currentIndex);
-                          setState(() {});
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          menus[index].icona,
 
-                        var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                        DefaultTabController.of(context).animateTo(activeIndex - 1);
-
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          // color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            menus[index].icona,
-
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${menus[index].title}',
-                                style: TextStyle(
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('${menus[index].title}',
+                              style: TextStyle(
                                   letterSpacing: 1,
                                   color: Colors.white
-                                ),),
-                            ),
-                          ],
-                        ),
+                              ),),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-              )
-          ),
+                  ),
+                )
+            )
         );
+      }),
+    );
+
   }
 
 }

@@ -179,7 +179,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:web3/Screens/crm/Leads/Leads.dart';
 import '../../Constants/Theme.dart';
-import '../../allHomes/all_homes.dart';
+import '../../all_homes.dart';
 import '../../custom_display/keepAlive.dart';
 import 'crm_menus.dart';
 import 'customers/importcustomers.dart';
@@ -289,7 +289,7 @@ class _ScreenDispState extends State<ScreenDisp>
                     ),
                     height: MediaQuery.of(context).size.height * 0.88,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: ListView.separated(
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -314,11 +314,17 @@ class _ScreenDispState extends State<ScreenDisp>
                               }
                             },
                             child: Container(
+                              // decoration: BoxDecoration(
+                              //   color: activetab == index
+                              //       ? Theme.of(context).primaryColor
+                              //       : Colors.blueAccent.shade200,
+                              //   borderRadius: BorderRadius.circular(10),
+                              // ),
                               decoration: BoxDecoration(
-                                color: activetab == index
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.blueAccent.shade200,
-                                borderRadius: BorderRadius.circular(10),
+                                // color: Theme.of(context).primaryColor,
+
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white
                               ),
                               child: CrmMenuList(crmenus: menuList),
                             ),

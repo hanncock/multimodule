@@ -25,6 +25,7 @@ crm
 https://www.behance.net/gallery/180688701/CRM-DASHBOARD?tracking_source=search_projects|companies+list+system+crm&l=1
 https://www.netsuite.com/portal/resource/articles/crm/crm-requirements.shtml
 https://app.clickup.com/t/86bxk8c4n (sokesoke1072@gmail, Sokesoke1072)
+https://dribbble.com/shots/22075972-Connecthub-CRM-Saas-Webapp-Dashboard
 
 dms
 https://www.behance.net/gallery/133691149/UI-Electronic-Document-Management-System?tracking_source=search_projects|document+management+system&l=1

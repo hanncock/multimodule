@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../Constants/Reusableswidgets/btns.dart';
 import '../../../Constants/Reusableswidgets/dropdown.dart';
 import '../../../Constants/Reusableswidgets/textfield.dart';
@@ -60,7 +59,7 @@ class _AddProjectsState extends State<AddProjects> {
   Widget build(BuildContext context) {
     final textFieldKey = GlobalKey();
     return Container(
-      color: Colors.grey[200],
+      color: Colors.grey[300],
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(

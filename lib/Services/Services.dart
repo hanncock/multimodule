@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web3/allHomes/all_homes.dart';
+import 'package:web3/all_homes.dart';
 import 'User.dart';
 
 
@@ -42,6 +42,32 @@ class AuthService{
     }
   }
 
+  getvalues(endpoint)async{
+    var fetchedData = "$url/api/$endpoint";
+    print(fetchedData);
+    try{
+      var response =  await get(Uri.parse(fetchedData));
+      var jsondata = jsonDecode(response.body);
+      return jsondata['data'];
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+
+
+  saveMany(val,endpoint)async{
+    var all = '${url}${endpoint}';
+    var send = jsonEncode(val);
+    // print(send);
+    var response = await http.post(Uri.parse(all), body: send, headers: headers);
+    var responseData = jsonDecode(response.body);
+    return responseData;
+  }
+
+
+
+
   getclients(var projId)async{
     // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
     String getcompanies ;
@@ -59,16 +85,13 @@ class AuthService{
   }
 
 
+
+
   delete(id,endpoinr)async{
     String res = "$url/api$endpoinr";
-    Map data = {
-      "id": id,
-    };
-    var send = jsonEncode(data);
-    print(send);
-    var response = await http.post(Uri.parse(res), body: send, headers: headers);
+    Map data = {"id": id,};
+    var response = await http.post(Uri.parse(res), body: jsonEncode(data), headers: headers);
     var responseData = jsonDecode(response.body);
-    print(responseData);
     return responseData;
   }
 
@@ -85,7 +108,8 @@ class AuthService{
   }
 
   getcompany()async{
-    String getcompanies = "$url/api/company/list?companyId=$companyIdInView";
+    // String getcompanies = "$url/api/company/list?companyId=$companyIdInView";
+    String getcompanies = "$url/api/company/list";
     print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -120,20 +144,6 @@ class AuthService{
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     var responseData = jsonDecode(response.body);
     print(responseData);
-    return responseData;
-  }
-
-
-  saveMany(val,endpoint)async{
-    // print(val);
-    var all = '${url}${endpoint}';
-    print(all);
-
-    var send = jsonEncode(val);
-    // print(send);
-    var response = await http.post(Uri.parse(all), body: send, headers: headers);
-    var responseData = jsonDecode(response.body);
-    print(" response is ${responseData}");
     return responseData;
   }
 
@@ -210,6 +220,20 @@ class AuthService{
       return e.toString();
     }
   }
+
+  getStudents()async{
+    // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
+    String getcompanies = "$url/api/student/list?companyId=${companyIdInView}";
+    print("here are thr resposnses "+getcompanies);
+    try{
+      var response =  await get(Uri.parse(getcompanies));
+      var jsondata = jsonDecode(response.body);
+      return jsondata['data'];
+    }catch(e){
+      return e.toString();
+    }
+  }
+
 
 
 }

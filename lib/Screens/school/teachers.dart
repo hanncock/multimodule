@@ -1,63 +1,61 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_excel/excel.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
-import 'package:web3/Constants/Theme.dart';
+import 'package:web3/Screens/school/addteacher.dart';
 
+import '../../Constants/ImportUI.dart';
 import '../../Constants/Reusableswidgets/btns.dart';
-import '../crm/customers/importcustomers.dart';
+import '../../Constants/Theme.dart';
+import '../../all_homes.dart';
 
-class Users extends StatefulWidget {
-  const Users({Key? key}) : super(key: key);
+class Teacher extends StatefulWidget {
+  const Teacher({super.key});
 
   @override
-  State<Users> createState() => _UsersState();
+  State<Teacher> createState() => _TeacherState();
 }
 
-class _UsersState extends State<Users> {
+class _TeacherState extends State<Teacher> {
 
+  List students = [];
 
-  late List users = [];
-  var name;
-
-  getusers()async{
-    var resu = await auth.getUsers();
-    print(resu);
-    if(resu.length == 0){
-      print('empty');
-    }else{
-      users = resu;
-
-      setState(() {});
-    }
+  getStudents()async{
+    var resu = await auth.getvalues("teacher/list?companyId=${companyIdInView}");
+    setState(() {
+      students = resu;
+    });
   }
 
+  @override
+  void initState(){
+    getStudents();
+    super.initState();
+  }
 
-  upload(List? value,String todo){
+  editDetails(var detail){
     showDialog(
         context: context,
         builder: (BuildContext context){
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState){
                 return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    // child: Text('Editing'),
-                    child: ImportCust(
-                      todo: todo,
-                      title: 'Users',
-                      expectedVals: value,
-                      endpoint: "/api/user/add",
+                  padding: const EdgeInsets.symmetric(horizontal: 300,vertical: 200),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      // child: Text('Editing'),
+                      child: detail == null? Card(child: AddTeacher()) : Card(child: AddTeacher(dets: [detail],)),
+                      // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),
                     ),
                   ),
                 );
               });
         });
   }
-  @override
-  void initState(){
-    super.initState();
-    getusers();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,60 +64,48 @@ class _UsersState extends State<Users> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 300,
+                // height: 35,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1,color: Colors.black12)
+                ),
+                child: TextFormField(
+                  style: TextStyle(fontSize: 14),
+                  decoration: InputDecoration(
+                    hintText: "Input the values",
+                    hintStyle: TextStyle(fontSize: 14),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ),
+            IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+
+            IconButton(
+                onPressed: (){
+                  getStudents();
+                }, icon: Icon(Icons.refresh,color: Colors.green,)
+            ),
+            // Icon(Icons.refresh,color: Colors.green,),
             Row(
               children: [
                 Container(
-                    width: 400,
-                    height:40,
-                    child: TextField(
-                      onChanged: (val){
-
-                      },
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          // floatingLabelBehavior: FloatingLabelBehavior.always,
-                          // labelText: widget.label,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              // color: Colors.green
-                            ),
-
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 0.5, color: Theme.of(context).primaryColor),
-                              borderRadius: BorderRadius.circular(10)
-
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 0.5, color: Colors.black),
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          // hintText: '${widget.hint}',
-                          hintStyle: boldfont
-                      ),
-                    )
-                ),
-                SizedBox(width: 5,),
-                btns(label: '',icona: Icon(Icons.search),color: Colors.blueAccent,)
-              ],
-            ),
-            Row(
-              children: [
-                btns(label: '',icona: Icon(Icons.refresh,color: Colors.green,),color:Colors.transparent,onclick: (){
-                  getusers();
-                },),
-                SizedBox(width: 5,),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: btns(
-                    color: Colors.green,
-                    label: 'Users',
-                    icona: Icon(Icons.add),
-                    onclick: (){
-                      // editDetails(null);
-                    },),
-                ),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child:btns(label:'Teacher',
+                      color: Colors.green,
+                      icona: Icon(Icons.add,size: 14,),
+                      onclick: (){
+                        editDetails(null);
+                        // upload(["clientName","clientEmail"],'Download');
+                      },)),
                 Container(
                   width: 120,
                   // height: 68,
@@ -135,22 +121,30 @@ class _UsersState extends State<Users> {
                           color: Colors.grey.shade200
                       ),
                     ),
+                    // child: Text('More'),
                     child: Row(
                       children: [
+                        // btns(label: 'Print',icona: Icon(Icons.manage_search_sharp),),
                         btns(label: 'More',),
                         Icon(Icons.arrow_drop_down,)
                       ],
                     ),
+                    // child: Text(''),
+                    // icon: Icon(Icons.open_with_rounded,color: Colors.blue,),
                     itemBuilder: (BuildContext context) {
                       return [
                         PopupMenuItem(
-
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,
                                     onclick:(){
-                                      upload(["firstName","otherNames","phone","idNo","gender","postalAdd","email"],"Import");
+                                      upload(["sirName","names","email","tscNo","idNo","phone","gender","dob","contact1","contact2","maritalStatus","companyId"],
+                                          "Import",
+                                          context,
+                                          "TeacherData",
+                                          "/teacher/add"
+                                      );
                                     }),
                                 SizedBox(height: 8),
                                 btns(label:'Export CSV',icona: Icon(Icons.comment_sharp),color: Colors.amber,onclick: (){
@@ -165,7 +159,13 @@ class _UsersState extends State<Users> {
                                   color: Colors.cyan,
                                   icona: Icon(Icons.download),
                                   onclick: (){
-                                    upload(["firstName","otherNames","phone","idNo","gender","postalAdd","email"],'Download');
+
+                                    upload(["sirName","names","email","tscNo","idNo","phone","gender","dob","contact1","contact2","maritalStatus","companyId"],
+                                        'Download',
+                                        context,
+                                        "TeacherData",
+                                        "/teacher/add"
+                                    );
                                   },)
 
                               ],
@@ -179,151 +179,8 @@ class _UsersState extends State<Users> {
             )
           ],
         ),
-        Divider(color: Colors.black12,height: 0.5,),
-        SizedBox(height: 10,),
-
-        users.isEmpty ?  Center(child: Text('We have no data')):Flexible(
-          // child: Container(
-          //   child: HorizontalDataTable(
-          //
-          //     elevationColor: Colors.redAccent,
-          //     isFixedHeader: true,
-          //     itemCount: users.length,
-          //     leftHandSideColumnWidth: 250,
-          //     rowSeparatorWidget: const Divider(
-          //       color: Colors.black38,
-          //       height: 0.5,
-          //       thickness: 0.5,
-          //     ),
-          //     headerWidgets: _headerwidgets(),
-          //     rightHandSideColumnWidth: MediaQuery.of(context).size.width -450,
-          //     leftSideItemBuilder: (BuildContext context, index){
-          //       var clientdata = users[index];
-          //       return Padding(
-          //         padding: const EdgeInsets.only(top: 8.0,bottom: 8),
-          //         child: Row(
-          //           children: [
-          //             CircleAvatar(
-          //               radius: 17,
-          //               backgroundColor: Colors.brown,
-          //               child: Icon(Icons.person_2_rounded,color: Colors.white,),
-          //             ),
-          //             SizedBox(width: 20,),
-          //             Row(
-          //               children: [
-          //                 Text('${clientdata['firstName'].toUpperCase()}.',style: boldfont,),
-          //                 Text('${clientdata['otherNames'].toUpperCase()}.',style: boldfont,),
-          //               ],
-          //             ),
-          //             // SizedBox(height: 10,),
-          //           ],
-          //         ),
-          //       );
-          //     },
-          //     rightSideItemBuilder: (BuildContext context, index){
-          //       var clientdata = users[index];
-          //       return Row(
-          //         children: [
-          //           Container(
-          //               width: 200,
-          //               // height: 68,
-          //               child:  Padding(
-          //                 padding: const EdgeInsets.only(top: 15.0,bottom: 15),
-          //                 child: Text('${clientdata['phone']}'),
-          //               )
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Padding(
-          //               padding: const EdgeInsets.only(top: 15,bottom: 15),
-          //               child: Text('${clientdata['idNo']}',textAlign: TextAlign.start),
-          //             ),
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Text('${clientdata['postalAdd']}',style: boldfont,textAlign: TextAlign.start,),
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Padding(
-          //               padding: const EdgeInsets.only(left: 30,top: 15),
-          //               child: Text('${clientdata['gender']}',textAlign: TextAlign.start),
-          //             ),
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Padding(
-          //               padding: const EdgeInsets.only(left: 30,top: 15),
-          //               child: Text('${clientdata['email']}',textAlign: TextAlign.start),
-          //             ),
-          //           ),
-          //           Container(
-          //             width: 100,
-          //             // height: 68,
-          //             child: PopupMenuButton(
-          //               // offset: Offset(width * 0.3, appBarHeight),
-          //               // color: darkmode ? Colors.black: Colors.grey[100],
-          //               shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(10.0),
-          //                 side: BorderSide(
-          //                     width: 1,
-          //                     color: Colors.grey.shade200
-          //                 ),
-          //               ),
-          //               icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
-          //               itemBuilder: (BuildContext context) {
-          //                 return [
-          //                   PopupMenuItem(
-          //                       child: Column(
-          //                         mainAxisAlignment: MainAxisAlignment.center,
-          //                         children: [
-          //                           GestureDetector(
-          //                             onTap: (){
-          //                               // print('editing');
-          //                               // editDetails(clients[index]);
-          //                             },
-          //                             child: Row(
-          //                               children: [
-          //                                 Icon(Icons.edit,color: Colors.blue,),
-          //
-          //                                 Padding(
-          //                                   padding: const EdgeInsets.all(8.0),
-          //                                   child: Text('Edit'),
-          //                                 )
-          //                               ],
-          //                             ),
-          //                           ),
-          //                           GestureDetector(
-          //                             onTap: (){
-          //
-          //                             },
-          //                             child: Row(
-          //                               children: [
-          //                                 Icon(Icons.delete,color: Colors.red,),
-          //                                 Padding(
-          //                                   padding: const EdgeInsets.all(8.0),
-          //                                   child: Text('Delete'),
-          //                                 )
-          //                               ],
-          //                             ),
-          //                           )
-          //                         ],
-          //                       )
-          //                   ),
-          //                 ];
-          //               },
-          //             ),
-          //           ),
-          //         ],
-          //       );
-          //     },
-          //
-          //   ),
-          // ),
+        Divider(height: 0.5,color: Colors.black12,),
+        students.isEmpty ?  Center(child: Text('We have no data')):Flexible(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -350,16 +207,9 @@ class _UsersState extends State<Users> {
                           )),
                           DataColumn(label: Row(
                             children: [
-                              Icon(Icons.phone,color: Colors.black,),
+                              Icon(Icons.app_registration,color: Colors.black,),
                               SizedBox(width: 10,),
-                              Text('Phone'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.credit_card,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('ID No'),
+                              Text('TSC No'),
                             ],
                           )),
                           DataColumn(label: Row(
@@ -371,9 +221,16 @@ class _UsersState extends State<Users> {
                           )),
                           DataColumn(label: Row(
                             children: [
-                              Icon(Icons.location_on,color: Colors.black,),
+                              Icon(Icons.credit_card,color: Colors.black,),
                               SizedBox(width: 10,),
-                              Text('Postal Add'),
+                              Text('ID No.'),
+                            ],
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.phone,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Phone'),
                             ],
                           )),
                           DataColumn(label: Row(
@@ -384,7 +241,7 @@ class _UsersState extends State<Users> {
                             ],
                           )),
                         ],
-                        rows:users.map((item){
+                        rows:students.map((item){
                           return DataRow(cells: [
                             DataCell( Row(
                               children: [
@@ -395,21 +252,21 @@ class _UsersState extends State<Users> {
                                   // child: clients[index]['logo'] == null ? Text('-'): Image.network(auth.url+'/'+clients[index]['logo']),
                                 ),
                                 SizedBox(width: 20,),
-                                Text('${item['firstName'].toUpperCase()}.',style: boldfont,),
-                                Text('${item['otherNames'].toUpperCase()}.',style: boldfont,),
+                                Text('${item['sirName'].toUpperCase()} ${item['names']}.',),
                                 // SizedBox(height: 10,),
                               ],
                             ),),
-                            DataCell(Text('${item['phone']}'),),
-                            DataCell(Text('${item['idNo']}'),),
+                            DataCell(Text('${item['tscNo']}'),),
                             DataCell(Text('${item['email']}'),),
-                            DataCell(Text('${item['postalAdd']}'),),
+                            DataCell(Text('${item['idNo']}'),),
+                            DataCell(Text('${item['phone']}'),),
                             DataCell(Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('${item['gender']}'),
+                                Text('${item['phone']}'),
                                 Container(
                                   width: 50,
+                                  // height: 68,
                                   child: PopupMenuButton(
                                     // offset: Offset(width * 0.3, appBarHeight),
                                     // color: darkmode ? Colors.black: Colors.grey[100],
@@ -436,7 +293,7 @@ class _UsersState extends State<Users> {
                                                   ),
                                                   child: GestureDetector(
                                                     onTap: (){
-                                                      // editDetails(item);
+                                                      editDetails(item);
                                                     },
                                                     child: Row(
                                                       children: [
@@ -452,7 +309,7 @@ class _UsersState extends State<Users> {
                                                 ),
                                                 SizedBox(height: 10,),
                                                 Container(
-
+                  
                                                   width:100,
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(8),
@@ -460,7 +317,7 @@ class _UsersState extends State<Users> {
                                                   ),
                                                   child: GestureDetector(
                                                     onTap: (){
-
+                  
                                                     },
                                                     child: Row(
                                                       children: [
@@ -483,6 +340,8 @@ class _UsersState extends State<Users> {
                                 ),
                               ],
                             ),),
+                  
+                  
                           ]);
                         }).toList()),
                   ),
@@ -491,6 +350,7 @@ class _UsersState extends State<Users> {
             ),
           ),
         ),
+
       ],
     );
   }
@@ -503,7 +363,7 @@ class _UsersState extends State<Users> {
           width: 250,
           child: Padding(
             padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 8),
-            child: Text('Names',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+            child: Text('Name',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
@@ -511,7 +371,7 @@ class _UsersState extends State<Users> {
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+            child: Text('TSC No.',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
@@ -519,7 +379,7 @@ class _UsersState extends State<Users> {
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Id No.',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+            child: Text('Email',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
@@ -527,7 +387,15 @@ class _UsersState extends State<Users> {
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('Postal Address',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+            child: Text('Phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
+          )
+      ),
+      Container(
+          color: Theme.of(context).primaryColor,
+          width: 200,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
+            child: Text('ID No',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(
@@ -536,15 +404,7 @@ class _UsersState extends State<Users> {
           width: 200,
           child: Padding(
             padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('gender',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('email',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
+            child: Text('Gender',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
           )
       ),
       Container(

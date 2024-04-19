@@ -42,45 +42,61 @@ class _formsState extends State<forms> {
             child: Text('${widget.label}',style: boldfont,),
           ),
           Container(
-            width: widget.widthh ?? 270 ,
-            height: (widget.linecnt == null ?43 : null),//: widget.width,
+            width: widget.widthh ?? 300 ,
+            height: (widget.linecnt == null ?42 : null),//: widget.width,
             decoration: BoxDecoration(
               border: Border.all(width: 1,color: Colors.black45),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(6),
                 color: Colors.white
             ),
-            child: TextFormField(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: TextFormField(
 
-              maxLines: widget.linecnt,
-              initialValue: widget.initVal,
-              // textAlign: TextAlign.justify,
-              onChanged: widget.onChanged,
-              style: boldfont,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-              contentPadding: EdgeInsets.only(left: 5,top: 2,bottom: 5),
-              icon: widget.icon,
-              //     fillColor: Colors.white,
-              //     // floatingLabelBehavior: FloatingLabelBehavior.always,
-              //     // labelText: widget.label,
-              //     border: OutlineInputBorder(
-              //       borderSide: BorderSide(
-              //         // color: Colors.green
-              //       ),
-              //
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     focusedBorder: OutlineInputBorder(
-              //         borderSide: BorderSide(width: 0.5, color: Theme.of(context).primaryColor),
-              //         borderRadius: BorderRadius.circular(10)
-              //
-              //     ),
-              //     enabledBorder: OutlineInputBorder(
-              //         borderSide: BorderSide(width: 0.5, color: Colors.black),
-              //         borderRadius: BorderRadius.circular(10)
-              //     ),
-                  hintText: '${widget.hint}',
-                  hintStyle: boldfont
+                maxLines: widget.linecnt,
+                initialValue: widget.initVal,
+                // textAlign: TextAlign.justify,
+                onChanged: widget.onChanged,
+                style: TextStyle(fontSize: 14),
+
+
+                // decoration: InputDecoration(
+                //   labelText: "${widget.hint}",
+                //   border: OutlineInputBorder(
+                //     borderSide: BorderSide(color: Colors.redAccent),
+                //     borderRadius: BorderRadius.circular(10.0),
+                //   ),
+                //   floatingLabelBehavior: FloatingLabelBehavior.always,
+                //   floatingLabelStyle: TextStyle(fontFamily: "Muli"),
+                // ),
+                // style: boldfont,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 5,top: 2,bottom: 5),
+                icon: widget.icon,
+
+                //     fillColor: Colors.white,
+                //     // floatingLabelBehavior: FloatingLabelBehavior.always,
+                //     // labelText: widget.label,
+                //     border: OutlineInputBorder(
+                //       borderSide: BorderSide(
+                //         // color: Colors.green
+                //       ),
+                //
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //     focusedBorder: OutlineInputBorder(
+                //         borderSide: BorderSide(width: 0.5, color: Theme.of(context).primaryColor),
+                //         borderRadius: BorderRadius.circular(10)
+                //
+                //     ),
+                //     enabledBorder: OutlineInputBorder(
+                //         borderSide: BorderSide(width: 0.5, color: Colors.black),
+                //         borderRadius: BorderRadius.circular(10)
+                //     ),
+                    hintText: '${widget.hint}',
+                    // hintStyle: boldfont
+                ),
               ),
             ),
           ),

@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/Services/Services.dart';
 import 'package:intl/intl.dart';
 
+import '../all_homes.dart';
+
 const defaultPadding = 16.0;
 
 final AuthService auth = AuthService();
@@ -16,13 +18,20 @@ clearlogs()async{
     SharedPreferences prefs = await  SharedPreferences.getInstance();
     prefs.get('Userdata');
     prefs.clear();
-
-    // Navigator.pushAndRemoveUntil(
-    //     context, MaterialPageRoute(builder: (context) => LocationScreen()), (
-    //     route) => false);
-
-
 }
+
+// List modulesaccquired = [];
+// List modsacq = [];
+// getCompanyModules()async{
+//     var resu = await auth.getvalues('companymodule/list?companyId=${companyIdInView}');
+//     modsacq = resu;
+//     modulesaccquired.clear();
+//     for(int i=0; i<resu.length; i++){
+//
+//         modulesaccquired.add(resu[i]['moduleId']);
+//     }
+//     // setState(() {});
+// }
 
 
 class Themes {

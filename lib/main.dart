@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Screens/Login/login.dart';
 import 'Screens/Wrapper.dart';
-import 'allHomes/all_homes.dart';
+import 'all_homes.dart';
 
 void main() {
   runApp(MyApp());
@@ -104,8 +105,12 @@ class MyApp extends StatelessWidget {
             return Theme(
                 data: Theme.of(context).copyWith(
                   textTheme: Theme.of(context).textTheme.apply(
-                    fontSizeFactor: .95,
-                    // fontSizeDelta: 1.2,
+                    fontSizeFactor: .9,
+                    fontSizeDelta: 0.1,
+                    // fontFamily: GoogleFonts.openSans().fontFamily!
+                    // fontFamily: GoogleFonts.raleway().fontFamily!
+                      // poppinsTextTheme()
+                    fontFamily: GoogleFonts.poppins().fontFamily
                   ),
                 ),
                 child: child!
@@ -123,3 +128,73 @@ class MyApp extends StatelessWidget {
 
   }
 }
+
+// import 'package:flutter/material.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: HomeScreen(),
+//     );
+//   }
+// }
+
+// class HomeScreen extends StatefulWidget {
+//   @override
+//   _HomeScreenState createState() => _HomeScreenState();
+// }
+//
+// class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+//   TabController? _tabController;
+//   List<Widget> _tabs = [Tab(text: 'Tab 1')];
+//   List<Widget> _tabViews = [Center(child: Text('Content 1'))];
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController = TabController(length: _tabs.length, vsync: this);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         bottom: TabBar(
+//           controller: _tabController,
+//           tabs: _tabs,
+//         ),
+//         title: Text('Tabs Example'),
+//       ),
+//       body: TabBarView(
+//         controller: _tabController,
+//         children: _tabViews,
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           // Add a new tab and switch to it
+//           setState(() {
+//             _tabs.add(Tab(text: 'New Tab'));
+//             _tabViews.add(Center(child: Text('New Content')));
+//             _tabController = TabController(
+//               length: _tabs.length,
+//               vsync: this,
+//               initialIndex: _tabs.length - 1,
+//             );
+//           });
+//         },
+//         child: Icon(Icons.add),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   void dispose() {
+//     _tabController?.dispose();
+//     super.dispose();
+//   }
+// }

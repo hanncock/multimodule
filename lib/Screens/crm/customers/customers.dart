@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Screens/crm/customers/importcustomers.dart';
 import '../../../Constants/Reusableswidgets/btns.dart';
@@ -86,6 +88,7 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Column(
         children: [
           Row(
@@ -229,271 +232,199 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
           SizedBox(height: 10,),
 
           clients.isEmpty ?  Center(child: Text('We have no data')):Flexible(
-            child: Container(
-              child: HorizontalDataTable(
-
-                elevationColor: Colors.redAccent,
-                isFixedHeader: true,
-                itemCount: clients.length,
-                leftHandSideColumnWidth: 250,
-                rowSeparatorWidget: const Divider(
-                  color: Colors.black38,
-                  height: 0.5,
-                  thickness: 0.5,
-                ),
-                headerWidgets: _headerwidgets(),
-                rightHandSideColumnWidth: MediaQuery.of(context).size.width -450,
-                leftSideItemBuilder: (BuildContext context, index){
-                  var clientdata = clients[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8.0,bottom: 8),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 17,
-                          backgroundColor: Colors.brown,
-                          child: Icon(Icons.computer,color: Colors.white,),
-                          // child: clients[index]['logo'] == null ? Text('-'): Image.network(auth.url+'/'+clients[index]['logo']),
-                        ),
-                        SizedBox(width: 20,),
-                        Text('${clientdata['clientName'].toUpperCase()}.',style: boldfont,),
-                        // SizedBox(height: 10,),
-                      ],
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: .5,color: Colors.black12)
                     ),
-                  );
-                },
-                rightSideItemBuilder: (BuildContext context, index){
-                  var clientdata = clients[index];
-                  return SingleChildScrollView(
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          // height: 68,
-                          child:  Row(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: DataTable(
+                        headingRowColor: MaterialStateProperty.all(Colors.white70),
+                        headingRowHeight: 45,
+                        dataRowMinHeight: 55,
+                        dataRowMaxHeight: 55,
+                        dividerThickness: 0.5,
+                        columns: [
+                          DataColumn(label: Row(
                             children: [
-                              Icon(Icons.phone,color: Colors.green,size: 14,),
+                              Icon(Icons.person,color: Colors.black,),
+                              Text('Name'),
+                            ],
+                          ) ),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.person,color: Colors.black,),
+                              Text('Products'),
+                            ],
+                          ) ),
+
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.mail,color: Colors.black,),
                               SizedBox(width: 10,),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 15.0,bottom: 15),
-                                child: Text('${clientdata['clientPhone']}'),
-                              ),
+                              Text('Email'),
                             ],
-                          )
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15,bottom: 15),
-                            child: Text('${clientdata['clientEmail']}',textAlign: TextAlign.start),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          )),
+                          DataColumn(label: Row(
                             children: [
-                              Text('${clientdata['contPersonName']}',style: boldfont,textAlign: TextAlign.start,),
-                              Row(
-                                children: [
-                                  SizedBox(width: 20,),
-                                  Icon(Icons.phone,color: Colors.green,size: 14,),
-                                  SizedBox(width: 5,),
-                                  Text('${clientdata['contPersonPhone']}'),
-                                ],
-                              ),
+                              Icon(Icons.phone,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Phone'),
                             ],
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 30,top: 15),
-                            child: Text('${clientdata['postalAdd']}',textAlign: TextAlign.start),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 30,top: 15),
-                            child: Text('${clientdata['clientAddress']}',textAlign: TextAlign.start),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15,bottom: 15),
-                            child: Text('${clientdata['clientType']}',textAlign: TextAlign.start),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          // height: 68,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15,bottom: 15),
-                            child: Text('${clientdata['industry']}',textAlign: TextAlign.start),
-                          ),
-                        ),
-                        Container(
-                          width: 100,
-                          // height: 68,
-                          child: PopupMenuButton(
-                            // offset: Offset(width * 0.3, appBarHeight),
-                            // color: darkmode ? Colors.black: Colors.grey[100],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(
-                                  width: 1,
-                                  color: Colors.grey.shade200
-                              ),
-                            ),
-                            icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                PopupMenuItem(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: (){
-                                            print('editing');
-                                            editDetails(clients[index]);
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.edit,color: Colors.blue,),
-                    
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text('Edit'),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 10,),
-                                        GestureDetector(
-                                          onTap: ()async{
-                                            // print(clientdata['id']);
-                                            var resu = await auth.delete(clientdata['id'],'/client/del');
-                                            print(resu);
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.delete,color: Colors.red,),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text('Delete'),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                ),
-                              ];
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.man,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Conatact Person'),
+                            ],
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.location_on,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Address'),
+                            ],
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.local_movies_outlined,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Industry'),
+                            ],
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.temple_hindu_sharp,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Client Type'),
+                            ],
+                          )),
 
-              ),
+                        ],
+                        rows: clients.map((item){
+                          return DataRow(cells: [
+                            DataCell(Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 17,
+                                  backgroundColor: Colors.brown.withOpacity(0.2),
+                                  child: Icon(Icons.computer,color: Colors.white,),
+                                  // child: clients[index]['logo'] == null ? Text('-'): Image.network(auth.url+'/'+clients[index]['logo']),
+                                ),
+                                SizedBox(width: 20,),
+                                Text('${item['clientName'].toUpperCase()}.'),
+                                // SizedBox(height: 10,),
+                              ],
+                            ),),
+                            DataCell(Text('products go here',textAlign: TextAlign.start)),
+                            DataCell(Text('${item['clientEmail']}',textAlign: TextAlign.start)),
+                            DataCell(Text('${item['clientPhone']}')),
+                            DataCell(Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${item['contPersonName']}',style: boldfont,textAlign: TextAlign.start,),
+                                Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      color: item['contPersonPhone'] == ''? Colors.white :Colors.green.withOpacity(0.2)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Text('${item['contPersonPhone'] ?? '---'}'),
+                                    )),
+                              ],
+                            ),),
+                            DataCell(Text('${item['postalAdd']}',)),
+                            DataCell(Text('${item['industry']}',)),
+                            DataCell(Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                              children: [
+                                Text('${item['clientType']}',),
+                                Container(
+                                  width: 50,
+                                  // height: 68,
+                                  child: PopupMenuButton(
+                                    // offset: Offset(width * 0.3, appBarHeight),
+                                    // color: darkmode ? Colors.black: Colors.grey[100],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(
+                                          width: 1,
+                                          color: Colors.grey.shade200
+                                      ),
+                                    ),
+                                    icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
+                                    itemBuilder: (BuildContext context) {
+                                      return [
+                                        PopupMenuItem(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    print('editing');
+                                                    editDetails(item);
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.edit,color: Colors.blue,),
+
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Text('Edit'),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10,),
+                                                GestureDetector(
+                                                  onTap: ()async{
+                                                    // print(clientdata['id']);
+                                                    var resu = await auth.delete(item['id'],'/client/del');
+                                                    print(resu);
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.delete,color: Colors.red,),
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Text('Delete'),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                        ),
+                                      ];
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )),
+
+                          //                     c
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+
           ),
         ],
       ),
     );
   }
-
-  List<Widget> _headerwidgets() {
-    return [
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 250,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 8),
-            child: Text('Name',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 150,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Email',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('Contact Person',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Address',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Products Acquired',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Client Type',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Industry',style: TextStyle(color: Colors.white,letterSpacing: 1.0,),),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 100,
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Icon(Icons.more_horiz_outlined,color: Colors.white,),
-          )
-      ),
-      // Text(''),
-    ];
-  }
-
-
 
   String csv = const ListToCsvConverter().convert(
     [
@@ -516,8 +447,5 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
       mimeType: MimeType.csv,
     );
   }
-
-
-
 }
 

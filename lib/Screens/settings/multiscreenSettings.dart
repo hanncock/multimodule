@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:web3/Screens/dashboard.dart';
+import 'package:web3/Screens/settings/CompaniesUI.dart';
 import 'package:web3/Screens/settings/SettingsDash.dart';
+import 'package:web3/Screens/settings/addCompany.dart';
 import 'package:web3/Screens/settings/settings.dart';
 import '../../custom_display/keepAlive.dart';
 
@@ -17,7 +20,7 @@ class _ScreenDispState extends State<SettingScreenDisp> with TickerProviderState
 
 
   List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[SettingsDash()];
+  final openScreensWidgets = <dynamic>[Companies()];
   late TabController controller2;
   int activetab = 0;
   int active = 0;
@@ -71,16 +74,14 @@ class _ScreenDispState extends State<SettingScreenDisp> with TickerProviderState
                   children: [
                     Container(
                       width:200,
-                      decoration: const BoxDecoration(
-                        // color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.transparent,
-                                offset: Offset(0, 0),
-                                blurRadius: 0,
-                                spreadRadius: 0
-                            )
-                          ]
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        border: Border(
+                          right: BorderSide( //                   <--- right side
+                            color: Colors.black12,
+                            width: 1.0,
+                          ),
+                        ),
                       ),
                       height:MediaQuery.of(context).size.height * 0.88,
                       child: Column(
@@ -109,18 +110,15 @@ class _ScreenDispState extends State<SettingScreenDisp> with TickerProviderState
                                           controller2 = TabController(length: widget.allwindows.length, vsync: this);
                                           var activeIndex = openScreenstitles.indexOf(menuList.title);
                                           DefaultTabController.of(context).animateTo(activeIndex -1);
-
-                                          // controller2.animateTo(activeIndex - 1);
-                                          // setState(() {});
-
                                         }
                                         setState(() {});
 
                                       },
                                       child: Container(
                                           decoration: BoxDecoration(
-                                              color: activetab == index ? Theme.of(context).primaryColor : Colors.blueAccent.shade200,
-                                              borderRadius: BorderRadius.circular(10)
+
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: activetab == index ? Theme.of(context).primaryColor.withOpacity(0.5) : Colors.white
                                           ),
                                           // child: widget.tocall == null ? CrmMenuList(crmenus: menuList) : widget.tocall
                                           child: SettingMenus(allmenus: menuList,)

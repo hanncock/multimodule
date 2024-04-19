@@ -58,6 +58,7 @@ dependencies:
   file_saver: ^0.2.8
 #  excel: ^2.0.4
   flutter_excel: any
+  sticky_headers: ^0.2.0
 #  syncfusion_flutter_xlsio: ^18.3.35-beta.1
 
 

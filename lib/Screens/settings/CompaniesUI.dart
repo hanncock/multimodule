@@ -3,6 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:web3/Constants/Theme.dart';
+import 'package:web3/Screens/settings/addCompany.dart';
 
 import '../../Constants/Reusableswidgets/btns.dart';
 import '../crm/customers/importcustomers.dart';
@@ -26,9 +27,27 @@ class _CompaniesState extends State<Companies> {
       print('empty');
     }else{
       companies = resu;
-
       setState(() {});
     }
+  }
+
+  editDetails(var detail){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState){
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    // child: Text('Editing'),
+                    child: detail == null? Card(child: AddCompany()) : Card(child: AddCompany(dets: [detail],)),
+                    // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),
+                  ),
+                );
+              });
+        });
   }
 
 
@@ -56,6 +75,8 @@ class _CompaniesState extends State<Companies> {
               });
         });
   }
+
+
   @override
   void initState(){
     super.initState();
@@ -120,7 +141,7 @@ class _CompaniesState extends State<Companies> {
                     label: 'Company',
                     icona: Icon(Icons.add),
                     onclick: (){
-                      // editDetails(null);
+                      editDetails(null);
                     },),
                 ),
                 Container(
@@ -284,8 +305,9 @@ class _CompaniesState extends State<Companies> {
                                   children: [
                                     GestureDetector(
                                       onTap: (){
-                                        print('editing');
-                                        // editDetails(clients[index]);
+                                        // print('editing');
+                                        // print(clientdata);
+                                        editDetails(clientdata);
                                       },
                                       child: Row(
                                         children: [

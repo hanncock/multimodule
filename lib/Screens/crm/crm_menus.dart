@@ -30,7 +30,7 @@ class CrmMenuList extends StatelessWidget {
         children: [
           crmenus.icona ,
           SizedBox(width: 20,),
-          Flexible(child: Text(crmenus.title.toUpperCase(),style: menutitle,softWrap: true,))
+          Flexible(child: Text(crmenus.title,style: boldfont,softWrap: true,))
         ],
       ),
     );
