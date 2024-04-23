@@ -252,6 +252,8 @@ class _ScreenDispState extends State<ScreenDisp>
                   ),
                   Expanded(
                     child: Card(
+                      elevation: 0,
+                      // color: Colors.green,
                       child: TabBar(
                         indicatorColor: Colors.white,
                         isScrollable: true,
@@ -287,9 +289,10 @@ class _ScreenDispState extends State<ScreenDisp>
                         )
                       ],
                     ),
-                    height: MediaQuery.of(context).size.height * 0.88,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                    height: MediaQuery.of(context).size.height * 0.875,
+                    child: Card(
+                      elevation: 0,
+                      // padding: const EdgeInsets.all(5.0),
                       child: ListView.separated(
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -321,10 +324,8 @@ class _ScreenDispState extends State<ScreenDisp>
                               //   borderRadius: BorderRadius.circular(10),
                               // ),
                               decoration: BoxDecoration(
-                                // color: Theme.of(context).primaryColor,
-
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white
+                                  // color: Colors.white
                               ),
                               child: CrmMenuList(crmenus: menuList),
                             ),
@@ -336,18 +337,16 @@ class _ScreenDispState extends State<ScreenDisp>
                     ),
                   ),
                   Expanded(
-                    child: Card(
-                      shadowColor: Colors.red,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width - 250,
-                        height: MediaQuery.of(context).size.height * 0.873,
-                        child: TabBarView(
-                          children: openScreensWidgets
-                              .map(
-                                (widget) => KeepPageAlive(child: widget),
-                          )
-                              .toList(),
-                        ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 250,
+                      height: MediaQuery.of(context).size.height * 0.87,
+                      child: TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
+                        children: openScreensWidgets
+                            .map(
+                              (widget) => KeepPageAlive(child: widget),
+                        )
+                            .toList(),
                       ),
                     ),
                   ),

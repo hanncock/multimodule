@@ -41,8 +41,8 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
         title: 'AllDash',
-        widget: allDash(),
-        // widget: Settings()
+        // widget: allDash(),
+        widget: Settings()
         // widget: ScreenDispSchl()
         // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
@@ -75,14 +75,16 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       title: 'CRM',
       widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),),
     ),
+    Menus(
+      icona: Icon(Icons.people,size: 40,),
+      title: 'will del',
+      widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),),
+    ),
 
 
   ];
 
-  final List menus = [
-
-
-  ];
+  final List menus = [];
 
   List modulesaccquired = [];
   List modsacq = [];
@@ -106,19 +108,13 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   }
 
   fetchmods(){
-    for(int i=0; i<menusListed.length; i++){
-      if(modules.where((element) => element['moduName'].toString() == menusListed[i].title).isNotEmpty){
-        for(int j=0; j<modulesaccquired.length; j++){
-          if(modules.where((element) => element['id'].toString() == modulesaccquired[j]).isNotEmpty){
-            if(menus.contains(menusListed[i])){
-            }else{
-              menus.add(menusListed[i]);
-            }
-          }
-        }
-      }
-    }
 
+    for(int i=0; i<modulesaccquired.length; i++){
+      var found = modules.indexWhere((element) => element['id'] == modulesaccquired[i]);
+      var menutoadd = menusListed.indexWhere((elem) => elem.title == modules[found]['moduName']);
+      menus.add(menusListed[menutoadd]);
+    }
+    setState(() {});
     return menus;
   }
 
@@ -156,6 +152,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                 width:MediaQuery.of(context).size.width,
                 height:MediaQuery.of(context).size.height -100 ,
                 child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
                     children: List.generate(
                       openScreens.length,
                           (index) => KeepPageAlive(child: openScreens[index].widget,),

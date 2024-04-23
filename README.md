@@ -45,3 +45,7 @@ https://flutteragency.com/how-to-solve-automatickeepaliveclientmixin-is-not-work
 
 
 https://alphacode.medium.com/working-with-spreadsheets-in-flutter-part-2-a000fb3c49ef# multimodule
+
+
+check if i need to pass the userId when creating a company
+checi if i need to return the last id if add a company then use that resposnse to add a user to that company

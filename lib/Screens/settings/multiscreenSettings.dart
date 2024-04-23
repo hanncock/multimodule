@@ -3,8 +3,10 @@ import 'package:web3/Screens/dashboard.dart';
 import 'package:web3/Screens/settings/CompaniesUI.dart';
 import 'package:web3/Screens/settings/SettingsDash.dart';
 import 'package:web3/Screens/settings/addCompany.dart';
+import 'package:web3/Screens/settings/adduser.dart';
 import 'package:web3/Screens/settings/settings.dart';
 import '../../custom_display/keepAlive.dart';
+import 'Users.dart';
 
 class SettingScreenDisp extends StatefulWidget {
   final List allwindows;
@@ -20,7 +22,7 @@ class _ScreenDispState extends State<SettingScreenDisp> with TickerProviderState
 
 
   List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[Companies()];
+  final openScreensWidgets = <dynamic>[Users()];
   late TabController controller2;
   int activetab = 0;
   int active = 0;
@@ -136,19 +138,16 @@ class _ScreenDispState extends State<SettingScreenDisp> with TickerProviderState
                     ),
 
                     Expanded(
-                      child: Card(
-                        shadowColor: Colors.red,
-                        child: Container(
-                          width:MediaQuery.of(context).size.width - 250,
-                          height:MediaQuery.of(context).size.height * 0.873,
-                          child: TabBarView(
-                              children: List.generate(
-                                openScreensWidgets.length,
-                                    (index) => KeepPageAlive(
-                                  child: openScreensWidgets[index],
-                                ),
-                              )
-                          ),
+                      child: Container(
+                        width:MediaQuery.of(context).size.width - 250,
+                        height:MediaQuery.of(context).size.height * 0.875,
+                        child: TabBarView(
+                            children: List.generate(
+                              openScreensWidgets.length,
+                                  (index) => KeepPageAlive(
+                                child: openScreensWidgets[index],
+                              ),
+                            )
                         ),
                       ),
                     )

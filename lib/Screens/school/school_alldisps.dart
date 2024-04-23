@@ -224,6 +224,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
                             children: openScreensWidgets
                                 .map((widget) => KeepPageAlive(child: widget),).toList(),
                           ),

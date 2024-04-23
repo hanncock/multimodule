@@ -1,14 +1,8 @@
-import 'dart:convert';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Reusableswidgets/textfield.dart';
 import 'package:web3/Constants/Theme.dart';
-import 'package:web3/all_homes.dart';
-
-import '../../Constants/Reusableswidgets/dropdown.dart';
-
 class AddCompany extends StatefulWidget {
   final List? dets;
   const AddCompany({super.key, this.dets});
@@ -23,7 +17,7 @@ class _AddCompanyState extends State<AddCompany> {
   late var companyName = widget.dets?[0]['companyName'];
   late var regNo = widget.dets?[0]['regNo'];
   late var email = widget.dets?[0]['email'];
-  late var phoneNo = widget.dets?[0]['phoneNo'].toString();
+  late var phoneNo = widget.dets?[0]['phoneNo'].toString() ?? "0";
   late var KraPin = widget.dets?[0]['KraPin'].toString();
   late var NSSFNo = widget.dets?[0]['NSSFNo'];
   late var NhifNo = widget.dets?[0]['NhifNo'];
@@ -35,7 +29,7 @@ class _AddCompanyState extends State<AddCompany> {
   List modulesaccquired = [];
   List modsacq = [];
   getCompanyModules()async{
-    var resu = await auth.getvalues('companymodule/list?companyId=${companyIdInView}');
+    var resu = await auth.getvalues('companymodule/list?companyId=${id}');
     modsacq = resu;
     modulesaccquired.clear();
     for(int i=0; i<resu.length; i++){
@@ -68,7 +62,6 @@ class _AddCompanyState extends State<AddCompany> {
     "town":town,
     "email":email,
     "phoneNo":phoneNo,
-    "modules":jsonEncode(modulesaccquired),
   };
 
 
@@ -78,7 +71,7 @@ class _AddCompanyState extends State<AddCompany> {
   saveCompanyModules(moddbId,modId)async{
     Map moddata = {
       "id":moddbId,
-      "companyId":companyIdInView.toString(),
+      "companyId":id,
       "moduleId":modId.toString()
     };
     var resu = await auth.saveMany(moddata,'/api/companymodule/add');
@@ -244,73 +237,91 @@ class _AddCompanyState extends State<AddCompany> {
                   ],
                 ),
                 SizedBox(height: 20,),
-                Text('Modules',style: boldfont,),
-                SizedBox(height: 20,),
-                modules.isEmpty?SizedBox():Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // color: Colors.grey[200]
-                  ),
-                  width: MediaQuery.of(context).size.width /4,
-                  // height: 400,
-                  child: ListView.builder(
-                    itemCount: modules.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index){
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey[100]
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text('${modules[index]['moduName']}',style: boldfont,),
-                                  ),
-                                  modulesaccquired.contains(modules[index]['id']) ? IconButton(
-                                      onPressed: ()async{
-                                        if(modulesaccquired.contains(modules[index]['id'])){
-                                          var res =  modsacq.indexWhere((element) => element['moduleId'] == modules[index]['id']);
-                                          var resu = await auth.delete(modsacq[res]['id'], "/companymodule/del");
-                                          print(resu);
-                                          modulesaccquired.remove(modules[index]['id'].toString());
-                                        }
-                                        setState(() {});
-                                        getCompanyModules();
-
-                                      },
-                                      icon: Icon(Icons.toggle_on,size: 50,color: Colors.green,)) :
-                                  IconButton(
-                                      onPressed: (){
-
-                                        if(!modulesaccquired.contains(modules[index]['id'])){
-                                          modulesaccquired.add(modules[index]['id'].toString());
-                                          saveCompanyModules(null,modules[index]['id'].toString());
-                                        }
-                                        setState(() {});
-                                        print('${modulesaccquired}');
-                                        // saveCompanyModules(null,modules[index]['id'].toString());
-                                        getCompanyModules();
-
-                                      },
-                                      icon: Icon(Icons.toggle_off_outlined,color: Colors.red,size: 50,)
-                                  )
-
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    btns(label: 'Save',
+                      onclick: ()async{
+                        // var resu = await auth.saveMany(data, "/api/company/save");
+                        var resu = await auth.saveMany(data, "/api/company/add");
+                        print(resu);
+                      },),
+                  ],
                 ),
+                SizedBox(height: 20,),
+                widget.dets == null? SizedBox():
+                Column(
+                  children: [
+                    Text('Modules',style: boldfont,),
+                    SizedBox(height: 20,),
+                    modules.isEmpty?SizedBox():Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        // color: Colors.grey[200]
+                      ),
+                      width: MediaQuery.of(context).size.width /4,
+                      // height: 400,
+                      child: ListView.builder(
+                        itemCount: modules.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index){
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey[100]
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text('${modules[index]['moduName']}',style: boldfont,),
+                                      ),
+                                      modulesaccquired.contains(modules[index]['id']) ? IconButton(
+                                          onPressed: ()async{
+                                            if(modulesaccquired.contains(modules[index]['id'])){
+                                              var res =  modsacq.indexWhere((element) => element['moduleId'] == modules[index]['id']);
+                                              var resu = await auth.delete(modsacq[res]['id'], "/companymodule/del");
+                                              print(resu);
+                                              modulesaccquired.remove(modules[index]['id'].toString());
+                                            }
+                                            setState(() {});
+                                            getCompanyModules();
+
+                                          },
+                                          icon: Icon(Icons.toggle_on,size: 50,color: Colors.green,)) :
+                                      IconButton(
+                                          onPressed: (){
+
+                                            if(!modulesaccquired.contains(modules[index]['id'])){
+                                              modulesaccquired.add(modules[index]['id'].toString());
+                                              saveCompanyModules(null,modules[index]['id'].toString());
+                                            }
+                                            setState(() {});
+                                            print('${modulesaccquired}');
+                                            // saveCompanyModules(null,modules[index]['id'].toString());
+                                            getCompanyModules();
+
+                                          },
+                                          icon: Icon(Icons.toggle_off_outlined,color: Colors.red,size: 50,)
+                                      )
+
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+
               ],
             ),
           ),

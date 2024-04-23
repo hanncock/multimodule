@@ -108,7 +108,6 @@ class AuthService{
   }
 
   getcompany()async{
-    // String getcompanies = "$url/api/company/list?companyId=$companyIdInView";
     String getcompanies = "$url/api/company/list";
     print(getcompanies);
     try{
