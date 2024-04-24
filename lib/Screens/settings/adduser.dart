@@ -290,46 +290,19 @@ class _AddUserState extends State<AddUser> {
                                                 children: [
                                                   Padding(
                                                     padding: const EdgeInsets.all(10.0),
-                                                    child: Text('${companies[index]['companyName']},${companies[index]['id']}',style: boldfont,),
+                                                    child: Text('${companies[index]['companyName']}',style: boldfont,),
                                                   ),
 
-                                                  // companies.where((element) => element['id']) == Userdata['allowedCompanies']['id'] ? IconButton(
-                                                  // Userdata['allowedCompanies'].where((element)=> element['id'] == companies[index]['id']).isNotEmpty
-                                                  //     allowed.contains(companies[index]['id'])?
-                                                  Text('${allowed}'),
-                                                      allowed.where((element) => element['companyId']) == companies[index]['id']? IconButton(
+                                                      allowed.where((element)=> element['companyId'] == companies[index]['id']).isNotEmpty? IconButton(
                                                       onPressed: ()async{
-                                                        // print('this is the company id to be removes ${companies[index]['id']}');
-                                                        var ind = allowed.indexOf((element) => element['companyId']) == companies[index]['id'];
-
-                                                        print(ind);
-                                                        // var toedit = allowed[ind]['id'];
-
-
-                                                        print(ind);
-                                                        // var idinuse = allowed[ind]['id'];
-                                                        Map data = {
-                                                          "id":id
-                                                          // "userId":id,
-                                                          // "companyId":companies[index]['id'],
-                                                        };
-                                                        var resu = await auth.delete(data, "/usercompany/del");
+                                                        var ind = allowed.indexWhere((element) => element['companyId'] == companies[index]['id']);
+                                                        var todel = allowed[ind]['id'];
+                                                        var resu = await auth.delete(todel, "/usercompany/del");
                                                         print(resu);
-                                                        // if(modulesaccquired.contains(modules[index]['id'])){
-                                                        //   var res =  modsacq.indexWhere((element) => element['moduleId'] == modules[index]['id']);
-                                                        //   var resu = await auth.delete(modsacq[res]['id'], "/companymodule/del");
-                                                        //   print(resu);
-                                                        //   modulesaccquired.remove(modules[index]['id'].toString());
-                                                        // }
-                                                        // setState(() {});
-                                                        // getCompanyModules();
-
                                                       },
                                                       icon: Icon(Icons.toggle_on,size: 30,color: Colors.green,)) :
                                                   IconButton(
                                                       onPressed: ()async{
-                                                        // var ind = allowed.indexOf((element) => element['companyId']) == companies[index]['companyId'];
-                                                        // if(allowed.contains((elem))){}
                                                         Map data = {
                                                           "id":null,
                                                           "userId":id,
@@ -337,16 +310,6 @@ class _AddUserState extends State<AddUser> {
                                                         };
                                                         var resu = await auth.saveMany(data, "/api/usercompany/add");
                                                         print(resu);
-
-                                                        // if(!modulesaccquired.contains(modules[index]['id'])){
-                                                        //   modulesaccquired.add(modules[index]['id'].toString());
-                                                        //   saveCompanyModules(null,modules[index]['id'].toString());
-                                                        // }
-                                                        // setState(() {});
-                                                        // print('${modulesaccquired}');
-                                                        // // saveCompanyModules(null,modules[index]['id'].toString());
-                                                        // getCompanyModules();
-
                                                       },
                                                       icon: Icon(Icons.toggle_off_outlined,color: Colors.red,size: 30,)
                                                   ),
