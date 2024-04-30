@@ -91,17 +91,6 @@ class _AddProjectsState extends State<AddProjects> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Column(
-                    //   children: [
-                    //     forms(value: startDate,
-                    //       initVal: startDate,
-                    //       label: 'Start Date',hint: 'Start Date', onChanged: (String value) {
-                    //       setState(() {
-                    //         startDate = value;
-                    //       });
-                    //     },)
-                    //   ],
-                    // ),
                     Row(
                       children: [
                         Text('Start Date',style: boldfont,),
@@ -156,37 +145,6 @@ class _AddProjectsState extends State<AddProjects> {
                         ),
                       ],
                     ),
-                    // Column(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     InkWell(
-                    //       onTap: ()async {
-                    //         final DateTime? picked = await showDatePicker(
-                    //             context: textFieldKey.currentContext!,
-                    //             initialDate: selectedDate,
-                    //             firstDate: DateTime(2015, 8),
-                    //             // firstDate: DateTime.now(),
-                    //             lastDate: DateTime(2101));
-                    //         if (picked != null) {
-                    //           print(picked);
-                    //           setState(() {
-                    //             selectedDate = picked;
-                    //           });
-                    //           print(selectedDate);
-                    //         }
-                    //       },
-                    //       child: forms(
-                    //         key: textFieldKey,
-                    //         value: endDate,
-                    //         initVal: endDate,
-                    //         label: 'End Date', hint: 'End Date', onChanged: (String value) {
-                    //         setState(() {
-                    //           endDate = value;
-                    //         });
-                    //       },),
-                    //     )
-                    //   ],
-                    // ),
                   ],
                 ),
                 SizedBox(width: 30,),

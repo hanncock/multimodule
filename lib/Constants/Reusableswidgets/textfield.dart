@@ -75,6 +75,8 @@ class _formsState extends State<forms> {
                 contentPadding: EdgeInsets.only(left: 5,top: 2,bottom: 5),
                 icon: widget.icon,
 
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  floatingLabelStyle: TextStyle(fontFamily: "Muli"),
                 //     fillColor: Colors.white,
                 //     // floatingLabelBehavior: FloatingLabelBehavior.always,
                 //     // labelText: widget.label,

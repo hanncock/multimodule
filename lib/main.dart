@@ -82,6 +82,9 @@ class MyApp extends StatelessWidget {
             // loggedOutReason: "Logged out because of user inactivity"
           ),
         ));
+        Navigator.push(context, MaterialPageRoute(
+            builder: (_) =>
+                Wrapper(sessionStateStream: sessionStateStream,)));
 
 
       } else if (timeoutEvent == SessionTimeoutState.appFocusTimeout) {

@@ -50,18 +50,17 @@ class _AddUserState extends State<AddUser> {
     if(resu.length == 0){
       print('empty');
     }else{
-      companies = resu;
-      setState(() {});
+      setState(() {
+        companies = resu;
+      });
     }
   }
   
   getAllowedCompanies()async{
     var resu = await auth.getvalues("usercompany/list?userId=${id}");
-    allowed = resu;
-    // print(resu);
-    // for(int i=0; i<resu.length; i++){
-    //   allowed.add(resu[i]['companyId']);
-    // }
+    setState(() {
+      allowed = resu;
+    });
   }
 
 
@@ -298,7 +297,8 @@ class _AddUserState extends State<AddUser> {
                                                         var ind = allowed.indexWhere((element) => element['companyId'] == companies[index]['id']);
                                                         var todel = allowed[ind]['id'];
                                                         var resu = await auth.delete(todel, "/usercompany/del");
-                                                        print(resu);
+                                                        getAllowedCompanies();
+                                                        setState(() {});
                                                       },
                                                       icon: Icon(Icons.toggle_on,size: 30,color: Colors.green,)) :
                                                   IconButton(
@@ -308,12 +308,13 @@ class _AddUserState extends State<AddUser> {
                                                           "userId":id,
                                                           "companyId":companies[index]['id'],
                                                         };
-                                                        var resu = await auth.saveMany(data, "/api/usercompany/add");
+                                                        var resu = await auth.saveMany(data, "/api/settings/usercompany/add");
                                                         print(resu);
+                                                        getAllowedCompanies();
+                                                        setState(() {});
                                                       },
                                                       icon: Icon(Icons.toggle_off_outlined,color: Colors.red,size: 30,)
                                                   ),
-                                                  Icon(Icons.check_box_outlined),
                                                 ],
                                               ),
                                             );
@@ -391,7 +392,7 @@ class _AddUserState extends State<AddUser> {
               children: [
                 btns(
                   onclick: ()async{
-                    var resu = await auth.saveMany(data, "/api/user/add");
+                    var resu = await auth.saveMany(data, "/api/settings/user/add");
                     print(resu);
                   },
                   label: 'Add User',

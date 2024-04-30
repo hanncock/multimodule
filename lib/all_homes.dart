@@ -1,23 +1,20 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Constants/Menus.dart';
 import 'package:web3/Screens/dashboard.dart';
-import 'package:web3/Screens/homeScreen.dart';
+import 'package:web3/Screens/school/addStudent.dart';
 import 'package:web3/custom_display/keepAlive.dart';
+import 'Constants/calender.dart';
 import 'Screens/Wrapper.dart';
 import 'Screens/crm/crm_menus.dart';
-
 import 'package:web3/Screens/crm/screen%20display.dart';
 import 'package:web3/Screens/crm/CrmsMenuList.dart';
-
 import 'Screens/school/school_alldisps.dart';
 import 'Screens/settings/settings.dart';
 
@@ -30,8 +27,8 @@ class AllHomes extends StatefulWidget {
 }
 
 var module;
-var companyInView = Userdata['allowedCompanies'][0]['companyName'] ?? null;
-var companyIdInView = Userdata['allowedCompanies'][0]['id'] ?? null;
+var companyInView ;//= Userdata['allowedCompanies'][0]['companyName'] ?? null;
+var companyIdInView ;//= Userdata['allowedCompanies'][0]['id'] ?? null;
 class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
   // final AllHomes _controller = Get.put(AllHomes());
@@ -42,8 +39,10 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
     Menus(
         title: 'AllDash',
         // widget: allDash(),
-        widget: Settings()
-        // widget: ScreenDispSchl()
+        // widget: MyHomePage(),
+        // widget: Settings()
+        widget: ScreenDispSchl()
+        // widget: AddStudent()
         // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
   ];
@@ -51,6 +50,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
   int currentIndex = 0;
 
+  List allowed = Userdata['allowedCompanies'];
   var settings = Menus(
       title: 'Settings',
       widget: Settings()
@@ -91,7 +91,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   List modules = [];
 
   getCompanyModules()async{
-    var resu = await auth.getvalues('companymodule/list?companyId=${companyIdInView}');
+    var resu = await auth.getvalues('settings/companymodule/list?companyId=${companyIdInView}');
     modsacq = resu;
     modulesaccquired.clear();
     for(int i=0; i<resu.length; i++){
@@ -101,7 +101,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   }
 
   getModules()async{
-    var resu = await auth.getvalues('module/list');
+    var resu = await auth.getvalues('settings/module/list');
     setState(() {
       modules = resu;
     });
@@ -118,6 +118,31 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
     return menus;
   }
 
+  setCompany()async{
+
+    SharedPreferences user = await SharedPreferences.getInstance();
+    var data = user.getString('compData');
+
+    if(data == null){
+      setState(() {
+        companyInView = Userdata['allowedCompanies'][0]['companyName'];
+        companyIdInView = Userdata['allowedCompanies'][0]['id'];
+      });
+    }else{
+      var svdVals = jsonDecode(data);
+      var compSvdVals = svdVals;
+
+      setState(() {
+        companyInView =svdVals['companyName'];
+        companyIdInView = svdVals['companyId'];
+      });
+    }
+
+
+
+
+  }
+
 
   Future _calculation = Future.delayed(
     const Duration(seconds: 1),
@@ -132,9 +157,12 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       vsync: this,
       // initialIndex: tab_index,
     );
-    getCompanyModules();
-    getModules().whenComplete((){
-      fetchmods();});
+    setCompany().whenComplete((){
+      getCompanyModules();
+      getModules().whenComplete((){
+        fetchmods();});
+    });
+
   }
 
   @override
@@ -179,6 +207,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('${openScreens[index].title}',style: header2Dash,),
+                                  // Text('${companyInView}',style: header2Dash,),
                                   SizedBox(width: 10,),
                                   index == 0? SizedBox() : InkWell(
                                       onTap: (){
@@ -207,13 +236,9 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                 color: Colors.grey.shade200
                             ),
                           ),
-                          child: Row(
-                            children: [
-
-                              btns(label: 'More',icona: Icon(Icons.arrow_drop_up_outlined),),
-
-                            ],
-                          ),
+                          child: Row(children: [
+                            btns(label: 'More',icona: Icon(Icons.arrow_drop_up_outlined))
+                          ]),
 
                           itemBuilder: (BuildContext context) {
                             return [
@@ -222,8 +247,36 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SizedBox(height: 10),
-                                      btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add,size: 14,),),
+                                      PopupMenuButton(
+                                        child: btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add),),
+                                        itemBuilder: (BuildContext context){
+                                          return allowed.map((e){
+                                            return  PopupMenuItem(child: InkWell(
+                                                onTap: ()async{
+                                                  Map compData = {
+                                                    "companyName":e['companyName'],
+                                                    "companyId":e['id'],
+                                                  };
+                                                  SharedPreferences pref = await SharedPreferences.getInstance();
+                                                  pref.setString("compData", jsonEncode(compData));
+                                                  setCompany();
+                                                  openScreens.clear();
+                                                  Navigator.push(context, MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          Wrapper(sessionStateStream: widget
+                                                              .sessionStateStream,)));
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(12.0),
+                                                      child: Text('${e['companyName']}'),
+                                                    ),
+                                                  ],
+                                                )));
+                                          }).toList();
+                                        }
+                                      ),
                                       SizedBox(height: 10),
                                       btns(label:'Logout',icona: Icon(Icons.logout,size: 14,),color: Colors.red,
                                         onclick: (){

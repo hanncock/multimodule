@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Screens/settings/adduser.dart';
-
 import '../../Constants/Reusableswidgets/btns.dart';
 import '../crm/customers/importcustomers.dart';
 
@@ -48,7 +46,7 @@ class _UsersState extends State<Users> {
                       todo: todo,
                       title: 'Users',
                       expectedVals: value,
-                      endpoint: "/api/user/add",
+                      endpoint: "/api/settings/user/add",
                     ),
                   ),
                 );
@@ -202,7 +200,6 @@ class _UsersState extends State<Users> {
         ),
         Divider(color: Colors.black12,height: 0.5,),
         SizedBox(height: 10,),
-
         users.isEmpty ?  Center(child: Text('We have no data')):Flexible(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

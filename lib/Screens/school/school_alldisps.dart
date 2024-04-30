@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:web3/Screens/crm/Leads/Leads.dart';
+import 'package:web3/Screens/school/Exam%20Results.dart';
+import 'package:web3/Screens/school/addsreams.dart';
 import 'package:web3/Screens/school/classes.dart';
 import 'package:web3/Screens/school/schlMenus.dart';
 import 'package:web3/Screens/school/students.dart';
@@ -12,7 +12,7 @@ import 'addStudent.dart';
 import 'exams.dart';
 
 List openScreenstitles = ['Dashboard'];
-final openScreensWidgets = <dynamic>[Leads()];
+final openScreensWidgets = <dynamic>[Students()];
 late TabController controller2;
 
 class ScreenDispSchl extends StatefulWidget {
@@ -41,23 +41,18 @@ class _ScreenDispState extends State<ScreenDispSchl>
   var actv ;
 
   List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[Exams()];
+  final openScreensWidgets = <dynamic>[Students()];
 
 
   late final schlMenuslst = [
     SchlMenus(
         title: 'Dashboard',
-        widget: AddStudent(),
+        widget: Students(),
         icona: Icon(Icons.home_max,color: Colors.black,)
     ),
     SchlMenus(
         title: 'Students',
         widget: Students(),
-        icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
-    ),
-    SchlMenus(
-        title: 'Students Details',
-        widget: AddStudent(dets: [{"id":123}],),
         icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
     ),
     SchlMenus(
@@ -71,6 +66,11 @@ class _ScreenDispState extends State<ScreenDispSchl>
         icona: Icon(Icons.edit_note_sharp,color: Colors.black,)
     ),
     SchlMenus(
+        title: 'Results',
+        widget: ExamResults(),
+        icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
         title: 'Library',
         widget: SizedBox(child: Text('Here'),),
         icona: Icon(Icons.library_books,color: Colors.black,)
@@ -82,7 +82,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
     ),
     SchlMenus(
         title: 'Stream',
-        widget: SizedBox(child: Text('Here'),),
+        widget: AddStream(),
         icona: Icon(Icons.view_stream_outlined,color: Colors.black,)
     )
   ];

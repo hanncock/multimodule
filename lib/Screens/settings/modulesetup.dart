@@ -21,7 +21,7 @@ class _ModuleSetupState extends State<ModuleSetup> {
   List modules = [];
 
   getModules()async{
-    var resu = await auth.getvalues('module/list');
+    var resu = await auth.getvalues('settings/module/list');
     setState(() {
       modules = resu;
     });
@@ -63,7 +63,7 @@ class _ModuleSetupState extends State<ModuleSetup> {
                           "id":id,
                           "moduName":moduleName,
                         };
-                        var resu = await auth.saveMany(data, "/api/module/add");
+                        var resu = await auth.saveMany(data, "/api/settings/module/add");
                         if(resu == 'success'){
                           setState(() {
                             moduleName == '';

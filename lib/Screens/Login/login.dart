@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Theme.dart';
-import 'package:web3/all_homes.dart';
-
 import '../../Services/User.dart';
 import '../Wrapper.dart';
 

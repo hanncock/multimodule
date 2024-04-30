@@ -5,21 +5,23 @@ import 'package:web3/all_homes.dart';
 
 import '../../Constants/Reusableswidgets/dropdown.dart';
 import '../../Constants/Theme.dart';
+import '../../Constants/calender.dart';
 
-class AddClass extends StatefulWidget {
+class AddStream extends StatefulWidget {
   final List? dets;
-  const AddClass({super.key, this.dets});
+  const AddStream({super.key, this.dets});
 
   @override
-  State<AddClass> createState() => _AddClassState();
+  State<AddStream> createState() => _AddStreamState();
 }
 
-class _AddClassState extends State<AddClass> {
+class _AddStreamState extends State<AddStream> {
 
   late var id = widget.dets?[0]['id'];
-  late var name = widget.dets?[0]['className'];
-  late var shrtform = widget.dets?[0]['shrtfrm'];
-  late var clsscode = widget.dets?[0]['classCode'];
+  late var name = widget.dets?[0]['streamName'];
+  late var code = widget.dets?[0]['streamCode'];
+  // late var endDate = widget.dets?[0]['endDate'];
+  // late var shrtform = widget.dets?[0]['shrtfrm'];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class _AddClassState extends State<AddClass> {
         children: [
           Row(
             children: [
-              Expanded(child: btns(label: 'Setup Class'))
+              Expanded(child: btns(label: 'Add Teacher'))
             ],
           ),
           Divider(thickness: 0.5,),
@@ -41,43 +43,47 @@ class _AddClassState extends State<AddClass> {
                       forms(
                           value: name,
                           initVal: name,
-                          label: 'Class Name',
-                          hint: "Class Name",
+                          label: 'Stream Name',
+                          hint: "Stream Name",
                           onChanged: (value){
                             setState(() {
                               name = value;
                             });
                           }),
                       forms(
-                          value: shrtform,
-                          initVal: shrtform,
-                          label: 'Accronym ',
-                          hint: "Accronym",
+                          value: code,
+                          initVal: code,
+                          label: 'Strea code',
+                          hint: "code",
                           onChanged: (value){
                             setState(() {
-                              shrtform = value;
+                              code = value;
                             });
                           }),
-                      forms(
-                          value: clsscode,
-                          initVal: clsscode,
-                          label: 'Class Code',
-                          hint: "Class Code",
-                          onChanged: (value){
-                            setState(() {
-                              clsscode = value;
-                            });
-                          }),
-                      // forms(
-                      //     value: endDate,
-                      //     initVal: endDate,
-                      //     label: 'End Date',
-                      //     hint: "End Date",
+
+
+                      // Calender(
+                      //     initVal:startDate,
+                      //     label: 'Start Date',
                       //     onChanged: (value){
-                      //       setState(() {
+                      //       setState((){
+                      //         startDate = value;
+                      //       });
+                      //       // print('here is the value');
+                      //       // print(value);
+                      //     }
+                      // ),
+                      // Calender(
+                      //     initVal:endDate,
+                      //     label: 'End Date',
+                      //     onChanged: (value){
+                      //       setState((){
                       //         endDate = value;
                       //       });
-                      //     })
+                      //       // print('here is the value');
+                      //       // print(value);
+                      //     }
+                      // ),
                     ],
                   ),
                   SizedBox(height: 20,),
@@ -92,18 +98,20 @@ class _AddClassState extends State<AddClass> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              btns(label: 'Add Teacher',color: Colors.green,onclick: ()async{
+              btns(label: 'Add Stream',color: Colors.green,onclick: ()async{
 
                 Map data = {
                   "id":id,
-                  "className" : name,
-                  "shrtform" : shrtform,
-                  "classCode" : clsscode,
+                  "streamName" : name,
+                  "streamCode" : code,
+                  // "endDate" : endDate,
+                  // "shrtfrm" : shrtform,
                   "companyId" : companyIdInView
                 };
-                var resu = await auth.saveMany(data,"/api/crm/classe/add");
+                var resu = await auth.saveMany(data,"/api/school/stream/add");
+                print(resu);
                 if(resu == 'success'){
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                 }else{
                   print('none');
                 }

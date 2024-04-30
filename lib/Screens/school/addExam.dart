@@ -5,6 +5,7 @@ import 'package:web3/all_homes.dart';
 
 import '../../Constants/Reusableswidgets/dropdown.dart';
 import '../../Constants/Theme.dart';
+import '../../Constants/calender.dart';
 
 class AddExam extends StatefulWidget {
   final List? dets;
@@ -59,26 +60,30 @@ class _AddExamState extends State<AddExam> {
                               shrtform = value;
                             });
                           }),
-                      forms(
-                          value: startDate,
-                          initVal: startDate,
+
+
+                      Calender(
+                          initVal:startDate,
                           label: 'Start Date',
-                          hint: "Start Date",
                           onChanged: (value){
-                            setState(() {
+                            setState((){
                               startDate = value;
                             });
-                          }),
-                      forms(
-                          value: endDate,
-                          initVal: endDate,
+                            // print('here is the value');
+                            // print(value);
+                          }
+                      ),
+                      Calender(
+                          initVal:endDate,
                           label: 'End Date',
-                          hint: "End Date",
                           onChanged: (value){
-                            setState(() {
+                            setState((){
                               endDate = value;
                             });
-                          })
+                            // print('here is the value');
+                            // print(value);
+                          }
+                      ),
                     ],
                   ),
                   SizedBox(height: 20,),
@@ -103,7 +108,7 @@ class _AddExamState extends State<AddExam> {
                   "shrtfrm" : shrtform,
                   "companyId" : companyIdInView
                 };
-                var resu = await auth.saveMany(data,"/api/exam/add");
+                var resu = await auth.saveMany(data,"/api/school/exam/add");
                 if(resu == 'success'){
                   Navigator.of(context).pop();
                 }else{

@@ -30,7 +30,6 @@ class _LeadsState extends State<Leads> {
 
   late List clients = [];
 
-  // List  projoPrams = ["Potemtial","Reached Out","In Comm","Meeting Set","Presentation","Deal & Agreemnet","Deal Sent"];
   List  projoPrams = [];
   var colName;
   List cols = [];
@@ -46,7 +45,7 @@ class _LeadsState extends State<Leads> {
   }
 
   projectColumns()async{
-    var resu = await auth.getRequests('projectcolumn/list?projectId=${projoId}');
+    var resu = await auth.getRequests('crm/projectcolumn/list?projectId=${projoId}');
     setState(() {
       projoPrams = resu;
     });
@@ -198,7 +197,7 @@ class _LeadsState extends State<Leads> {
                                             toSend.add(mapval);
                                           }
                                           print(toSend);
-                                          var resu = await auth.saveMany(toSend,'/api/projectcolumn/add');
+                                          var resu = await auth.saveMany(toSend,'/api/crm/projectcolumn/add');
                                           if(resu == 'success'){
                                             Navigator.of(context).pop();
                                             projectColumns();
@@ -374,88 +373,6 @@ class _LeadsState extends State<Leads> {
                   ),
                 )),
               ),
-              // projoPrams.isEmpty ? Text('loading'): Container(
-              //   width: MediaQuery.of(context).size.width - 200,
-              //   // color: Colors.brown,
-              //   child: DataTable(
-              //     // dataRowHeight: 600,
-              //     columns: List.generate(projoPrams.length, (index) => DataColumn(label:Text('${projoPrams[index]['projColName']}'), )),
-              //     // rows: List.generate(projoPrams.length, (index) => DataRow(cells: [DataCell(Text(''))])),
-              //     rows: List.generate(1, (index) => DataRow(
-              //         cells:List<DataCell>.generate(
-              //             projoPrams.length, (index) => DataCell(
-              //           Container(
-              //             color: Colors.white,
-              //             // width: 400,
-              //             // width: (MediaQuery.of(context).size.width - 380) / projoPrams.length,
-              //             width: 400,
-              //             child: ListView.builder(
-              //                 itemCount: combined[index].length,
-              //                 itemBuilder: (context, num){
-              //                   var dats = combined[index];
-              //                   var dat = dats[num];
-              //                   return Row(
-              //                     children: [
-              //                       Padding(
-              //                         padding: const EdgeInsets.all(8.0),
-              //                         child: Column(
-              //                           mainAxisAlignment: MainAxisAlignment.start,
-              //                           crossAxisAlignment: CrossAxisAlignment.start,
-              //                           children: [
-              //                             Row(
-              //                               children: [
-              //                                 Text('${dat['clientName']}',style: boldfont,),
-              //                               ],
-              //                             ),
-              //                             SizedBox(height: 10,),
-              //                             Row(
-              //                               children: [
-              //                                 Icon(Icons.call,color: Colors.green,),
-              //                                 Padding(
-              //                                   padding: const EdgeInsets.all(8.0),
-              //                                   child: Text('${dat['clientPhone']}'),
-              //                                 ),
-              //                               ],
-              //                             ),
-              //                             SizedBox(height: 10,),
-              //                             Row(
-              //                               children: [
-              //                                 Icon(Icons.mail,color: Colors.brown,),
-              //                                 Padding(
-              //                                   padding: const EdgeInsets.all(8.0),
-              //                                   child: Text('${dat['clientEmail']}'),
-              //                                 ),
-              //                               ],
-              //                             ),
-              //                           ],
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   );
-              //             }),
-              //           )
-              //             // Text('${
-              //             //     combined[index]}')
-              //         )
-              //         )
-              //     )
-              //     ),
-              //     // rows: [
-              //     //   DataRow(cells: [
-              //     //     DataCell(Text('soke')),
-              //     //     DataCell(Text('soke')),
-              //     //     DataCell(Text('soke')),
-              //     //     DataCell(Text('soke')),
-              //     //     DataCell(Text('soke'))
-              //     //   ]
-              //     //   )
-              //     // ],
-              //   ),
-              // ),
-
-
-
-
               clients.isEmpty ? Text('') :Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(

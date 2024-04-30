@@ -75,7 +75,7 @@ class _CustomersState extends State<Customers>  with SingleTickerProviderStateMi
                       todo: todo,
                       title: 'ClientData',
                       expectedVals: value,
-                      endpoint: "/api/client/add",
+                      endpoint: "/api/crm/client/add",
                     ),
                     // child: detail == null? Card(child: AddCustomer()) : Card(child: AddCustomer(custDetails: [detail],)),
                     // child: CreateCompany(sessionStateStream: session, companyDetails: companyDetails,),

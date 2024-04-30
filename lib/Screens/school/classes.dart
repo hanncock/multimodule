@@ -20,7 +20,7 @@ class _ClassesState extends State<Classes> {
   List students = [];
 
   getStudents()async{
-    var resu = await auth.getvalues("classe/list?companyId=${companyIdInView}");
+    var resu = await auth.getvalues("school/classe/list?companyId=${companyIdInView}");
     setState(() {
       students = resu;
     });

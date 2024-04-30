@@ -74,12 +74,12 @@ class _AddCompanyState extends State<AddCompany> {
       "companyId":id,
       "moduleId":modId.toString()
     };
-    var resu = await auth.saveMany(moddata,'/api/companymodule/add');
+    var resu = await auth.saveMany(moddata,'/api/settings/companymodule/add');
     print(resu);
   }
 
   saveCompany()async{
-    var resu = await auth.saveMany(data, "/api/company/add");
+    var resu = await auth.saveMany(data, "/api/settings/company/add");
     print(resu);
   }
 

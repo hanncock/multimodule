@@ -21,7 +21,7 @@ class AuthService{
 
   login(username,password)async{
 
-    var all = '$url/api/users/login';
+    var all = '$url/api/settings/users/login';
     Map data = {
       "email": username,
       "pass": password
@@ -72,7 +72,7 @@ class AuthService{
     // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
     String getcompanies ;
 
-    projId == null ?  getcompanies = "$url/api/client/list?companyId=${companyIdInView}":
+    projId == null ?  getcompanies = "$url/api/crm/client/list?companyId=${companyIdInView}":
         getcompanies = "$url/api/client/list?companyId=${companyIdInView}&projectId=${projId}";
     // print("here are thr resposnses "+getcompanies);
     try{
@@ -96,7 +96,7 @@ class AuthService{
   }
 
   getUsers()async{
-    String getcompanies = "$url/api/user/list";
+    String getcompanies = "$url/api/settings/user/list";
     print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -108,7 +108,7 @@ class AuthService{
   }
 
   getcompany()async{
-    String getcompanies = "$url/api/company/list";
+    String getcompanies = "$url/api/settings/company/list";
     print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -121,7 +121,7 @@ class AuthService{
 
   createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType,leadId,projectId)async{
 
-    var all = '$url/api/client/add';
+    var all = '$url/api/crm/client/add';
     Map data = {
         "id":id,
         "clientName":clientName,
@@ -149,7 +149,7 @@ class AuthService{
 
   createProj(id,projectName,projDescription,personInCharge,inchargeMail,inchargeContact,startdate,enddate,projectStatus,designation)async{
 
-    var all = '$url/api/project/add';
+    var all = '$url/api/crm/project/add';
     Map data = {
       "id":id,
       "projectName":projectName,
@@ -171,7 +171,7 @@ class AuthService{
   }
 
   getProjects()async{
-    String getcompanies = "$url/api/project/list";
+    String getcompanies = "$url/api/crm/project/list";
     print(getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -196,7 +196,7 @@ class AuthService{
 
   createProjCol(id,projectColName)async{
 
-    var all = '$url/api/project/add';
+    var all = '$url/api/crm/project/add';
     Map data = {
       "projColId":id,
       "projColName":projectColName,
@@ -210,7 +210,7 @@ class AuthService{
   }
 
   getProjectsColumns()async{
-    String getcompanies = "$url/api/project/list";
+    String getcompanies = "$url/api/crm/project/list";
     try{
       var response =  await get(Uri.parse(getcompanies));
       var jsondata = jsonDecode(response.body);
@@ -222,7 +222,7 @@ class AuthService{
 
   getStudents()async{
     // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
-    String getcompanies = "$url/api/student/list?companyId=${companyIdInView}";
+    String getcompanies = "$url/api/school/student/list?companyId=${companyIdInView}";
     print("here are thr resposnses "+getcompanies);
     try{
       var response =  await get(Uri.parse(getcompanies));

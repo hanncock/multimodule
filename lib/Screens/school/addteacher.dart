@@ -208,7 +208,7 @@ class _AddTeacherState extends State<AddTeacher> {
                   "companyId" : companyIdInView
 
                 };
-                var resu = await auth.saveMany(data,"/api/teacher/add");
+                var resu = await auth.saveMany(data,"/api/school/teacher/add");
                 if(resu == 'success'){
                   Navigator.of(context).pop();
                 }else{

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:web3/Screens/school/addExam.dart';
 import '../../Constants/ImportUI.dart';
 import '../../Constants/Reusableswidgets/btns.dart';
@@ -20,7 +19,7 @@ class _ExamsState extends State<Exams> {
   List students = [];
 
   getStudents()async{
-    var resu = await auth.getvalues("exam/list?companyId=${companyIdInView}");
+    var resu = await auth.getvalues("school/exam/list?companyId=${companyIdInView}");
     setState(() {
       students = resu;
     });
@@ -127,8 +126,6 @@ class _ExamsState extends State<Exams> {
                         Icon(Icons.arrow_drop_down,)
                       ],
                     ),
-                    // child: Text(''),
-                    // icon: Icon(Icons.open_with_rounded,color: Colors.blue,),
                     itemBuilder: (BuildContext context) {
                       return [
                         PopupMenuItem(
@@ -204,42 +201,64 @@ class _ExamsState extends State<Exams> {
                             children: List.generate(num,
                                     (ind) => Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        margin: EdgeInsets.all(2),
-                                        width: (MediaQuery.of(context).size.width - 320) /4,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: Colors.white,
-                                        ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.library_books,size: 40,color: Colors.black,),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(10.0),
-                                                    child: Text('${dat[ind]['examName']}',style: boldfont,),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Text('${dat[ind]['startDate']}'),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Text('${dat[ind]['endDate']}'),
-                                                  ),
-                                                ],
+                                      child: InkWell(
+                                        onTap:((){
+                                          editDetails(dat[ind]);
+                                        }),
+                                        child: Container(
+                                          margin: EdgeInsets.all(2),
+                                          width: (MediaQuery.of(context).size.width - 320) /4,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.white,
+                                          ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.library_books,size: 40,color: Colors.black,),
+                                              SizedBox(width:10),
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: Text('${dat[ind]['examName']}',style: boldfont,),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                            width:100,
+                                                            child: Text('Start Date:')
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Text('${dat[ind]['startDate']}',style:boldfont),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                            width:100,
+                                                            child: Text('End Date:')),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Text('${dat[ind]['endDate']}',style:boldfont),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Text('Duration:')
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            Icon(Icons.more_vert_rounded,color: Colors.black,)
-                                          ],
-                                        ),
-                                      )),
+                                              Icon(Icons.more_vert_rounded,color: Colors.black,)
+                                            ],
+                                          ),
+                                        )),
+                                      ),
                                     ))
                         ),
                       ),
@@ -247,241 +266,9 @@ class _ExamsState extends State<Exams> {
                   );
                 });
           },),
-
-          // child: ListView.builder(
-          //     itemCount: students.length,
-          //     itemBuilder: (context, index){
-          //
-          //       List<List<T>> splitList<T>(List<T> list, int chunkSize) {
-          //         List<List<T>> chunks = [];
-          //         for (var i = 0; i < list.length; i += chunkSize) {
-          //           chunks.add(list.sublist(i, i + chunkSize > list.length ? list.length : i + chunkSize));
-          //         }
-          //         return chunks;
-          //       }
-          //       List grouped = splitList(students, 3);
-          //       return Container(child: Text('${grouped[index]}'),);
-          // }),
-          //
-
-
-          // child: ListView.builder(
-          //   itemCount: students.length, // Change this according to your list size
-          //   itemBuilder: (BuildContext context, int index) {
-          //     if (index < 4) {
-          //       return Row(
-          //         children: List.generate(4, (subIndex) {
-          //           return Expanded(
-          //             child: Card(
-          //               child: ListTile(
-          //                 title: Text('Item ${(index)}'),
-          //               ),
-          //             ),
-          //           );
-          //         }),
-          //       );
-          //     } else {
-          //       // return GridView.builder(
-          //       //   shrinkWrap: true,
-          //       //   physics: NeverScrollableScrollPhysics(),
-          //       //   itemCount: 6, // Change this according to your list size
-          //       //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //       //     crossAxisCount: 4,
-          //       //     crossAxisSpacing: 4.0,
-          //       //     mainAxisSpacing: 4.0,
-          //       //   ),
-          //       //   itemBuilder: (BuildContext context, int subIndex) {
-          //       //     return Card(
-          //       //       child: ListTile(
-          //       //         title: Text('Item ${(index * 4) + subIndex}'),
-          //       //       ),
-          //       //     );
-          //       //   },
-          //       // );
-          //     }
-          //   },
-          // ),
-
-
-
-
-          // child: Container(
-          //   child: HorizontalDataTable(
-          //
-          //     elevationColor: Colors.redAccent,
-          //     isFixedHeader: true,
-          //     itemCount: students.length,
-          //     leftHandSideColumnWidth: 250,
-          //     rowSeparatorWidget: const Divider(
-          //       color: Colors.black38,
-          //       height: 0.5,
-          //       thickness: 0.5,
-          //     ),
-          //     headerWidgets: _headerwidgets(),
-          //     rightHandSideColumnWidth: MediaQuery.of(context).size.width -450,
-          //     leftSideItemBuilder: (BuildContext context, index){
-          //       var clientdata = students[index];
-          //       return Container(
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(top: 15,bottom: 15),
-          //
-          //           child: Text('${clientdata['examName'].toUpperCase()}',style: boldfont,),
-          //         ),
-          //       );
-          //     },
-          //     rightSideItemBuilder: (BuildContext context, index){
-          //       var clientdata = students[index];
-          //       return Row(
-          //         children: [
-          //           Container(
-          //               width: 200,
-          //               // height: 68,
-          //               child:  Text('${clientdata['shrtfrm']}')
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Padding(
-          //               padding: const EdgeInsets.only(top: 15,bottom: 15),
-          //               child: Text('${clientdata['startDate']}',textAlign: TextAlign.start),
-          //             ),
-          //           ),
-          //           Container(
-          //             width: 200,
-          //             // height: 68,
-          //             child: Text('${clientdata['endDate']}',style: boldfont,textAlign: TextAlign.start,),
-          //           ),
-          //           Container(
-          //             width: 100,
-          //             // height: 68,
-          //             child: PopupMenuButton(
-          //               // offset: Offset(width * 0.3, appBarHeight),
-          //               // color: darkmode ? Colors.black: Colors.grey[100],
-          //               shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(10.0),
-          //                 side: BorderSide(
-          //                     width: 1,
-          //                     color: Colors.grey.shade200
-          //                 ),
-          //               ),
-          //               icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
-          //               itemBuilder: (BuildContext context) {
-          //                 return [
-          //                   PopupMenuItem(
-          //                       padding: EdgeInsets.all(0),
-          //                       child: Column(
-          //                         mainAxisAlignment: MainAxisAlignment.center,
-          //                         children: [
-          //                           Container(
-          //                             width:100,
-          //                             decoration: BoxDecoration(
-          //                                 borderRadius: BorderRadius.circular(8),
-          //                                 color: Colors.blue.withOpacity(0.5)
-          //                             ),
-          //                             child: GestureDetector(
-          //                               onTap: (){
-          //                                 editDetails(clientdata);
-          //                               },
-          //                               child: Row(
-          //                                 children: [
-          //                                   Icon(Icons.edit,color: Colors.blue,),
-          //                                   SizedBox(width: 10,),
-          //                                   Padding(
-          //                                     padding: const EdgeInsets.all(8.0),
-          //                                     child: Text('Edit'),
-          //                                   )
-          //                                 ],
-          //                               ),
-          //                             ),
-          //                           ),
-          //                           SizedBox(height: 10,),
-          //                           Container(
-          //
-          //                             width:100,
-          //                             decoration: BoxDecoration(
-          //                                 borderRadius: BorderRadius.circular(8),
-          //                                 color: Colors.red.withOpacity(0.5)
-          //                             ),
-          //                             child: GestureDetector(
-          //                               onTap: (){
-          //
-          //                               },
-          //                               child: Row(
-          //                                 children: [
-          //                                   Icon(Icons.delete,color: Colors.red,size: 14,),
-          //                                   SizedBox(width: 10,),
-          //                                   Padding(
-          //                                     padding: const EdgeInsets.all(8.0),
-          //                                     child: Text('Delete'),
-          //                                   )
-          //                                 ],
-          //                               ),
-          //                             ),
-          //                           ),
-          //                         ],
-          //                       )
-          //                   ),
-          //                 ];
-          //               },
-          //             ),
-          //           ),
-          //         ],
-          //       );
-          //     },
-          //
-          //   ),
-          // ),
         ),
 
       ],
     );
   }
-
-  List<Widget> _headerwidgets() {
-    return [
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 250,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 8),
-            child: Text('Name',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('Acronym',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Start Date.',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('End Date',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 100,
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Icon(Icons.more_horiz_outlined,color: Colors.white,),
-          )
-      ),
-      // Text(''),
-    ];
-  }
-
 }

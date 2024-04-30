@@ -22,7 +22,7 @@ class _TeacherState extends State<Teacher> {
   List students = [];
 
   getStudents()async{
-    var resu = await auth.getvalues("teacher/list?companyId=${companyIdInView}");
+    var resu = await auth.getvalues("school/teacher/list?companyId=${companyIdInView}");
     setState(() {
       students = resu;
     });
@@ -181,243 +181,97 @@ class _TeacherState extends State<Teacher> {
         ),
         Divider(height: 0.5,color: Colors.black12,),
         students.isEmpty ?  Center(child: Text('We have no data')):Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                        border: Border.all(width: .5,color: Colors.grey.shade400)
-                    ),
-                    child: DataTable(
-                        headingRowHeight: 45,
-                        dataRowMinHeight: 53,
-                        dataRowMaxHeight: 53,
-                        dividerThickness: 0.5,
-                        border: const TableBorder(verticalInside: BorderSide(width: .05,)),
-                        columns: [
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.person,color: Colors.black,),
-                              Text('Name'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.app_registration,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('TSC No'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.mail,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Email'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.credit_card,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('ID No.'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.phone,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Phone'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.generating_tokens,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Gender'),
-                            ],
-                          )),
-                        ],
-                        rows:students.map((item){
-                          return DataRow(cells: [
-                            DataCell( Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 22,
-                                  backgroundColor: Colors.brown.withOpacity(0.2),
-                                  child: Icon(Icons.computer,color: Colors.black12,),
-                                  // child: clients[index]['logo'] == null ? Text('-'): Image.network(auth.url+'/'+clients[index]['logo']),
-                                ),
-                                SizedBox(width: 20,),
-                                Text('${item['sirName'].toUpperCase()} ${item['names']}.',),
-                                // SizedBox(height: 10,),
-                              ],
-                            ),),
-                            DataCell(Text('${item['tscNo']}'),),
-                            DataCell(Text('${item['email']}'),),
-                            DataCell(Text('${item['idNo']}'),),
-                            DataCell(Text('${item['phone']}'),),
-                            DataCell(Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('${item['phone']}'),
-                                Container(
-                                  width: 50,
-                                  // height: 68,
-                                  child: PopupMenuButton(
-                                    // offset: Offset(width * 0.3, appBarHeight),
-                                    // color: darkmode ? Colors.black: Colors.grey[100],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: BorderSide(
-                                          width: 1,
-                                          color: Colors.grey.shade200
-                                      ),
-                                    ),
-                                    icon: Icon(Icons.more_vert_rounded,color: Colors.blue,),
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        PopupMenuItem(
-                                            padding: EdgeInsets.all(0),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width:100,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8),
-                                                      color: Colors.blue.withOpacity(0.5)
-                                                  ),
-                                                  child: GestureDetector(
-                                                    onTap: (){
-                                                      editDetails(item);
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(Icons.edit,color: Colors.blue,),
-                                                        SizedBox(width: 10,),
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(8.0),
-                                                          child: Text('Edit'),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10,),
-                                                Container(
-                  
-                                                  width:100,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(8),
-                                                      color: Colors.red.withOpacity(0.5)
-                                                  ),
-                                                  child: GestureDetector(
-                                                    onTap: (){
-                  
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(Icons.delete,color: Colors.red,size: 14,),
-                                                        SizedBox(width: 10,),
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(8.0),
-                                                          child: Text('Delete'),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                        ),
-                                      ];
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),),
-                  
-                  
-                          ]);
-                        }).toList()),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      border: Border.all(width: .5,color: Colors.grey.shade400)
                   ),
+                  child: DataTable(
+                    showCheckboxColumn: false,
+                      headingRowHeight: 45,
+                      dataRowMinHeight: 53,
+                      dataRowMaxHeight: 53,
+                      dividerThickness: 0.5,
+                      border: const TableBorder(verticalInside: BorderSide(width: .05,)),
+                      columns: [
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.person,color: Colors.black,),
+                            Text('Name'),
+                          ],
+                        )),
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.app_registration,color: Colors.black,),
+                            SizedBox(width: 10,),
+                            Text('TSC No'),
+                          ],
+                        )),
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.mail,color: Colors.black,),
+                            SizedBox(width: 10,),
+                            Text('Email'),
+                          ],
+                        )),
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.credit_card,color: Colors.black,),
+                            SizedBox(width: 10,),
+                            Text('ID No.'),
+                          ],
+                        )),
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.phone,color: Colors.black,),
+                            SizedBox(width: 10,),
+                            Text('Phone'),
+                          ],
+                        )),
+                        DataColumn(label: Row(
+                          children: [
+                            Icon(Icons.generating_tokens,color: Colors.black,),
+                            SizedBox(width: 10,),
+                            Text('Gender'),
+                          ],
+                        )),
+                      ],
+                      rows:students.map((item){
+                        return DataRow(
+                            onSelectChanged: (selected){
+                              editDetails(item);
+                            },
+                            cells: [
+                          DataCell( Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.brown.withOpacity(0.2),
+                                child: Icon(Icons.computer,color: Colors.black12,),
+                                // child: clients[index]['logo'] == null ? Text('-'): Image.network(auth.url+'/'+clients[index]['logo']),
+                              ),
+                              SizedBox(width: 20,),
+                              Text('${item['sirName'].toUpperCase()} ${item['names']}.',),
+                              // SizedBox(height: 10,),
+                            ],
+                          ),),
+                          DataCell(Text('${item['tscNo']}'),),
+                          DataCell(Text('${item['email']}'),),
+                          DataCell(Text('${item['idNo']}'),),
+                          DataCell(Text('${item['phone']}'),),
+                          DataCell(Text('${item['phone']}'),),
+                        ]);
+                      }).toList()),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-
       ],
     );
   }
-
-  List<Widget> _headerwidgets() {
-    return [
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 250,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 8),
-            child: Text('Name',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('TSC No.',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Email',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('Phone',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0,top: 8,bottom: 8),
-            child: Text('ID No',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30.0,top: 8,bottom: 8),
-            child: Text('Gender',style: TextStyle(color: Colors.white,letterSpacing: 1.0,)),
-          )
-      ),
-      Container(
-          color: Theme.of(context).primaryColor,
-
-          width: 100,
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Icon(Icons.more_horiz_outlined,color: Colors.white,),
-          )
-      ),
-      // Text(''),
-    ];
-  }
-
 }
