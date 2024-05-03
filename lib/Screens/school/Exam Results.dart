@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_excel/excel.dart';
+import 'package:web3/Constants/Reusableswidgets/btns.dart';
 
 import '../../Constants/Reusableswidgets/dropdown.dart';
 import '../../Constants/Theme.dart';
@@ -16,33 +20,92 @@ class _ExamResultsState extends State<ExamResults> {
 
 
   List exams = [];
-  List classes = [];
+  List selectedExam = [];
+  List subjects = [];
   var selExam;
+  List classes = [];
   var selcls;
+  List streams = [];
+  var selStrm;
+  List students = [];
+
+  List results = [];
+
+  // late List subjts = selectedExam[0]['subjectsToExm'].split(",") ?? [];
+
+  // List subjects;
 
 
   getexams()async{
-    // var resu = await auth.getvalues("school/exam/list?companyId=${companyIdInView}");
-    var resu = await auth.getvalues("school/exam/list?companyId=2204");
+    var resu = await auth.getvalues("school/exam/list?companyId=${companyIdInView}");
     setState(() {
       exams = resu;
     });
   }
 
-  getStudents()async{
-    // var resu = await auth.getvalues("school/classe/list?companyId=${companyIdInView}");
-    var resu = await auth.getvalues("school/classe/list?companyId=2204");
+  getExamined(examId)async{
+    var resu = await auth.getvalues("school/examsubjects/list?examId=${examId}");
+
+    setState(() {
+      subjects = resu;
+    });
+    // examSubjects.clear();
+    // for(int i=0; i<resu.length; i++){
+    //   Map examWithSubjects = {
+    //     "id":resu[i]['id'],
+    //     "examId": resu[i]['examId'],
+    //     "subjectId": resu[i]['subjectId']
+    //   };
+    //   examSubjects.add(examWithSubjects);
+    // }
+    setState(() {});
+  }
+
+  List vals = [];
+
+
+  getclasses()async{
+    var resu = await auth.getvalues("school/classe/list?companyId=${companyIdInView}");
     setState(() {
       classes = resu;
     });
     print(resu);
   }
+  getStreams()async{
+    var resu = await auth.getvalues("school/stream/list?companyId=${companyIdInView}");
+    setState(() {
+      streams = resu;
+    });
+  }
+
+  getStudents()async{
+    var endpoint = "school/student/list?companyId=${companyIdInView}";
+    if(selcls != null){
+      endpoint = endpoint+"&class=${selcls}";
+      setState(() {});
+    }
+    if(selStrm != null){
+      endpoint = endpoint+"&stream=${selStrm.toString()}";
+      setState(() {});
+    }
+    var resu = await auth.getvalues(endpoint);
+    print(resu);
+    if(resu.length > 0){
+      students = resu;
+    }else{
+      students.clear();
+
+    }
+    setState(() {});
+  }
+
 
   @override
   void initState(){
     super.initState();
     getexams();
-    getStudents();
+    getclasses();
+    getStreams();
   }
 
   @override
@@ -68,31 +131,22 @@ class _ExamResultsState extends State<ExamResults> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton2(
                             isExpanded:true,
-                            hint: Text('${selExam ?? ''}',style: boldfont),
+                            hint: selectedExam.isEmpty ?Text('') :Text('${selectedExam[0]['examName'] ?? ''}',style: boldfont),
                             items: exams.map((e) => DropdownMenuItem(
-                                value:["${e['examName']}","${e['id']}"],
+                                // value:["${e['examName']}","${e['id']}"],
+                                value:[e],
                                 child: Text('${e['examName']}',style: boldfont,))).toList(),
                             onChanged: (val){
                               setState(() {
-                                var vals = val as List;
-                                selExam = vals[0].toString() ;
+                                selectedExam.clear();
+                                selectedExam = val as List;
+                                getExamined(selectedExam[0]['id']);
+                                // var vals = val as List;
+                                // selExam = vals[0].toString() ;
+                                // selectedExam
                                 // projoId = vals[1] ;
                                 // loading = true;
                               });
-                              // projectColumns();
-                              // combined.clear();
-                              // client().whenComplete((){
-                              //   for(int i=0; i<projoPrams.length; i++){
-                              //     var idtocheck = projoPrams[i]['id'];
-                              //     Map<String, dynamic> grouping = {};
-                              //     combined.add(grouping[idtocheck] = clients.where((element) => element['leadId'] == idtocheck).toList());
-                              //   }
-                              //   setState(() {
-                              //     loading = false;
-                              //   });
-                              //   print(combined);
-                              // });
-                              // print(clients);
                             }
                         ),
                       ),
@@ -122,23 +176,8 @@ class _ExamResultsState extends State<ExamResults> {
                               setState(() {
                                 var vals = val as List;
                                 selcls = vals[0].toString() ;
-                                // projoId = vals[1] ;
-                                // loading = true;
                               });
-                              // projectColumns();
-                              // combined.clear();
-                              // client().whenComplete((){
-                              //   for(int i=0; i<projoPrams.length; i++){
-                              //     var idtocheck = projoPrams[i]['id'];
-                              //     Map<String, dynamic> grouping = {};
-                              //     combined.add(grouping[idtocheck] = clients.where((element) => element['leadId'] == idtocheck).toList());
-                              //   }
-                              //   setState(() {
-                              //     loading = false;
-                              //   });
-                              //   print(combined);
-                              // });
-                              // print(clients);
+                              getStudents();
                             }
                         ),
                       ),
@@ -160,31 +199,18 @@ class _ExamResultsState extends State<ExamResults> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton2(
                             isExpanded:true,
-                            hint: Text('${selcls ?? ''}',style: boldfont),
-                            items: classes.map((e) => DropdownMenuItem(
-                                value:["${e['className']}","${e['id']}"],
-                                child: Text('${e['className']}',style: boldfont,))).toList(),
+                            hint: Text('${selStrm ?? ''}',style: boldfont),
+                            items: streams.map((e) => DropdownMenuItem(
+                                value:["${e['streamName']}","${e['id']}"],
+                                child: Text('${e['streamName']}',style: boldfont,))).toList(),
                             onChanged: (val){
                               setState(() {
                                 var vals = val as List;
-                                selcls = vals[0].toString() ;
+                                selStrm = vals[0].toString() ;
                                 // projoId = vals[1] ;
                                 // loading = true;
                               });
-                              // projectColumns();
-                              // combined.clear();
-                              // client().whenComplete((){
-                              //   for(int i=0; i<projoPrams.length; i++){
-                              //     var idtocheck = projoPrams[i]['id'];
-                              //     Map<String, dynamic> grouping = {};
-                              //     combined.add(grouping[idtocheck] = clients.where((element) => element['leadId'] == idtocheck).toList());
-                              //   }
-                              //   setState(() {
-                              //     loading = false;
-                              //   });
-                              //   print(combined);
-                              // });
-                              // print(clients);
+                              getStudents();
                             }
                         ),
                       ),
@@ -196,8 +222,126 @@ class _ExamResultsState extends State<ExamResults> {
             ),
           ),
           Divider(height: 0.5,),
+          // students.isEmpty ? Text('${subjts ?? ''}') : Text(''),
+          students.isEmpty ? Text('select class') :Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    DataTable(columns: [
+                      DataColumn(label: Text('#')),
+                      DataColumn(label: Text('Names'))
+                    ],
+                        rows:students.map((item){
+                          return DataRow(
+                              cells: [
+                                DataCell(Text('${item['admissionNo']}',style: boldfont,)),
+                                DataCell(Text('${item['firstName']} ${item['othernames']}',style: boldfont,)),
+                              ]
+                          );}).toList()
+                    ),
+                    DataTable(
+                      columnSpacing: 0,
+                                  columns: List.generate(subjects.length, (colName) => DataColumn(label: Text('${subjects[colName]['subjectCode']}'))),
+                        rows: students.map((item){
+                          return DataRow(
+                          cells: List.generate(
+                            subjects.length,
+                                (ind) => DataCell(
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(width: 0.1)
+                                      ),
+                                      width: 100,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                            hintText: 'Input Marks',
+                                            hintStyle: TextStyle(fontSize: 12)
+                                          ),
+                                          onChanged: (val){
+
+                                            Map insertval = {
+                                              "id":null,
+                                              "studentName" : "${item['firstName']} ${item['othernames']}",''
+                                                  "studentId":item['id'],
+                                              "studentAdm": item['admissionNo'],
+                                              "examId":selectedExam[0]['id'],
+                                              "subjectId":subjects[ind]['id'],
+                                              "results":val,
+                                              "year":DateTime.now().year
+                                            };
+
+                                            // vals[item+ind] = val;
+                                            // print(val);
+                                            // results.where((element) => element['subjectId'] == subjects[ind]['id'] && element['studentAdm'] == item['admissionNo']);
+                                            if(results.where((element) => element['subjectId'] == subjects[ind]['id'] && element['studentAdm'] == item['admissionNo']).isNotEmpty){
+                                              // print('contains');
+                                              var indx = results.indexWhere((element) => element['subjectId'] == subjects[ind]['id'] && element['studentAdm'] == item['admissionNo']);
+                                                  print(indx);
+                                                  results[indx] = insertval;
+                                            }else{
+                                              results.add(insertval);
+                                              // print(results);
+                                            }
+                                            // Map insertval = {
+                                            //   "id":null,
+                                            //   "studentName" : "${item['firstName']} ${item['othernames']}",''
+                                            //   "studentId":item['id'],
+                                            //   "studentAdm": item['admissionNo'],
+                                            //   "examId":selectedExam[0]['id'],
+                                            //   "subjectId":subjects[ind]['id'],
+                                            //   "results":val,
+                                            //   "year":DateTime.now().year
+                                            // };
+
+                                            // print(insertval);
+                                            // print("${item['firstName']}, ${subjects[ind]['subjectCode']}, ${val}");
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                              // Text('${ind}'),
+                            ),
+                          ));
+                        }).toList()
+                    ),
+                  ],
+                ),
+                btns(label: 'Save Results',
+                  onclick: ()async{
+                  var resu = await auth.saveMany(results, "/api/school/examresult/add");
+                  print(resu);
+                  // print(results);
+                  // print(vals);
+                  },
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
   }
+  
+  
 }
+
+// class ListGenerateCell extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: List.generate(
+//         selectedExam[0][''],
+//             (index) => Text('Item $index'),
+//       ),
+//     );
+//   }
+// }

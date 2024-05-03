@@ -155,19 +155,22 @@ class _AdmitOrMoveState extends State<AdmitOrMove> {
               shrinkWrap: true,
                 itemCount: widget.dets!.length,
                 itemBuilder: (context, index){
-              return Text('${widget.dets}');
+              return Text('${widget.dets![index]}');
             }),
           ),
           btns(label: 'Admit',
-          onclick: (){
+          onclick: ()async{
 
             for(int i=0; i<widget.dets!.length; i++){
               // final user = jsonDecode(widget.dets![i]) as Map<dynamic, dynamic>;
               // user["class"] = selcls;
               // user["stream"] = selStrm;
 
-              var rs = widget.dets![i].toList();
-              print(rs);
+              var rs = widget.dets![i];
+              rs['class'] = selcls;
+              rs['stream'] = selStrm;
+              setState(() {});
+              // print(rs);
               // Map<String, dynamic> jsonMap = json.decode(widget.dets![i]);
               // print(widget.dets![i].runtimeType);
               // jsonMap['class'] = selcls; // Example of adding a value
@@ -177,14 +180,14 @@ class _AdmitOrMoveState extends State<AdmitOrMove> {
               // widget.dets?.add(updatedJsonString);
               // widget.dets![i].add[{"class":selStrm}];
             }
-            print(widget.dets);
-            // var resu = await auth.saveMany("data","/api/school/student/add");
-            // print(resu);
-            // if(resu == 'success'){
-            //   Navigator.of(context).pop();
-            // }else{
-            //   print('none');
-            // }
+            // print(widget.dets);
+            var resu = await auth.saveMany(widget.dets,"/api/school/student/add");
+            print(resu);
+            if(resu == 'success'){
+              Navigator.of(context).pop();
+            }else{
+              print('none');
+            }
           },
           )
         ],

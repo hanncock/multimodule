@@ -515,7 +515,7 @@ class _CalenderState extends State<Calender> {
             child: Text('${widget.label}',style: boldfont,),
           ),
           Container(
-            width: 300,
+            width: 250,
             // height: 100,
             decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black45),

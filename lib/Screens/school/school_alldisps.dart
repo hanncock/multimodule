@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web3/Screens/school/Exam%20Results.dart';
+import 'package:web3/Screens/school/Subjects.dart';
+import 'package:web3/Screens/school/addSubject.dart';
 import 'package:web3/Screens/school/addsreams.dart';
 import 'package:web3/Screens/school/classes.dart';
 import 'package:web3/Screens/school/schlMenus.dart';
@@ -11,9 +13,9 @@ import '../../custom_display/keepAlive.dart';
 import 'addStudent.dart';
 import 'exams.dart';
 
-List openScreenstitles = ['Dashboard'];
-final openScreensWidgets = <dynamic>[Students()];
-late TabController controller2;
+// List openScreenstitles = ['Dashboard'];
+// final openScreensWidgets = <dynamic>[Exams()];
+// late TabController controller2;
 
 class ScreenDispSchl extends StatefulWidget {
   // final List allwindows;
@@ -41,7 +43,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
   var actv ;
 
   List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[Students()];
+  final openScreensWidgets = <dynamic>[Exams()];
 
 
   late final schlMenuslst = [
@@ -84,6 +86,16 @@ class _ScreenDispState extends State<ScreenDispSchl>
         title: 'Stream',
         widget: AddStream(),
         icona: Icon(Icons.view_stream_outlined,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Subjects',
+        widget: Subjectc(),
+        icona: Icon(Icons.view_stream_outlined,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Fees & Charges',
+        widget: Subjectc(),
+        icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
     )
   ];
 

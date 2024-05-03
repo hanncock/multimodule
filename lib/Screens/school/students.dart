@@ -318,17 +318,32 @@ class _StudentsState extends State<Students> {
                               Text('Gender'),
                             ],
                           )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.class_,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Class'),
+                            ],
+                          )),
+                          DataColumn(label: Row(
+                            children: [
+                              Icon(Icons.straighten_outlined,color: Colors.black,),
+                              SizedBox(width: 10,),
+                              Text('Stream'),
+                            ],
+                          )),
                         ],
                         rows: students.map((item){
                           return DataRow(
                               onSelectChanged: (selected){
                                 if(selecteds.contains(item)){
-                                  selecteds.add(item);
+                                  // selecteds.add(item);
                                   editDetails(item);
                                 }else{
                                   selecteds.add(item);
 
                                 }
+                                print(selecteds);
                                 setState(() {});
                                 // print(item);
                                 // editDetails(item);
@@ -359,31 +374,21 @@ class _StudentsState extends State<Students> {
                                     ),
                                   ],
                                 )),
-                            DataCell(Text('${item['admissionNo']}')),
-                            DataCell(Text('${item['email']}',style: TextStyle(color: Colors.blue,),)),
-                            DataCell(Container(
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green.withOpacity(0.1)
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text('${item['idNo']}'),
-                                ))),
-                            DataCell(Text('${item['phone']}')),
-                            DataCell(Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                              children: [
-                                Row(
-                                  children: [
-                                    // (item['gender'] == "MALE" && item['gender'] != null) ? Icon(Icons.male,color: Colors.blue,) : Icon(Icons.female,color: Colors.pink,),
-                                    // SizedBox(width: 10,),
-                                    Text('${item['gender']}',textAlign: TextAlign.start),
-                                  ],
-                                ),
-                              ],
-                            )),
+                                DataCell(Text('${item['admissionNo']}')),
+                                DataCell(Text('${item['email']}',style: TextStyle(color: Colors.blue,),)),
+                                DataCell(Container(
+                                    decoration:BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.green.withOpacity(0.1)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Text('${item['idNo']}'),
+                                    ))),
+                                DataCell(Text('${item['phone']}')),
+                                DataCell(Text('${item['gender']}',textAlign: TextAlign.start)),
+                                DataCell(Text('${item['class'] ?? ''}')),
+                                DataCell(Text('${item['stream'] ?? ''} ')),
                           ]);
                         }).toList(),
                       )

@@ -43,7 +43,7 @@ class AuthService{
   }
 
   getvalues(endpoint)async{
-    var fetchedData = "$url/api/$endpoint";
+    var fetchedData = Uri.encodeFull("$url/api/$endpoint");
     print(fetchedData);
     try{
       var response =  await get(Uri.parse(fetchedData));
