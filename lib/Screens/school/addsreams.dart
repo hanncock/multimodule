@@ -53,7 +53,7 @@ class _AddStreamState extends State<AddStream> {
                       forms(
                           value: code,
                           initVal: code,
-                          label: 'Strea code',
+                          label: 'Stream code',
                           hint: "code",
                           onChanged: (value){
                             setState(() {

@@ -44,7 +44,6 @@ class AuthService{
 
   getvalues(endpoint)async{
     var fetchedData = Uri.encodeFull("$url/api/$endpoint");
-    print(fetchedData);
     try{
       var response =  await get(Uri.parse(fetchedData));
       var jsondata = jsonDecode(response.body);
@@ -59,7 +58,6 @@ class AuthService{
   saveMany(val,endpoint)async{
     var all = '${url}${endpoint}';
     var send = jsonEncode(val);
-    // print(send);
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     var responseData = jsonDecode(response.body);
     return responseData;

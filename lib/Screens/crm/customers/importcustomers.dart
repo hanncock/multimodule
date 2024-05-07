@@ -374,6 +374,7 @@ class _ImportCustState extends State<ImportCust> {
     }
     // print(combined.runtimeType);
     var resu = await auth.saveMany(combined,widget.endpoint);
+    // print(resu);
     if(resu == 'success'){
       Navigator.of(context).pop();
     }

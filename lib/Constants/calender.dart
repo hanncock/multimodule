@@ -516,7 +516,7 @@ class _CalenderState extends State<Calender> {
           ),
           Container(
             width: 250,
-            // height: 100,
+            height: 42,
             decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black45),
                 borderRadius: BorderRadius.circular(6),

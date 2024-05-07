@@ -143,7 +143,7 @@ class _TeacherState extends State<Teacher> {
                                           "Import",
                                           context,
                                           "TeacherData",
-                                          "/teacher/add"
+                                          "/school/teacher/add"
                                       );
                                     }),
                                 SizedBox(height: 8),

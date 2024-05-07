@@ -111,7 +111,7 @@ class _AddStudentState extends State<AddStudent> {
                             hint: "Admission / Reg No",
                             onChanged: (value){
                               setState(() {
-                                othernames = value;
+                                admissionNo = value;
                               });
                             })
                       ],

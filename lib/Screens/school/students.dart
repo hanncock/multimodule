@@ -163,7 +163,7 @@ class _StudentsState extends State<Students> {
                                           "Import",
                                           context,
                                           "StudentData",
-                                          "/student/add"
+                                          "/school/student/add"
                                       );
                                     }),
                                 SizedBox(height: 8),
@@ -183,7 +183,7 @@ class _StudentsState extends State<Students> {
                                         'Download',
                                         context,
                                         "StudentData",
-                                        "/student/add"
+                                        "/school/student/add"
                                     );
                                   },),
                                 SizedBox(height: 8),
@@ -194,6 +194,23 @@ class _StudentsState extends State<Students> {
                                 ),
                                 SizedBox(height: 8),
                                 btns(label:'Move to Next Class',icona: Icon(Icons.receipt_long),),
+                                SizedBox(height: 8),
+                                btns(label:'Delete',color: Colors.red,icona: Icon(Icons.delete),
+                                onclick: ()async{
+                                  print('deleting');
+                                  List ids = [];
+                                  for(int i=0; i<selecteds.length; i++){
+                                    ids.add(selecteds[i]['id']);
+                                  }
+                                  print(ids);
+                                  var resu = await auth.delete(ids, "/school/student/del");
+                                  print(resu);
+                                  if(resu == 'success'){
+                                    getStudents();
+                                    selecteds.clear();
+                                  }
+                                },
+                                ),
                                 SizedBox(height: 8),
 
                               ],
@@ -268,129 +285,129 @@ class _StudentsState extends State<Students> {
                   //   }).toList(),
                   // ),
                   Expanded(
-                      child: DataTable(
-                        showCheckboxColumn: false,
-                        headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
-                        headingRowHeight: 45,
-                        dataRowMinHeight: 53,
-                        dataRowMaxHeight: 53,
-                        dividerThickness: 0.5,
-                        // border: const TableBorder(verticalInside: BorderSide(width: .05,)),
-                        columns: [
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.person,color: Colors.black,),
-                              Text('Name'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.app_registration,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Reg No'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.mail,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Email'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.credit_card,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('ID No.'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.phone,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Phone'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.generating_tokens,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Gender'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.class_,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Class'),
-                            ],
-                          )),
-                          DataColumn(label: Row(
-                            children: [
-                              Icon(Icons.straighten_outlined,color: Colors.black,),
-                              SizedBox(width: 10,),
-                              Text('Stream'),
-                            ],
-                          )),
-                        ],
-                        rows: students.map((item){
-                          return DataRow(
-                              onSelectChanged: (selected){
-                                if(selecteds.contains(item)){
-                                  // selecteds.add(item);
-                                  editDetails(item);
-                                }else{
-                                  selecteds.add(item);
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: DataTable(
+                          showCheckboxColumn: false,
+                          headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
+                          headingRowHeight: 45,
+                          dataRowMinHeight: 53,
+                          dataRowMaxHeight: 53,
+                          dividerThickness: 0.5,
+                          // border: const TableBorder(verticalInside: BorderSide(width: .05,)),
+                          columns: [
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.person,color: Colors.black,),
+                                Text('Name'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.app_registration,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Reg No'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.mail,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Email'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.credit_card,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('ID No.'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.phone,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Phone'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.generating_tokens,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Gender'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.class_,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Class'),
+                              ],
+                            )),
+                            DataColumn(label: Row(
+                              children: [
+                                Icon(Icons.straighten_outlined,color: Colors.black,),
+                                SizedBox(width: 10,),
+                                Text('Stream'),
+                              ],
+                            )),
+                          ],
+                          rows: students.map((item){
+                            return DataRow(
+                                onSelectChanged: (selected){
+                                  if(selecteds.contains(item)){
+                                    // selecteds.add(item);
+                                    editDetails(item);
+                                  }else{
+                                    selecteds.add(item);
 
-                                }
-                                print(selecteds);
-                                setState(() {});
-                                // print(item);
-                                // editDetails(item);
-                                // print(selected);
-                              },
-                              cells: [
-                                DataCell(Row(
-                                  children: [
-                                    selecteds.isEmpty ? SizedBox():
-                                        selecteds.contains(item) ? InkWell(
-                                            onTap:(){
-                                              selecteds.remove(item);
-                                              setState(() {});
-                                            },
-                                            child: Icon(Icons.check_box_outlined,color: Colors.blue,)):
-                                            Icon(Icons.check_box_outline_blank,color: Colors.black12,),
-                                    SizedBox(width: 20,),
-                                    CircleAvatar(
-                                      backgroundColor:Colors.blue.withOpacity(0.1),
-                                      child: Text('${item['firstName'][0].toUpperCase()} ${(item['othernames'][0]).toUpperCase()}',
-                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.brown),),
-                                      radius: 15,
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Text('${item['firstName']} ${item['othernames']}',
-                                      // style: boldfont,
-                                      // style: TextStyle(fontSize: 13,fontFamily: GoogleFonts.poppins().fontFamily,fontWeight: FontWeight.bold)
-                                    ),
-                                  ],
-                                )),
-                                DataCell(Text('${item['admissionNo']}')),
-                                DataCell(Text('${item['email']}',style: TextStyle(color: Colors.blue,),)),
-                                DataCell(Container(
-                                    decoration:BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.green.withOpacity(0.1)
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text('${item['idNo']}'),
-                                    ))),
-                                DataCell(Text('${item['phone']}')),
-                                DataCell(Text('${item['gender']}',textAlign: TextAlign.start)),
-                                DataCell(Text('${item['class'] ?? ''}')),
-                                DataCell(Text('${item['stream'] ?? ''} ')),
-                          ]);
-                        }).toList(),
+                                  }
+                                  setState(() {});
+
+                                },
+                                cells: [
+                                  DataCell(Row(
+                                    children: [
+                                      selecteds.isEmpty ? SizedBox():
+                                          selecteds.contains(item) ? InkWell(
+                                              onTap:(){
+                                                selecteds.remove(item);
+                                                setState(() {});
+                                              },
+                                              child: Icon(Icons.check_box_outlined,color: Colors.blue,)):
+                                              Icon(Icons.check_box_outline_blank,color: Colors.black12,),
+                                      SizedBox(width: 20,),
+                                      CircleAvatar(
+                                        backgroundColor:Colors.blue.withOpacity(0.1),
+                                        // child: Text('${item['firstName'][0].toUpperCase()} ${(item['othernames'] == null ? '' : item['othernames'][0]).toUpperCase()}',
+                                        //   style: TextStyle(fontWeight: FontWeight.bold,color: Colors.brown),),
+                                        radius: 15,
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('${item['firstName']} ${item['othernames']}',
+                                        // style: boldfont,
+                                        // style: TextStyle(fontSize: 13,fontFamily: GoogleFonts.poppins().fontFamily,fontWeight: FontWeight.bold)
+                                      ),
+                                    ],
+                                  )),
+                                  DataCell(Text('${item['admissionNo']}')),
+                                  DataCell(Text('${item['email']}',style: TextStyle(color: Colors.blue,),)),
+                                  DataCell(Container(
+                                      decoration:BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.green.withOpacity(0.1)
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Text('${item['idNo']}'),
+                                      ))),
+                                  DataCell(Text('${item['phone']}')),
+                                  DataCell(Text('${item['gender']}',textAlign: TextAlign.start)),
+                                  DataCell(Text('${item['class'] ?? ''}')),
+                                  DataCell(Text('${item['stream'] ?? ''} ')),
+                            ]);
+                          }).toList(),
+                        ),
                       )
                   )
                 ],

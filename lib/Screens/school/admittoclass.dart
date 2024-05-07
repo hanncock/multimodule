@@ -180,6 +180,7 @@ class _AdmitOrMoveState extends State<AdmitOrMove> {
               // widget.dets?.add(updatedJsonString);
               // widget.dets![i].add[{"class":selStrm}];
             }
+
             // print(widget.dets);
             var resu = await auth.saveMany(widget.dets,"/api/school/student/add");
             print(resu);

@@ -5,6 +5,7 @@ import 'package:web3/Screens/school/addSubject.dart';
 import 'package:web3/Screens/school/addsreams.dart';
 import 'package:web3/Screens/school/classes.dart';
 import 'package:web3/Screens/school/schlMenus.dart';
+import 'package:web3/Screens/school/scholarsession.dart';
 import 'package:web3/Screens/school/students.dart';
 import 'package:web3/Screens/school/teachers.dart';
 import '../../Constants/Theme.dart';
@@ -18,9 +19,6 @@ import 'exams.dart';
 // late TabController controller2;
 
 class ScreenDispSchl extends StatefulWidget {
-  // final List allwindows;
-  // final Widget menuwindow;
-  // final Widget? tocall;
 
   const ScreenDispSchl({
     Key? key,
@@ -96,6 +94,11 @@ class _ScreenDispState extends State<ScreenDispSchl>
         title: 'Fees & Charges',
         widget: Subjectc(),
         icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Scholarly Sessions',
+        widget: ScholarSession(),
+        icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
     )
   ];
 
@@ -156,11 +159,41 @@ class _ScreenDispState extends State<ScreenDispSchl>
                               .map(
                                 (title) => Padding(
                               padding: const EdgeInsets.all(14.0),
-                              child: Text(
-                                title,
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${title}',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  // openScreenstitles.where((element) => element == 'Dashboard').isNotEmpty?
+                                  title == 'Dashboard' ? Text('') :Column(
+
+                                    children: [
+                                      InkWell(
+                                          onTap: (){
+                                            var index = openScreenstitles.indexWhere((element) => element  == title);
+                                            print(index);
+                                            setState(() {
+                                              openScreenstitles.removeAt(index);
+                                              openScreensWidgets.removeAt(index);
+                                              // if(openScreens[index].title == settings.title){
+                                              //   currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                              //   openScreens.removeAt(currentIndex);
+                                              // }else{
+                                              //   currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
+                                              //   openScreens.removeAt(currentIndex);
+                                              // }
+                                            });
+                                          },
+                                          child: Icon(Icons.close,size: 10,color: Colors.red,)),
+                                      Text(''),
+
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
                           )
@@ -215,7 +248,6 @@ class _ScreenDispState extends State<ScreenDispSchl>
                                 child: Container(
                                   decoration: BoxDecoration(
                                       // color: Theme.of(context).primaryColor,
-
                                     borderRadius: BorderRadius.circular(10),
                                     color: actv == index ? Theme.of(context).primaryColor.withOpacity(0.5) : Colors.white
                                   ),
