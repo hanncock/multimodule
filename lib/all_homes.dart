@@ -38,10 +38,10 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
         title: 'AllDash',
-        widget: allDash(),
+        // widget: allDash(),
         // widget: MyHomePage(),
         // widget: Settings()
-        // widget: ScreenDispSchl()
+        widget: ScreenDispSchl()
         // widget: AddStudent()
         // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
