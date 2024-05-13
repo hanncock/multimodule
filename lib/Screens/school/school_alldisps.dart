@@ -4,6 +4,7 @@ import 'package:web3/Screens/school/Subjects.dart';
 import 'package:web3/Screens/school/addSubject.dart';
 import 'package:web3/Screens/school/addsreams.dart';
 import 'package:web3/Screens/school/classes.dart';
+import 'package:web3/Screens/school/gradingsystem.dart';
 import 'package:web3/Screens/school/schlMenus.dart';
 import 'package:web3/Screens/school/scholarsession.dart';
 import 'package:web3/Screens/school/students.dart';
@@ -41,7 +42,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
   var actv ;
 
   List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[Exams()];
+  final openScreensWidgets = <dynamic>[ExamResults()];
 
 
   late final schlMenuslst = [
@@ -64,6 +65,11 @@ class _ScreenDispState extends State<ScreenDispSchl>
         title: 'Examinations',
         widget: Exams(),
         icona: Icon(Icons.edit_note_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Grading System',
+        widget: GradingSystem(),
+        icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
     ),
     SchlMenus(
         title: 'Results',
@@ -94,6 +100,11 @@ class _ScreenDispState extends State<ScreenDispSchl>
         title: 'Fees & Charges',
         widget: Subjectc(),
         icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Boarding & Residency',
+        widget: Subjectc(),
+        icona: Icon(Icons.bed,color: Colors.black,)
     ),
     SchlMenus(
         title: 'Scholarly Sessions',

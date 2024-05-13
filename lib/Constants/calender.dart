@@ -492,8 +492,9 @@ import 'Theme.dart';
 class Calender extends StatefulWidget {
   final String? label;
   final String? initVal;
+  final double? widthh;
   final ValueChanged<String> onChanged;
-  const Calender({super.key,required this.onChanged,this.label,this.initVal});
+  const Calender({super.key,required this.onChanged,this.label,this.initVal, this.widthh});
 
   @override
   State<Calender> createState() => _CalenderState();
@@ -515,7 +516,7 @@ class _CalenderState extends State<Calender> {
             child: Text('${widget.label}',style: boldfont,),
           ),
           Container(
-            width: 250,
+            width: widget.widthh ?? 250,
             height: 42,
             decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black45),

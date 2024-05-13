@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Reusableswidgets/textfield.dart';
@@ -20,6 +21,11 @@ class _AddExamState extends State<AddExam> {
   late var startDate = widget.dets?[0]['startDate'];
   late var endDate = widget.dets?[0]['endDate'];
   late var shrtform = widget.dets?[0]['shrtfrm'];
+  late var selgrading = widget.dets?[0]['grading'];
+  late var selgradingId = widget.dets?[0]['gradingId'];
+
+  List gradings = [];
+
 
   List sbjExmd = [];
 
@@ -31,6 +37,13 @@ class _AddExamState extends State<AddExam> {
     var resu = await auth.getvalues("school/subject/list?companyId=${companyIdInView}");
     setState(() {
       subjects = resu;
+    });
+  }
+
+  getGrading()async{
+    var resu = await auth.getvalues("school/grading/list?companyId=${companyIdInView}");
+    setState(() {
+      gradings = resu;
     });
   }
 
@@ -57,6 +70,7 @@ class _AddExamState extends State<AddExam> {
     super.initState();
     widget.dets!.isEmpty ?null  :getSubjects();
     widget.dets!.isEmpty ?null  :getExamined();
+    getGrading();
   }
 
   @override
@@ -78,6 +92,7 @@ class _AddExamState extends State<AddExam> {
                   Row(
                     children: [
                       forms(
+                        widthh: 250,
                           value: name,
                           initVal: name,
                           label: 'Exam Name',
@@ -88,6 +103,7 @@ class _AddExamState extends State<AddExam> {
                             });
                           }),
                       forms(
+                        widthh: 100,
                           value: shrtform,
                           initVal: shrtform,
                           label: 'Accronym ',
@@ -100,6 +116,7 @@ class _AddExamState extends State<AddExam> {
 
 
                       Calender(
+                        widthh: 150,
                           initVal:startDate,
                           label: 'Start Date',
                           onChanged: (value){
@@ -109,6 +126,7 @@ class _AddExamState extends State<AddExam> {
                           }
                       ),
                       Calender(
+                        widthh: 150,
                           initVal:endDate,
                           label: 'End Date',
                           onChanged: (value){
@@ -117,8 +135,44 @@ class _AddExamState extends State<AddExam> {
                             });
                           }
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Grading System',style: boldfont,),
+                          ),
+                          Container(
+                            width: 200,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(width: 0.5)
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                  isExpanded:true,
+                                  hint: Text('${selgrading ?? ''}',style: boldfont),
+                                  items: gradings.map((e) => DropdownMenuItem(
+                                      // value:["${e['gradingTitle']}","${e['id']}"],
+                                      value:[e],
+                                      child: Text('${e['gradingTitle']}',style: boldfont,))).toList(),
+                                  onChanged: (val){
+                                    setState(() {
+                                      var vals = val as List;
+                                      selgrading = vals[0]['gradingTitle'];
+                                      selgradingId = vals[0]['id'];
+                                    });
+
+                                  }
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
+
                   SizedBox(height: 20,),
                 ],
               ),
@@ -144,45 +198,51 @@ class _AddExamState extends State<AddExam> {
                       }
                       setState(() {});
                     },
-                    child: Row(
-                      children: [
-                        examSubjects.where((el)=> el['subjectId'] == subjects[index]['id']).isNotEmpty ?InkWell(
-                            onTap: ()async{
-                              var indfnd = examSubjects.indexWhere((element) => element['subjectId'] == subjects[index]['id']);
-                              print(examSubjects[indfnd]);
-                              var resu = await auth.delete(examSubjects[indfnd]['id'],"/school/examsubject/del");
-                              getExamined();
+                    child: Card(
+                      child: Row(
+                        children: [
+                          examSubjects.where((el)=> el['subjectId'] == subjects[index]['id']).isNotEmpty ?InkWell(
+                              onTap: ()async{
+                                var indfnd = examSubjects.indexWhere((element) => element['subjectId'] == subjects[index]['id']);
+                                print(examSubjects[indfnd]);
+                                var resu = await auth.delete(examSubjects[indfnd]['id'],"/school/examsubject/del");
+                                getExamined();
 
-                            },
-                            child: Icon(Icons.check_box_outlined,color: Colors.blue,)):
-                        InkWell(
-                            onTap: ()async{
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Icon(Icons.check_box_outlined,color: Colors.blue,),
+                              )):
+                          InkWell(
+                              onTap: ()async{
 
-                              Map examWithSubjects = {
-                                "id":null,
-                                "examId": id,
-                                "subjectId": subjects[index]['id']
-                              };
-                              var resu = await auth.saveMany(examWithSubjects, "/api/school/examsubject/add");
-                              print(resu);
-                              getExamined();
-                            },
-                            child: Icon(Icons.check_box_outline_blank,color: Colors.black,)
-                        ),
-                        SizedBox(width: 10,),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('${subjects[index]['subjectName']} ${subjects[index]['id']}'),
-                        )
-                      ],
+                                Map examWithSubjects = {
+                                  "id":null,
+                                  "examId": id,
+                                  "subjectId": subjects[index]['id']
+                                };
+                                var resu = await auth.saveMany(examWithSubjects, "/api/school/examsubject/add");
+                                print(resu);
+                                getExamined();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: const Icon(Icons.check_box_outline_blank,color: Colors.black,),
+                              )
+                          ),
+                          SizedBox(width: 10,),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text('${subjects[index]['subjectName']}',style: boldfont,),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 })
-
               ],
             ),
           ),
-          Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -195,8 +255,10 @@ class _AddExamState extends State<AddExam> {
                   "endDate" : endDate,
                   "shrtfrm" : shrtform,
                   "companyId" : companyIdInView,
+                  "gradingId": selgradingId,
+                  "grading":selgrading
                 };
-                //
+                // print(data);
                 var resu = await auth.saveMany(data,"/api/school/exam/add");
                 print(resu);
                 if(resu == 'success'){
