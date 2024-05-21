@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Reusableswidgets/textfield.dart';
 import 'package:web3/all_homes.dart';
@@ -68,8 +69,8 @@ class _AddExamState extends State<AddExam> {
   @override
   void initState(){
     super.initState();
-    widget.dets!.isEmpty ?null  :getSubjects();
-    widget.dets!.isEmpty ?null  :getExamined();
+    widget.dets!.isEmpty ?print('soke')  :getSubjects();
+    widget.dets!.isEmpty ?print('soke')  :getExamined();
     getGrading();
   }
 
@@ -182,7 +183,7 @@ class _AddExamState extends State<AddExam> {
           // Text('${sbjExmd}'),
           SizedBox(height: 10,),
           Divider(),
-          widget.dets!.isEmpty?SizedBox() : Container(
+          (widget.dets.isNull ||  widget.dets!.isEmpty) ?SizedBox() : Container(
             child: Column(
               children: [
                 ListView.builder(

@@ -47,57 +47,14 @@ https://flutteragency.com/how-to-solve-automatickeepaliveclientmixin-is-not-work
 https://alphacode.medium.com/working-with-spreadsheets-in-flutter-part-2-a000fb3c49ef# multimodule
 
 https://dribbble.com/shots/22130564-E-service-application-form
-
+[autoloader.php](..%2F..%2FDesktop%2Fdamn%2Fsysschl%2Foop_php%2Foop3%2Fincludes%2Fautoloader.php)
 
 check if i need to pass the userId when creating a company
-checi if i need to return the last id if add a company then use that resposnse to add a user to that company
+checi if i need to return the last id if add a company then use that resposnse to add a user to that company[autoloader.php](..%2F..%2FDesktop%2Fdamn%2Fsysschl%2Foop_php%2Foop3%2Fincludes%2Fautoloader.php)
 
 
+[autoloader.php](..%2F..%2FDesktop%2Fdamn%2Fsysschl%2Foop_php%2Foop3%2Fincludes%2Fautoloader.php)
 
-$id = $gotenValues[$idchecker];
-$val = $gotenValues[$idchecker];
+https://ww5.gogoanimes.fi/super-cube-episode-1-18-episode-1
 
-//                         unset($values[$idchecker]);
-
-//                         return $gotenValues;
-
-                            $current_arr = [];
-//
-//                         foreach(array_keys($gotenValues) as $vl){
-//
-//                               $current_arr [] = $vl ."=". '"'.$gotenValues[$vl].'"';
-// //                             return $vl;
-//                         }
-//
-//                         $val [] = $current_arr;
-
-//                         return $current_arr;
-
-//                          $id = $current_arr[0];
-
-//                        foreach(array_keys($gotenValues) as $vl){
-//
-// //                        return $vl;
-//                            $current_arr = [];
-//
-//                            foreach(array_keys($gotenValues) as $vlfnd){
-//
-//                                $current_arr [] = $vlfnd ."=". '"'.$values[$vl][$vlfnd].'"';
-//
-}
-//
-//                             $id = $current_arr[0];
-//
-//
-//                           $placeholders = implode(",",$current_arr);
-//
-//                           $sql = "UPDATE $tableName SET $placeholders WHERE $id ;";
-//
-//                           $val [] = $sql;
-
-
-
-[UPDATE students SET firstName="Eskirii",email="eskiri@mail.com",othernames="Magma
-Pi",admissionNo="1234555",idNo="1234434",phone="1234435",gender="MALE",dob="-",companyId="2204",class="Class 1",stream="South" WHERE id="17149897695857" ;, UPDATE students SET firstName="Tony
-",email="tstar@mail.com",othernames="Stark",admissionNo="TS12345",idNo="234567",phone="2345687",gender="MALE",dob="2024-05-02",companyId="2204",class="Class 1",stream="South" WHERE id="17150706446036" ;, UPDATE students SET
-firstName="Jnr",email="jnr@mail.com",othernames="Junior",admissionNo="23434",idNo="2234",phone="2234",gender="",dob="",companyId="2204",class="Class 1",stream="South" WHERE id="17150822685425" ;
+https://ww5.gogoanimes.fi/super-cube-episode-24

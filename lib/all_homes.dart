@@ -8,10 +8,13 @@ import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Constants/Menus.dart';
 import 'package:web3/Screens/dashboard.dart';
+import 'package:web3/Screens/dms/dmsdash.dart';
 import 'package:web3/Screens/school/addStudent.dart';
 import 'package:web3/custom_display/keepAlive.dart';
 import 'Constants/calender.dart';
 import 'Screens/Wrapper.dart';
+import 'Screens/communication/Email.dart';
+import 'Screens/communication/Messaging.dart';
 import 'Screens/crm/crm_menus.dart';
 import 'package:web3/Screens/crm/screen%20display.dart';
 import 'package:web3/Screens/crm/CrmsMenuList.dart';
@@ -38,10 +41,11 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
         title: 'AllDash',
-        // widget: allDash(),
+        widget: allDash(),
+        // widget: Messaging(),
         // widget: MyHomePage(),
         // widget: Settings()
-        widget: ScreenDispSchl()
+        // widget: ScreenDispSchl()
         // widget: AddStudent()
         // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
@@ -56,6 +60,15 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       widget: Settings()
   );
 
+  var messaging = Menus(
+      title: 'Messaging',
+      widget: Messaging()
+  );
+
+  var emailing = Menus(
+      title: 'Email',
+      widget: Emailing()
+  );
 
 
   List menusListed = [
@@ -80,7 +93,11 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       title: 'will del',
       widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),),
     ),
-
+    Menus(
+      icona: Icon(Icons.document_scanner,size: 40,),
+      title: 'DMS',
+      widget: DMS(),
+    ),
 
   ];
 
@@ -164,6 +181,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
     });
 
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -278,12 +296,69 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                         }
                                       ),
                                       SizedBox(height: 10),
-                                      btns(label:'Logout',icona: Icon(Icons.logout,size: 14,),color: Colors.red,
+                                      btns(label:'Messaging',icona: Icon(Icons.sms,size: 14,),
+                                          onclick: (){
+                                            if(openScreens.contains(messaging)){
+                                              setState(() {
+                                                controller = TabController(
+                                                  length: openScreens.length,
+                                                  vsync: this,
+                                                  // initialIndex: tab_index,
+                                                );
+                                                currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                                var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                                // DefaultTabController.of(context).animateTo(activeIndex);
+                                                controller.animateTo(activeIndex);
+                                                module = messaging.title;
+                                              });
+
+
+                                            }else{
+                                              setState(() {
+                                                openScreens.add(messaging);
+                                                controller = TabController(
+                                                  length: openScreens.length,
+                                                  vsync: this,
+                                                  // initialIndex: tab_index,
+                                                );
+                                                currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                controller.animateTo(activeIndex);
+                                              });
+                                            }
+                                        },
+                                      ),
+                                      SizedBox(height: 10),
+                                      btns(label:'Email',icona: Icon(Icons.email,size: 14,),
                                         onclick: (){
-                                        clearlogs();
-                                        Navigator.pushAndRemoveUntil(
-                                            context, MaterialPageRoute(builder: (context) => Wrapper(sessionStateStream: widget.sessionStateStream,)), (
-                                            route) => false);
+                                          if(openScreens.contains(emailing)){
+                                            setState(() {
+                                              controller = TabController(
+                                                length: openScreens.length,
+                                                vsync: this,
+                                                // initialIndex: tab_index,
+                                              );
+                                              currentIndex = openScreens.indexWhere((element) => emailing.title == element.title);
+                                              var activeIndex = openScreens.indexWhere((element) => emailing.title == element.title);
+                                              // DefaultTabController.of(context).animateTo(activeIndex);
+                                              controller.animateTo(currentIndex);
+                                              module = emailing.title;
+                                            });
+                                          }else{
+                                            controller = TabController(
+                                              length: openScreens.length,
+                                              vsync: this,
+                                              // initialIndex: tab_index,
+                                            );
+                                            setState(() {
+                                              openScreens.add(emailing);
+
+                                              currentIndex = openScreens.indexWhere((element) => emailing.title == element.title);
+                                              print(currentIndex);
+                                              var activeIndex = openScreens.indexWhere((element) => emailing.title == element.title);
+                                              controller.animateTo(activeIndex);
+                                            });
+                                          }
                                         },
                                       ),
                                       SizedBox(height: 8),
@@ -321,6 +396,16 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                         },
                                       ),
                                       SizedBox(height: 10),
+                                      btns(label:'Logout',icona: Icon(Icons.logout,size: 14,),color: Colors.red,
+                                        onclick: (){
+                                          clearlogs();
+                                          Navigator.pushAndRemoveUntil(
+                                              context, MaterialPageRoute(builder: (context) => Wrapper(sessionStateStream: widget.sessionStateStream,)), (
+                                              route) => false);
+                                        },
+                                      ),
+                                      SizedBox(height: 10),
+
                                     ],
                                   )
                               ),

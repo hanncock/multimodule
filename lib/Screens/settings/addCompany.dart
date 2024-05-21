@@ -29,7 +29,7 @@ class _AddCompanyState extends State<AddCompany> {
   List modulesaccquired = [];
   List modsacq = [];
   getCompanyModules()async{
-    var resu = await auth.getvalues('companymodule/list?companyId=${id}');
+    var resu = await auth.getvalues('settings/companymodule/list?companyId=${id}');
     modsacq = resu;
     modulesaccquired.clear();
     for(int i=0; i<resu.length; i++){
@@ -44,7 +44,7 @@ class _AddCompanyState extends State<AddCompany> {
 
   List modules = [];
   getModules()async{
-    var resu = await auth.getvalues('module/list');
+    var resu = await auth.getvalues('settings/module/list');
     setState(() {
       modules = resu;
     });
@@ -285,7 +285,7 @@ class _AddCompanyState extends State<AddCompany> {
                                           onPressed: ()async{
                                             if(modulesaccquired.contains(modules[index]['id'])){
                                               var res =  modsacq.indexWhere((element) => element['moduleId'] == modules[index]['id']);
-                                              var resu = await auth.delete(modsacq[res]['id'], "/companymodule/del");
+                                              var resu = await auth.delete(modsacq[res]['id'], "/settings/companymodule/del");
                                               print(resu);
                                               modulesaccquired.remove(modules[index]['id'].toString());
                                             }

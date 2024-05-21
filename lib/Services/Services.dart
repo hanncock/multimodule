@@ -3,10 +3,85 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/all_homes.dart';
+import '../Screens/Wrapper.dart';
 import 'User.dart';
 
 
 class AuthService{
+
+
+  sendSms(phoneNum,message,username,apiKey)async{
+
+    // print('${apiKey},${username},${message},${phoneNum}');
+    var url = 'https://api.africastalking.com/version1/messaging';
+    var bodyFields = {
+      'username': username,
+      'to': phoneNum,
+      'message': message
+    };
+    print(bodyFields);
+    final response = await http.post(Uri.parse(url),
+        body: bodyFields,
+        headers: {
+          // 'apikey': '41928f753d83cfa1c413d2ff71075de523f385b7b8a0a267b334353547ee8a6e',
+          'apikey': '${apiKey}',
+          'Accept': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+          // 'Content-Type':'application/json'
+        }
+    );
+    // print(response.body);
+    var data = jsonDecode(response.body);
+    // print(data);
+    print(data['SMSMessageData']['Recipients']);
+    List tosave = [];
+    data['SMSMessageData']['Recipients'].forEach((item){
+      Map dattoSave = {
+        "id": null,
+        "numberTo":item['number'],
+        "messageId":item['messageId'],
+        "message":message,
+        "status":item['status'],
+        "status_code":item['statusCode'],
+        "cost":item['cost'],
+        "companyId":companyIdInView,
+        "user":"${Userdata['firstName']} ${Userdata['otherNames']}"
+      };
+
+      tosave.add(dattoSave);
+
+    });
+
+    print(tosave);
+    var resu = await saveMany(tosave, '/api/communication/message/add');
+    print(resu);
+    // var sendData = data['SMSMessageData']['Recipients'][0];
+
+    // saveMessotoDb(sendData['number'],sendData['messageId'],message,sendData['status'],sendData['statusCode'],sendData['cost']);
+  }
+
+  // saveMessotoDb(numberTo,messageId,message,status,status_code,cost)async{
+  //
+  //   var all = '$url/api/messages/save';
+  //
+  //   Map data = {
+  //     "numberTo":numberTo,
+  //     "companyId":companyIdtouse,
+  //     "messageId":message,
+  //     "message":messageId,
+  //     "status":status,
+  //     "status_code":status_code,
+  //     "cost":cost,
+  //     "user": currentUser
+  //   };
+  //
+  //   var send = jsonEncode(data);
+  //   print(send);
+  //   var response = await http.post(Uri.parse(all), body: send, headers: headers);
+  //   var responseData = jsonDecode(response.body);
+  //   print(responseData);
+  //   return responseData;
+  // }
 
   // String url ="http://192.168.0.111:3000";
   String url ="http://0.0.0.0:3000";

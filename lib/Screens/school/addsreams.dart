@@ -23,6 +23,20 @@ class _AddStreamState extends State<AddStream> {
   // late var endDate = widget.dets?[0]['endDate'];
   // late var shrtform = widget.dets?[0]['shrtfrm'];
 
+  List streams = [];
+  getStreams()async{
+    var resu = await auth.getvalues("school/stream/list?companyId=${companyIdInView}");
+    print(resu);
+    streams = resu;
+    setState(() {});
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getStreams();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,93 +44,76 @@ class _AddStreamState extends State<AddStream> {
         children: [
           Row(
             children: [
-              Expanded(child: btns(label: 'Add Teacher'))
+              Expanded(child: btns(label: 'Streams'))
             ],
           ),
           Divider(thickness: 0.5,),
           Row(
             children: [
-              Column(
+              forms(
+                  value: name,
+                  initVal: name,
+                  label: 'Stream Name',
+                  hint: "Stream Name",
+                  onChanged: (value){
+                    setState(() {
+                      name = value;
+                    });
+                  }),
+              forms(
+                  value: code,
+                  initVal: code,
+                  label: 'Stream code',
+                  hint: "code",
+                  onChanged: (value){
+                    setState(() {
+                      code = value;
+                    });
+                  }),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      forms(
-                          value: name,
-                          initVal: name,
-                          label: 'Stream Name',
-                          hint: "Stream Name",
-                          onChanged: (value){
-                            setState(() {
-                              name = value;
-                            });
-                          }),
-                      forms(
-                          value: code,
-                          initVal: code,
-                          label: 'Stream code',
-                          hint: "code",
-                          onChanged: (value){
-                            setState(() {
-                              code = value;
-                            });
-                          }),
+                  btns(label: 'Add Stream',color: Colors.green,onclick: ()async{
 
-
-                      // Calender(
-                      //     initVal:startDate,
-                      //     label: 'Start Date',
-                      //     onChanged: (value){
-                      //       setState((){
-                      //         startDate = value;
-                      //       });
-                      //       // print('here is the value');
-                      //       // print(value);
-                      //     }
-                      // ),
-                      // Calender(
-                      //     initVal:endDate,
-                      //     label: 'End Date',
-                      //     onChanged: (value){
-                      //       setState((){
-                      //         endDate = value;
-                      //       });
-                      //       // print('here is the value');
-                      //       // print(value);
-                      //     }
-                      // ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
+                    Map data = {
+                      "id":id,
+                      "streamName" : name,
+                      "streamCode" : code,
+                      // "endDate" : endDate,
+                      // "shrtfrm" : shrtform,
+                      "companyId" : companyIdInView
+                    };
+                    var resu = await auth.saveMany(data,"/api/school/stream/add");
+                    print(resu);
+                    if(resu == 'success'){
+                      // Navigator.of(context).pop();
+                    }else{
+                      print('none');
+                    }
+                  },)
                 ],
               ),
             ],
           ),
-          SizedBox(height: 30,),
           Divider(color: Colors.black12,height: 0.5,),
-          SizedBox(height: 30,),
-          // Text('${widget.custDetails}'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              btns(label: 'Add Stream',color: Colors.green,onclick: ()async{
-
-                Map data = {
-                  "id":id,
-                  "streamName" : name,
-                  "streamCode" : code,
-                  // "endDate" : endDate,
-                  // "shrtfrm" : shrtform,
-                  "companyId" : companyIdInView
-                };
-                var resu = await auth.saveMany(data,"/api/school/stream/add");
-                print(resu);
-                if(resu == 'success'){
-                  // Navigator.of(context).pop();
-                }else{
-                  print('none');
-                }
-              },)
-            ],
+          Container(
+            child: Column(
+                children: [
+                  ListView.builder(
+                      itemCount: streams.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index){
+                        return Card(
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text('${streams[index]['streamName']}'),
+                          ),
+                        );
+                      })
+                ]
+            ),
           )
 
         ],

@@ -54,6 +54,7 @@ class _LoginState extends State<Login> {
                       },
                       decoration: InputDecoration(
                         border: InputBorder.none,
+                        
                         contentPadding: EdgeInsets.all(10),
                         hintText: 'Username',
                         prefixIcon: Icon(Icons.perm_identity_rounded)

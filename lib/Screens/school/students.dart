@@ -100,7 +100,7 @@ class _StudentsState extends State<Students> {
                 child: TextFormField(
                   style: TextStyle(fontSize: 14),
                   decoration: InputDecoration(
-                    hintText: "Input the values",
+                    hintText: "Student Name",
                     hintStyle: TextStyle(fontSize: 14),
                     border: InputBorder.none,
                   ),

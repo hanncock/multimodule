@@ -57,7 +57,7 @@ class _AddUserState extends State<AddUser> {
   }
   
   getAllowedCompanies()async{
-    var resu = await auth.getvalues("usercompany/list?userId=${id}");
+    var resu = await auth.getvalues("settings/usercompany/list?userId=${id}");
     setState(() {
       allowed = resu;
     });
@@ -296,9 +296,9 @@ class _AddUserState extends State<AddUser> {
                                                       onPressed: ()async{
                                                         var ind = allowed.indexWhere((element) => element['companyId'] == companies[index]['id']);
                                                         var todel = allowed[ind]['id'];
-                                                        var resu = await auth.delete(todel, "/usercompany/del");
+                                                        var resu = await auth.delete(todel, "/settings/usercompany/del");
+                                                        // print('here is resu of del companu${resu}');
                                                         getAllowedCompanies();
-                                                        setState(() {});
                                                       },
                                                       icon: Icon(Icons.toggle_on,size: 30,color: Colors.green,)) :
                                                   IconButton(
