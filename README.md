@@ -58,3 +58,8 @@ checi if i need to return the last id if add a company then use that resposnse t
 https://ww5.gogoanimes.fi/super-cube-episode-1-18-episode-1
 
 https://ww5.gogoanimes.fi/super-cube-episode-24
+[index.php](..%2F..%2FDesktop%2Fdamn%2Fsysschl%2Foop_php%2FORM2%2Findex.php)
+
+https://www.youtube.com/watch?v=uki8BS7xEug
+
+https://www.youtube.com/watch?v=QPjeTSFhfP4

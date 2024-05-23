@@ -215,6 +215,13 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TabBar(
+                          dividerColor: Colors.transparent,
+                            indicator: BoxDecoration(
+                              color:  Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black54,
                             isScrollable:true,
                             tabs: List.generate(
                               growable:true,
@@ -445,10 +452,7 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                 itemBuilder: (context,index) => GestureDetector(
                   onTap: (){
                     if(openScreens.contains(menus[index])){
-                      print(openScreens);
-                      var activeIndex;
                       currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                      // activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
                       module = menus[index].title;
                       setState(() {});
                       DefaultTabController.of(context).animateTo(currentIndex);
@@ -456,9 +460,9 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                       openScreens.add(menus[index]);
                       currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
                       setState(() {});
-
-                      var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                      DefaultTabController.of(context).animateTo(activeIndex - 1);
+                      DefaultTabController.of(context).animateTo(currentIndex);
+                      // var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                      // DefaultTabController.of(context).animateTo(activeIndex - 1);
 
                     }
                   },

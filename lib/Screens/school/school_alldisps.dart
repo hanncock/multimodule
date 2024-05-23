@@ -164,18 +164,26 @@ class _ScreenDispState extends State<ScreenDispSchl>
                       child: Card(
                         elevation: 5,
                         child: TabBar(
+                          dividerColor: Colors.transparent,
+                          indicator: BoxDecoration(
+                              color:  Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.all(Radius.circular(10))
+                          ),
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.black54,
                           indicatorColor: Colors.purple,
                           isScrollable: true,
                           tabs: openScreenstitles
                               .map(
                                 (title) => Padding(
-                              padding: const EdgeInsets.all(14.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Row(
                                 children: [
                                   Text(
                                     '${title}',
                                     style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      // color: Colors.white
+                                      // color: Theme.of(context).primaryColor,
                                     ),
                                   ),
                                   SizedBox(width: 10,),
