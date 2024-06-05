@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
 import 'package:web3/Constants/Theme.dart';
 import 'package:web3/Constants/Menus.dart';
+import 'package:web3/Screens/accounting/AccountsDash.dart';
 import 'package:web3/Screens/dashboard.dart';
 import 'package:web3/Screens/dms/dmsdash.dart';
 import 'package:web3/Screens/school/addStudent.dart';
@@ -41,7 +42,8 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
         title: 'AllDash',
-        widget: allDash(),
+        // widget: allDash(),
+        widget: AccountsDash(),
         // widget: Messaging(),
         // widget: MyHomePage(),
         // widget: Settings()
@@ -97,6 +99,11 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       icona: Icon(Icons.document_scanner,size: 40,),
       title: 'DMS',
       widget: DMS(),
+    ),
+    Menus(
+      icona: Icon(Icons.currency_bitcoin_rounded,size: 40,),
+      title: 'Finance',
+      widget: AccountsDash(),
     ),
 
   ];
@@ -165,6 +172,9 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
     const Duration(seconds: 1),
         () => 'soke'
   );
+
+  // final GlobalKey<DefaultTabController> _tabController = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -189,7 +199,8 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       backgroundColor: Colors.grey[200],
       body: DefaultTabController(
         length: openScreens.length,
-        initialIndex: 0,
+        // initialIndex: 0,
+        initialIndex: currentIndex,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -241,9 +252,11 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                           if(openScreens[index].title == settings.title){
                                             currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
                                             openScreens.removeAt(currentIndex);
+                                            currentIndex = currentIndex -1;
                                           }else{
                                             currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
                                             openScreens.removeAt(currentIndex);
+                                            currentIndex = currentIndex - 1;
                                           }
                                         });
                                       },
@@ -304,36 +317,94 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                       ),
                                       SizedBox(height: 10),
                                       btns(label:'Messaging',icona: Icon(Icons.sms,size: 14,),
-                                          onclick: (){
-                                            if(openScreens.contains(messaging)){
-                                              setState(() {
-                                                controller = TabController(
-                                                  length: openScreens.length,
-                                                  vsync: this,
-                                                  // initialIndex: tab_index,
-                                                );
-                                                currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
-                                                var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
-                                                // DefaultTabController.of(context).animateTo(activeIndex);
-                                                controller.animateTo(activeIndex);
-                                                module = messaging.title;
-                                              });
+                                        onclick: (){
+                                          if(openScreens.contains(messaging)){
+                                            setState(() {
+
+                                              currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                              var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                              print("here is the index${activeIndex}");
+                                              print("here is the current index${currentIndex}");
+                                              // DefaultTabController.of(context).animateTo(activeIndex);
+                                              controller = TabController(
+                                                length: openScreens.length,
+                                                vsync: this,
+                                                initialIndex: activeIndex,
+                                              );
+                                              // module = messaging.title;
+                                              // DefaultTabController.of(context).animateTo(currentIndex);
+
+                                            });
 
 
-                                            }else{
-                                              setState(() {
-                                                openScreens.add(messaging);
-                                                controller = TabController(
-                                                  length: openScreens.length,
-                                                  vsync: this,
-                                                  // initialIndex: tab_index,
-                                                );
-                                                currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                                var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                                controller.animateTo(activeIndex);
-                                              });
-                                            }
+                                          }else{
+                                            // setState(() {
+                                              print('adding');
+                                              openScreens.add(messaging);
+                                              controller = TabController(
+                                                length: openScreens.length,
+                                                vsync: this,
+                                                // initialIndex: tab_index,
+                                              );
+
+                                              currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                              var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                              print("here is the index on adding${activeIndex}");
+                                              print("here is the current  index on adding${currentIndex}");
+                                              // DefaultTabController.of(context).animateTo(activeIndex);
+                                              // controller = TabController(
+                                              //   length: openScreens.length,
+                                              //   vsync: this,
+                                              //   // initialIndex: activeIndex,
+                                              // );
+                                              controller.animateTo(currentIndex);
+
+                                              // currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+
+
+                                              // var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                              // controller.animateTo(activeIndex);
+                                              // DefaultTabController.of(context).animateTo(currentIndex);
+                                              // print(openScreens);
+                                            // });
+                                          }
                                         },
+                                        //   onclick: (){
+                                        //     if(openScreens.contains(messaging)){
+                                        //       setState(() {
+                                        //
+                                        //         currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                        //         // var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                        //         // print("here is the index${activeIndex}");
+                                        //         // DefaultTabController.of(context).animateTo(activeIndex);
+                                        //         controller = TabController(
+                                        //           length: openScreens.length,
+                                        //           vsync: this,
+                                        //           // initialIndex: activeIndex,
+                                        //         );
+                                        //         // module = messaging.title;
+                                        //         // DefaultTabController.of(context).animateTo(currentIndex);
+                                        //
+                                        //       });
+                                        //
+                                        //
+                                        //     }else{
+                                        //       setState(() {
+                                        //         print('adding');
+                                        //         openScreens.add(messaging);
+                                        //         controller = TabController(
+                                        //           length: openScreens.length,
+                                        //           vsync: this,
+                                        //           // initialIndex: tab_index,
+                                        //         );
+                                        //         currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                        //         // var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                        //         controller.animateTo(currentIndex);
+                                        //         // DefaultTabController.of(context).animateTo(currentIndex);
+                                        //         // print(openScreens);
+                                        //       });
+                                        //     }
+                                        // },
                                       ),
                                       SizedBox(height: 10),
                                       btns(label:'Email',icona: Icon(Icons.email,size: 14,),

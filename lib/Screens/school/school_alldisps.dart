@@ -14,6 +14,7 @@ import '../../all_homes.dart';
 import '../../custom_display/keepAlive.dart';
 import 'addStudent.dart';
 import 'exams.dart';
+import 'feesandcharges.dart';
 
 // List openScreenstitles = ['Dashboard'];
 // final openScreensWidgets = <dynamic>[Exams()];
@@ -98,7 +99,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
     ),
     SchlMenus(
         title: 'Fees & Charges',
-        widget: Subjectc(),
+        widget: FessandCharges(),
         icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
     ),
     SchlMenus(

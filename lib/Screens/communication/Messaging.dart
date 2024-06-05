@@ -24,15 +24,15 @@ class _MessagingState extends State<Messaging> {
   var searchmesso;
 
   getMessoConfig()async{
-    var resu = await auth.getvalues('communication/emailsetup/list?companyId=${companyIdInView}');
+    var resu = await auth.getvalues('communication/messagingsetup/list?companyId=${companyIdInView}');
     config = resu;
-    setState(() {});
+    // setState(() {});
   }
 
   getMessages()async{
-    var resu = await auth.getvalues('communication/email/list?companyId=${companyIdInView}');
+    var resu = await auth.getvalues('communication/message/list?companyId=${companyIdInView}');
     messages = resu;
-    setState(() {});
+    // setState(() {});
   }
 
   editDetails(){

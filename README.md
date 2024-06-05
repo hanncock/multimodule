@@ -63,3 +63,8 @@ https://ww5.gogoanimes.fi/super-cube-episode-24
 https://www.youtube.com/watch?v=uki8BS7xEug
 
 https://www.youtube.com/watch?v=QPjeTSFhfP4
+
+##acounting
+https://www.youtube.com/watch?v=b93KBmcXanI&list=TLPQMjcwNTIwMjSyL4xelermxw&index=1
+
+https://www.youtube.com/watch?v=qdO1hwg2HY8&list=PL5jb9EteFAOA3tCKoanOSEJaIDYn1Z5LC
