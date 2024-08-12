@@ -51,6 +51,7 @@ class dropdwn extends StatelessWidget {
               border: Border.all(width: 0.5,color: Colors.black)
             ),
             width: widthh ?? 300,
+            height:35,
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
                 isExpanded:true,

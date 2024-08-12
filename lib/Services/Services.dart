@@ -98,6 +98,7 @@ class AuthService{
 
     var all = '$url/api/settings/users/login';
     Map data = {
+
       "email": username,
       "pass": password
     };

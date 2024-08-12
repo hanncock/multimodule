@@ -29,6 +29,8 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:web3/Screens/accounting/Invoices.dart';
+import 'package:web3/Screens/accounting/chargesSetup.dart';
 import 'package:web3/Screens/accounting/chartofaccnts.dart';
 import 'package:web3/Screens/accounting/getxcontroller.dart';
 import 'package:web3/Screens/school/Exam%20Results.dart';
@@ -65,8 +67,6 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
   late TabController controller2;
 
 
-  List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[AccntStats()];
 
 
   late final schlMenuslst = [
@@ -79,6 +79,17 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
         title: 'Chart Of Accounts',
         widget: ChartodAccnts(),
         icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Charges Setup',
+        widget: ChargesSetup(),
+        icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Invoices',
+        // widget: Invoices(),
+        widget: DataPage(),
+        icona: Icon(Icons.checklist_rtl_rounded,color: Colors.black,)
     ),
   ];
 
@@ -138,8 +149,13 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
                           ),
                         ),
                         Expanded(
-                          child: Card(
-                            elevation: 5,
+                          child: Container(
+                            margin: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                border: Border.all(width: 0.1,color: Colors.black),
+                                borderRadius: BorderRadius.circular(5)
+                              // color: Colors.grey
+                            ),
                             child: GetBuilder<TapController>(
                               builder: (tapController) {
                                 return TabBar(
@@ -156,7 +172,7 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
                                   tabs: tapController.openScreenstitlles
                                       .map(
                                         (title) => Padding(
-                                      padding: const EdgeInsets.all(5.0),
+                                          padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5,bottom: 5),
                                       child: Row(
                                         children: [
                                           Text(
@@ -168,18 +184,13 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
                                           ),
                                           SizedBox(width: 10,),
                                           // openScreenstitles.where((element) => element == 'Dashboard').isNotEmpty?
-                                          title == 'Dashboard' ? Text('') :Column(
-
-                                            children: [
-                                              InkWell(
-                                                  onTap: (){
-                                                    tapController.deleteTab(tapController.actvTab);
-                                                  },
-                                                  child: Icon(Icons.close,size: 10,color: Colors.red,)),
-                                              Text(''),
-
-                                            ],
-                                          )
+                                          title == 'Dashboard' ? Text('') :InkWell(
+                                              onTap: (){
+                                                tapController.deleteTab(tapController.actvTab);
+                                              },
+                                              child: CircleAvatar(
+                                                  radius: 8,
+                                                  child: Icon(Icons.close,size: 10,color: Colors.red,)))
                                         ],
                                       ),
                                     ),

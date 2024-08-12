@@ -12,6 +12,7 @@ import 'package:web3/Screens/school/teachers.dart';
 import '../../Constants/Theme.dart';
 import '../../all_homes.dart';
 import '../../custom_display/keepAlive.dart';
+import '../accounting/chargesSetup.dart';
 import 'addStudent.dart';
 import 'exams.dart';
 import 'feesandcharges.dart';
@@ -99,7 +100,7 @@ class _ScreenDispState extends State<ScreenDispSchl>
     ),
     SchlMenus(
         title: 'Fees & Charges',
-        widget: FessandCharges(),
+        widget: ChargesSetup(),
         icona: Icon(Icons.monetization_on_sharp,color: Colors.black,)
     ),
     SchlMenus(
@@ -162,13 +163,18 @@ class _ScreenDispState extends State<ScreenDispSchl>
                       ),
                     ),
                     Expanded(
-                      child: Card(
-                        elevation: 5,
+                      child: Container(
+                        margin: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.1,color: Colors.black),
+                          borderRadius: BorderRadius.circular(5)
+                          // color: Colors.grey
+                        ),
                         child: TabBar(
                           dividerColor: Colors.transparent,
                           indicator: BoxDecoration(
                               color:  Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10))
+                              borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
                           labelColor: Colors.white,
                           unselectedLabelColor: Colors.black54,
@@ -177,8 +183,9 @@ class _ScreenDispState extends State<ScreenDispSchl>
                           tabs: openScreenstitles
                               .map(
                                 (title) => Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5,bottom: 5),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '${title}',
@@ -189,30 +196,25 @@ class _ScreenDispState extends State<ScreenDispSchl>
                                   ),
                                   SizedBox(width: 10,),
                                   // openScreenstitles.where((element) => element == 'Dashboard').isNotEmpty?
-                                  title == 'Dashboard' ? Text('') :Column(
-
-                                    children: [
-                                      InkWell(
-                                          onTap: (){
-                                            var index = openScreenstitles.indexWhere((element) => element  == title);
-                                            print(index);
-                                            setState(() {
-                                              openScreenstitles.removeAt(index);
-                                              openScreensWidgets.removeAt(index);
-                                              // if(openScreens[index].title == settings.title){
-                                              //   currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                              //   openScreens.removeAt(currentIndex);
-                                              // }else{
-                                              //   currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
-                                              //   openScreens.removeAt(currentIndex);
-                                              // }
-                                            });
-                                          },
-                                          child: Icon(Icons.close,size: 10,color: Colors.red,)),
-                                      Text(''),
-
-                                    ],
-                                  )
+                                  title == 'Dashboard' ? Text('') :InkWell(
+                                      onTap: (){
+                                        var index = openScreenstitles.indexWhere((element) => element  == title);
+                                        print(index);
+                                        setState(() {
+                                          openScreenstitles.removeAt(index);
+                                          openScreensWidgets.removeAt(index);
+                                          // if(openScreens[index].title == settings.title){
+                                          //   currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                          //   openScreens.removeAt(currentIndex);
+                                          // }else{
+                                          //   currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
+                                          //   openScreens.removeAt(currentIndex);
+                                          // }
+                                        });
+                                      },
+                                      child: CircleAvatar(
+                                          radius: 8,
+                                          child: Icon(Icons.close,size: 10,color: Colors.red,)))
                                 ],
                               ),
                             ),

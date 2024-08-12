@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:web3/Screens/accounting/newInvoice.dart';
 
 import 'acctsStats.dart';
 
@@ -16,7 +17,8 @@ class TapController extends GetxController{
 
 
   List _openScreenstitlles = ['Dashboard'];
-  final openScreensWidgetts = <dynamic>[AccntStats()];
+  // final openScreensWidgetts = <dynamic>[AccntStats()];
+  final openScreensWidgetts = <dynamic>[NewInvoice()];
 
   List get openScreenstitlles => _openScreenstitlles;
 
@@ -30,8 +32,6 @@ class TapController extends GetxController{
   void addtoList(value,widget){
     _openScreenstitlles.add(value);
     openScreensWidgetts.add(widget);
-    print('here are the titles ${openScreenstitlles}');
-    print('here are the screens ${openScreensWidgetts}');
     update();
 
     // print(_openScreenstitlles.length);
@@ -52,8 +52,6 @@ class TapController extends GetxController{
 
     void deleteTab(value){
       var actv = value;
-      print(value);
-
       if(_openScreenstitlles.length > 0){
         _actvTab = value - 1;
       }else{

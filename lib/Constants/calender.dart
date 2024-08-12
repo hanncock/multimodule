@@ -517,7 +517,7 @@ class _CalenderState extends State<Calender> {
           ),
           Container(
             width: widget.widthh ?? 250,
-            height: 42,
+            height: 35,
             decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black45),
                 borderRadius: BorderRadius.circular(6),
@@ -527,7 +527,7 @@ class _CalenderState extends State<Calender> {
               // controller: _dateControler,
               initialValue: widget.initVal,
               decoration: InputDecoration(
-                icon: Icon(Icons.calendar_today),
+                icon: Icon(Icons.calendar_today,size: 14,),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 5,top: 2,bottom: 5),
                 labelText: widget.initVal ?? 'DATE',

@@ -10,9 +10,15 @@ const defaultPadding = 16.0;
 
 final AuthService auth = AuthService();
 
-final ft = new DateFormat('dd-MMM-yyyy | hh:mm a ');
-final f = new DateFormat('yyyy-MM-dd');
+// final ft = new DateFormat('dd-MMM-yyyy | hh:mm a ');
+// final f = new DateFormat('yyyy-MM-dd');
+// const dateFormat4 = 'yyyy-MM-dd';
+
+
+final f = new DateFormat('dd-MMM-yyyy | hh:mm a ');
+final ft = new DateFormat('yyyy-MM-dd');
 const dateFormat4 = 'yyyy-MM-dd';
+final frmtd = new DateFormat('d MMMM , y');
 
 clearlogs()async{
     SharedPreferences prefs = await  SharedPreferences.getInstance();

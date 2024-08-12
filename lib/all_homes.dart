@@ -1,3 +1,293 @@
+/*import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:local_session_timeout/local_session_timeout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web3/getxMainDash.dart';
+import 'package:web3/custom_display/keepAlive.dart';
+
+import 'Constants/Menus.dart';
+import 'Constants/Reusableswidgets/btns.dart';
+import 'Constants/Theme.dart';
+import 'Screens/Wrapper.dart';
+import 'Screens/communication/Email.dart';
+import 'Screens/communication/Messaging.dart';
+import 'Screens/settings/settings.dart';
+
+
+
+
+var module;
+var companyInView ;
+var companyIdInView ;
+class AllHomes extends StatefulWidget {
+  final StreamController<SessionState> sessionStateStream;
+  const AllHomes({Key? key, required this.sessionStateStream}) : super(key: key);
+  // const AllHomes({super.key});
+
+  @override
+  State<AllHomes> createState() => _AllHomesState();
+}
+
+class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin{
+
+  late TabController controller2;
+  List allowed = Userdata['allowedCompanies'];
+
+  var settings = Menus(
+      title: 'Settings',
+      widget: Settings()
+  );
+
+  var messaging = Menus(
+      title: 'Messaging',
+      widget: Messaging()
+  );
+
+  var emailing = Menus(
+      title: 'Email',
+      widget: Emailing()
+  );
+
+
+  setCompany()async {
+    SharedPreferences user = await SharedPreferences.getInstance();
+    var data = user.getString('compData');
+
+    if (data == null) {
+      setState(() {
+        companyInView = Userdata['allowedCompanies'][0]['companyName'];
+        companyIdInView = Userdata['allowedCompanies'][0]['id'];
+      });
+    } else {
+      var svdVals = jsonDecode(data);
+      var compSvdVals = svdVals;
+
+      setState(() {
+        companyInView = svdVals['companyName'];
+        companyIdInView = svdVals['companyId'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setCompany();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    TapController tapController = Get.put(TapController());
+    print("here is active${tapController.actvTab}");
+
+    return Scaffold(
+      body: Container(
+              // width: 600,
+              child: GetBuilder<TapController>(
+                  builder: (tapController) {
+                  return DefaultTabController(
+                    initialIndex: tapController.actvTab,
+                      length: tapController.openScreenstitlles.length,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    // color: Colors.grey[200]
+                                  ),
+                                  width: MediaQuery.of(context).size.width - 250,
+                                  height: MediaQuery.of(context).size.height * 0.95,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: TabBarView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      children: tapController.openScreenstitlles
+                                          .map((widget) => KeepPageAlive(child: widget.widget),).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  child: TabBar(
+                                      dividerColor: Colors.transparent,
+                                      indicator: BoxDecoration(
+                                          color:  Theme.of(context).primaryColor,
+                                          borderRadius: BorderRadius.all(Radius.circular(10))
+                                      ),
+                                      labelColor: Colors.white,
+                                      unselectedLabelColor: Colors.black54,
+                                      isScrollable:true,
+                                      tabs: List.generate(
+                                        growable: true,
+                                          tapController.openScreenstitlles.length,
+                                              (index) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('${tapController.openScreenstitlles[index].title}'),
+                                      )),
+                                      // tabs: tapController.openScreenstitlles.map((title) =>Padding(
+                                      //   padding: const EdgeInsets.all(8.0),
+                                      //   child: Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.start,
+                                      //     children: [
+                                      //       Text('${title.title}'),
+                                      //
+                                      //       SizedBox(width: 10,),
+                                      //       title.title == 'AllDash'?Text('') : InkWell(
+                                      //         onTap: (){
+                                      //           tapController.deleteTab(title);
+                                      //         },
+                                      //         child: CircleAvatar(
+                                      //           radius: 8,
+                                      //           child: Icon(Icons.close,color: Colors.red,size: 10,),),
+                                      //       )
+                                      //     ],
+                                      //   )
+                                      // ),).toList()
+                                  ),
+                                ),
+                              ),
+                              PopupMenuButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(
+                                      width: 1,
+                                      color: Colors.grey.shade200
+                                  ),
+                                ),
+                                child: Row(children: [
+                                  btns(label: 'More',icona: Icon(Icons.arrow_drop_up_outlined))
+                                ]),
+
+                                itemBuilder: (BuildContext context) {
+                                  return [
+                                    PopupMenuItem(
+
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            PopupMenuButton(
+                                                child: btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add),),
+                                                itemBuilder: (BuildContext context){
+                                                  return allowed.map((e){
+                                                    return  PopupMenuItem(child: InkWell(
+                                                        onTap: ()async{
+                                                          Map compData = {
+                                                            "companyName":e['companyName'],
+                                                            "companyId":e['id'],
+                                                          };
+                                                          SharedPreferences pref = await SharedPreferences.getInstance();
+                                                          pref.setString("compData", jsonEncode(compData));
+                                                          setCompany();
+                                                          tapController.openScreenstitlles.clear();
+                                                          Navigator.push(context, MaterialPageRoute(
+                                                              builder: (_) =>
+                                                                  Wrapper(sessionStateStream: widget
+                                                                      .sessionStateStream,)));
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(12.0),
+                                                              child: Text('${e['companyName']}'),
+                                                            ),
+                                                          ],
+                                                        )));
+                                                  }).toList();
+                                                }
+                                            ),
+                                            SizedBox(height: 10),
+                                            btns(label:'Messaging',icona: Icon(Icons.sms,size: 14,),
+                                              onclick: (){
+                                                tapController.addtoList(messaging);
+
+                                              },
+
+                                            ),
+                                            SizedBox(height: 10),
+                                            btns(label:'Email',icona: Icon(Icons.email,size: 14,),
+                                              onclick: (){
+                                                tapController.addtoList(emailing);
+                                              },
+                                            ),
+                                            SizedBox(height: 8),
+                                            btns(label: '${Userdata['firstName']}',
+                                              icona: Icon(Icons.settings,size: 14,),
+                                              onclick: (){
+                                                tapController.addtoList(settings);
+
+                                                // if(openScreens.contains(settings)){
+                                                //   setState(() {
+                                                //     controller = TabController(
+                                                //       length: openScreens.length,
+                                                //       vsync: this,
+                                                //       // initialIndex: tab_index,
+                                                //     );
+                                                //     currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                //     var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                //     // DefaultTabController.of(context).animateTo(activeIndex);
+                                                //     controller.animateTo(activeIndex);
+                                                //     module = settings.title;
+                                                //   });
+                                                //
+                                                //
+                                                // }else{
+                                                //   setState(() {
+                                                //     openScreens.add(settings);
+                                                //     controller = TabController(
+                                                //       length: openScreens.length,
+                                                //       vsync: this,
+                                                //       // initialIndex: tab_index,
+                                                //     );
+                                                //     currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                //     var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                                //     controller.animateTo(activeIndex);
+                                                //   });
+                                                // }
+                                              },
+                                            ),
+                                            SizedBox(height: 10),
+                                            btns(label:'Logout',icona: Icon(Icons.logout,size: 14,),color: Colors.red,
+                                              onclick: (){
+                                              tapController.openScreenstitlles.clear();
+                                                clearlogs();
+                                                Navigator.pushAndRemoveUntil(
+                                                    context, MaterialPageRoute(builder: (context) => Wrapper(sessionStateStream: widget.sessionStateStream,)), (
+                                                    route) => false);
+                                              },
+                                            ),
+                                            SizedBox(height: 10),
+
+                                          ],
+                                        )
+                                    ),
+                                  ];
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                  );
+                }
+              ),
+
+      ),
+    );
+  }
+}*/
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +322,8 @@ class AllHomes extends StatefulWidget {
 
 var module;
 var companyInView ;//= Userdata['allowedCompanies'][0]['companyName'] ?? null;
-var companyIdInView ;//= Userdata['allowedCompanies'][0]['id'] ?? null;
+
+var companyIdInView =2204;//= Userdata['allowedCompanies'][0]['id'] ?? null;
 class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
   // final AllHomes _controller = Get.put(AllHomes());
@@ -41,15 +332,15 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
   late List openScreens = [
     Menus(
-        title: 'AllDash',
-        // widget: allDash(),
-        widget: AccountsDash(),
-        // widget: Messaging(),
-        // widget: MyHomePage(),
-        // widget: Settings()
-        // widget: ScreenDispSchl()
-        // widget: AddStudent()
-        // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
+      title: 'AllDash',
+      // widget: allDash(),
+      widget: AccountsDash(),
+      // widget: Messaging(),
+      // widget: MyHomePage(),
+      // widget: Settings()
+      // widget: ScreenDispSchl()
+      // widget: AddStudent()
+      // widget: ScreenDisp(allwindows: myMenus, menuwindow: CrmMenuList(crmenus: myMenus[4]),)
     ),
   ];
 
@@ -169,8 +460,8 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
 
   Future _calculation = Future.delayed(
-    const Duration(seconds: 1),
-        () => 'soke'
+      const Duration(seconds: 1),
+          () => 'soke'
   );
 
   // final GlobalKey<DefaultTabController> _tabController = GlobalKey();
@@ -226,10 +517,10 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TabBar(
-                          dividerColor: Colors.transparent,
+                            dividerColor: Colors.transparent,
                             indicator: BoxDecoration(
-                              color:  Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10))
+                                color:  Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.all(Radius.circular(10))
                             ),
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.black54,
@@ -286,34 +577,34 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       PopupMenuButton(
-                                        child: btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add),),
-                                        itemBuilder: (BuildContext context){
-                                          return allowed.map((e){
-                                            return  PopupMenuItem(child: InkWell(
-                                                onTap: ()async{
-                                                  Map compData = {
-                                                    "companyName":e['companyName'],
-                                                    "companyId":e['id'],
-                                                  };
-                                                  SharedPreferences pref = await SharedPreferences.getInstance();
-                                                  pref.setString("compData", jsonEncode(compData));
-                                                  setCompany();
-                                                  openScreens.clear();
-                                                  Navigator.push(context, MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          Wrapper(sessionStateStream: widget
-                                                              .sessionStateStream,)));
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(12.0),
-                                                      child: Text('${e['companyName']}'),
-                                                    ),
-                                                  ],
-                                                )));
-                                          }).toList();
-                                        }
+                                          child: btns(label: 'Switch Company',icona: Icon(Icons.switch_access_shortcut_add),),
+                                          itemBuilder: (BuildContext context){
+                                            return allowed.map((e){
+                                              return  PopupMenuItem(child: InkWell(
+                                                  onTap: ()async{
+                                                    Map compData = {
+                                                      "companyName":e['companyName'],
+                                                      "companyId":e['id'],
+                                                    };
+                                                    SharedPreferences pref = await SharedPreferences.getInstance();
+                                                    pref.setString("compData", jsonEncode(compData));
+                                                    setCompany();
+                                                    openScreens.clear();
+                                                    Navigator.push(context, MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            Wrapper(sessionStateStream: widget
+                                                                .sessionStateStream,)));
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(12.0),
+                                                        child: Text('${e['companyName']}'),
+                                                      ),
+                                                    ],
+                                                  )));
+                                            }).toList();
+                                          }
                                       ),
                                       SizedBox(height: 10),
                                       btns(label:'Messaging',icona: Icon(Icons.sms,size: 14,),
@@ -339,33 +630,33 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
 
                                           }else{
                                             // setState(() {
-                                              print('adding');
-                                              openScreens.add(messaging);
-                                              controller = TabController(
-                                                length: openScreens.length,
-                                                vsync: this,
-                                                // initialIndex: tab_index,
-                                              );
+                                            print('adding');
+                                            openScreens.add(messaging);
+                                            controller = TabController(
+                                              length: openScreens.length,
+                                              vsync: this,
+                                              // initialIndex: tab_index,
+                                            );
 
-                                              currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
-                                              var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
-                                              print("here is the index on adding${activeIndex}");
-                                              print("here is the current  index on adding${currentIndex}");
-                                              // DefaultTabController.of(context).animateTo(activeIndex);
-                                              // controller = TabController(
-                                              //   length: openScreens.length,
-                                              //   vsync: this,
-                                              //   // initialIndex: activeIndex,
-                                              // );
-                                              controller.animateTo(currentIndex);
+                                            currentIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                            var activeIndex = openScreens.indexWhere((element) => messaging.title == element.title);
+                                            print("here is the index on adding${activeIndex}");
+                                            print("here is the current  index on adding${currentIndex}");
+                                            // DefaultTabController.of(context).animateTo(activeIndex);
+                                            // controller = TabController(
+                                            //   length: openScreens.length,
+                                            //   vsync: this,
+                                            //   // initialIndex: activeIndex,
+                                            // );
+                                            controller.animateTo(currentIndex);
 
-                                              // currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                            // currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
 
 
-                                              // var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                              // controller.animateTo(activeIndex);
-                                              // DefaultTabController.of(context).animateTo(currentIndex);
-                                              // print(openScreens);
+                                            // var activeIndex = openScreens.indexWhere((element) => settings.title == element.title);
+                                            // controller.animateTo(activeIndex);
+                                            // DefaultTabController.of(context).animateTo(currentIndex);
+                                            // print(openScreens);
                                             // });
                                           }
                                         },
@@ -509,61 +800,61 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       child: FutureBuilder(
           future: _calculation,
           builder: (context,snapshot){
-        return Container(
-            child:GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: menus.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing: defaultPadding,
-                    mainAxisSpacing: defaultPadding,
-                    crossAxisCount: 4,
-                    childAspectRatio: 1.5
-                ),
-                itemBuilder: (context,index) => GestureDetector(
-                  onTap: (){
-                    if(openScreens.contains(menus[index])){
-                      currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                      module = menus[index].title;
-                      setState(() {});
-                      DefaultTabController.of(context).animateTo(currentIndex);
-                    }else{
-                      openScreens.add(menus[index]);
-                      currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                      setState(() {});
-                      DefaultTabController.of(context).animateTo(currentIndex);
-                      // var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
-                      // DefaultTabController.of(context).animateTo(activeIndex - 1);
-
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.all(Radius.circular(10))
+            return Container(
+                child:GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: menus.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: defaultPadding,
+                        mainAxisSpacing: defaultPadding,
+                        crossAxisCount: 4,
+                        childAspectRatio: 1.5
                     ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          menus[index].icona,
+                    itemBuilder: (context,index) => GestureDetector(
+                      onTap: (){
+                        if(openScreens.contains(menus[index])){
+                          currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                          module = menus[index].title;
+                          setState(() {});
+                          DefaultTabController.of(context).animateTo(currentIndex);
+                        }else{
+                          openScreens.add(menus[index]);
+                          currentIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                          setState(() {});
+                          DefaultTabController.of(context).animateTo(currentIndex);
+                          // var activeIndex = openScreens.indexWhere((element) => menus[index].title == element.title);
+                          // DefaultTabController.of(context).animateTo(activeIndex - 1);
 
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('${menus[index].title}',
-                              style: TextStyle(
-                                  letterSpacing: 1,
-                                  color: Colors.white
-                              ),),
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              menus[index].icona,
+
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('${menus[index].title}',
+                                  style: TextStyle(
+                                      letterSpacing: 1,
+                                      color: Colors.white
+                                  ),),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+                    )
                 )
-            )
-        );
-      }),
+            );
+          }),
     );
 
   }

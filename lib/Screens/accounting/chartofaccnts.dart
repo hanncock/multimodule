@@ -560,6 +560,7 @@ class _ChartodAccntsState extends State<ChartodAccnts> {
               Row(
                 children: [
                   forms(
+                    label: 'Header Code',
                       widthh: 150,
                       value: 'Header Code',
                       hint: 'Acc Header Code i.e 101',
@@ -665,7 +666,7 @@ class _ChartodAccntsState extends State<ChartodAccnts> {
                                               DefaultTabController.of(context).animateTo(tapController.actvTab);
                                             }else{
                                               tapController.printList();
-                                              tapController.addtoList(subhead['headerName'],FessandCharges());
+                                              tapController.addtoList(subhead['headerName'],FessandCharges(title:subhead['headerName']));
                                               tapController.switchTo(subhead['headerName']);
                                               DefaultTabController.of(context).animateTo(tapController.actvTab);
 

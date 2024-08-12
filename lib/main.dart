@@ -749,3 +749,88 @@ void main() {
 //     ]}
 //   },
 // };
+
+/*
+* import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Dropdown and TextField Example',
+      home: DropdownTextFieldExample(),
+    );
+  }
+}
+
+class DropdownTextFieldExample extends StatefulWidget {
+  @override
+  _DropdownTextFieldExampleState createState() =>
+      _DropdownTextFieldExampleState();
+}
+
+class _DropdownTextFieldExampleState extends State<DropdownTextFieldExample> {
+  // List of dropdown items
+  List<String> _dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
+
+  // Selected dropdown value
+  var _selectedItem;
+
+  // Text field value
+  String _textFieldValue = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dropdown and TextField Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // Dropdown button
+            DropdownButton<String>(
+              value: _selectedItem,
+              onChanged: (newValue) {
+                setState(() {
+                  _selectedItem = newValue;
+                  // Update text field value when dropdown changes
+                  _textFieldValue = newValue!;
+                });
+              },
+              items: _dropdownItems.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 20),
+            // Text field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: TextField(
+                controller: TextEditingController(text: _textFieldValue),
+                onChanged: (newValue) {
+                  setState(() {
+                    _textFieldValue = newValue;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Selected Value',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+* */
