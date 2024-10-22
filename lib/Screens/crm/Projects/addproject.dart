@@ -241,7 +241,22 @@ class _AddProjectsState extends State<AddProjects> {
               children: [
                 btns(label: 'Create Project',
                   onclick: ()async{
-                  var resu = await auth.createProj(id, projectName, projDescription, personInCharge, inchargeMail, inchargeContact, startDate, endDate, projectStatus,designation);
+                  // var resu = await auth.createProj(id, projectName, projDescription, personInCharge, inchargeMail, inchargeContact, startDate, endDate, projectStatus,designation);
+
+                    Map data = {
+                      "id":id,
+                      "projectName":projectName,
+                      "projDescription":projDescription,
+                      "personInCharge":personInCharge,
+                      "inchargeMail":inchargeMail,
+                      "startDate":startDate,
+                      "endDate":endDate,
+                      "projectStatus":projectStatus,
+                      "designation":designation,
+                      // "location":location,
+                      // "postalAdd":postalAdd
+                    };
+                    var resu = await auth.saveMany(data, "crm/project/add");
 
                   if(resu == 'success'){
                    Navigator.of(context).pop();

@@ -300,6 +300,7 @@ import 'package:web3/Constants/Menus.dart';
 import 'package:web3/Screens/accounting/AccountsDash.dart';
 import 'package:web3/Screens/dashboard.dart';
 import 'package:web3/Screens/dms/dmsdash.dart';
+import 'package:web3/Screens/hrm/hrmdash.dart';
 import 'package:web3/Screens/school/addStudent.dart';
 import 'package:web3/custom_display/keepAlive.dart';
 import 'Constants/calender.dart';
@@ -333,8 +334,8 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
   late List openScreens = [
     Menus(
       title: 'AllDash',
-      // widget: allDash(),
-      widget: AccountsDash(),
+      widget: allDash(),
+      // widget: AccountsDash(),
       // widget: Messaging(),
       // widget: MyHomePage(),
       // widget: Settings()
@@ -395,6 +396,11 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
       icona: Icon(Icons.currency_bitcoin_rounded,size: 40,),
       title: 'Finance',
       widget: AccountsDash(),
+    ),
+    Menus(
+      icona: Icon(Icons.manage_accounts,size: 40,),
+      title: 'HRM',
+      widget: HRMDash(),
     ),
 
   ];

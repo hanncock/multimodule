@@ -18,7 +18,7 @@ class _CompaniesState extends State<Companies> {
   var name;
   var selected;
   getcompanies()async{
-    var resu = await auth.getcompany();
+    var resu = await auth.getvalues("settings/company/list");
     if(resu.length == 0){
       print('empty');
     }else{

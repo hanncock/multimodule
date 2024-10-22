@@ -17,7 +17,7 @@ class _ProjectsState extends State<Projects> {
   late List projects = [];
 
   project()async{
-    var resu = await auth.getProjects();
+    var resu = await auth.getvalues("crm/project/list");
     setState(() {
       projects = resu;
     });

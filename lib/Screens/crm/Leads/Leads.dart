@@ -38,14 +38,15 @@ class _LeadsState extends State<Leads> {
 
   bool loading = false;
   project()async{
-    var resu = await auth.getProjects();
+    var resu = await auth.getvalues("crm/project/list");
     setState(() {
       projects = resu;
     });
   }
 
   projectColumns()async{
-    var resu = await auth.getRequests('crm/projectcolumn/list?projectId=${projoId}');
+    // var resu = await auth.getRequests('crm/projectcolumn/list?projectId=${projoId}');
+    var resu = await auth.getvalues('crm/projectcolumn/list?projectId=${projoId}');
     setState(() {
       projoPrams = resu;
     });

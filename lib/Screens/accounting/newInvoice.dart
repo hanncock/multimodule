@@ -13,7 +13,8 @@ import '../../Constants/calender.dart';
 import '../../all_homes.dart';
 
 class NewInvoice extends StatefulWidget {
-  const NewInvoice({super.key});
+  final String? invNum;
+  const NewInvoice({super.key, this.invNum});
 
   @override
   State<NewInvoice> createState() => _NewInvoiceState();
@@ -24,9 +25,8 @@ class _NewInvoiceState extends State<NewInvoice> {
   List accountsToCharge = [];
   var selectedAccId;
   final TextEditingController textEditingController = TextEditingController();
-  var invoiceNum;
+  var invoiceNum = "${(DateTime.now().year).toString()}${(DateTime.now().minute).toString()}${(DateTime.now().second).toString()}";
   var selectedAcc ;
-  // TextEditingController quantity = TextEditingController();
   var invcedate = DateTime.now();
   var quantity;
   var invcduedate;
@@ -58,11 +58,30 @@ class _NewInvoiceState extends State<NewInvoice> {
     });
   }
 
+  getInv()async{
+    invceLines.clear();
+    var resu = await auth.getvalues('accounting/transactionentry/list?invNum=${widget.invNum}&companyId=${companyIdInView}&trannscationType="INV"');
+    print(resu);
+    setState(() {
+      invoiceNum = widget.invNum.toString();
+      invceLines = resu;
+      selectedAcc =  invceLines[0]['chargedAccount'];
+    });
+  }
+
   @override
   void initState(){
     super.initState();
-    getAccounts();
-    getCharges();
+    print(widget.invNum);
+    if(widget.invNum != null ) {
+      getInv();
+    }else{
+      getAccounts();
+      getCharges();
+    }
+
+    //
+    // });
   }
 
   @override
@@ -147,10 +166,13 @@ class _NewInvoiceState extends State<NewInvoice> {
                       ],
                     ),
                     forms(
+                      initVal: invoiceNum,
                         label: 'Invoice Number',
                         value: invoiceNum,
                         onChanged: (val){
-                          invoiceNum = val;
+                          setState(() {
+                            invoiceNum = val;
+                          });
                         })
                   ],
                 ),
@@ -229,7 +251,7 @@ class _NewInvoiceState extends State<NewInvoice> {
                       ],
                     ),
                   ),
-                  Padding(
+                  widget.invNum == null ? Padding(
                     padding: const EdgeInsets.only(top: 3,bottom: 0),
                     child: Row(
                       children: [
@@ -323,7 +345,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                             controller: TextEditingController(text: cost),
                             onChanged: (newValue) {
 
-                              cost = (newValue as TextEditingController);
+                              cost.text = (newValue as TextEditingController).toString();
+                              // cost.text = newValue;
                               // cost = (newValue).toString();
                               // linetotal = (int.parse(quantity.toString()) * int.parse(cost.toString())).toString();
                               setState(() {});
@@ -390,6 +413,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                             textEditingController.clear();
 
                             Map <String,dynamic> invline = {
+                              // "id":invceLines[0]['id'] ?? null,
+                              "id": null,
                               "transactionName":selectedCharge,
                               "invNum":invoiceNum,
                               "transactionType":"INV",
@@ -407,18 +432,41 @@ class _NewInvoiceState extends State<NewInvoice> {
                               "invoiceDate":"$invcedate" ,
                               "invoiceDueDate":"$invcduedate",
                             };
+                            /*Map <String,dynamic> invline = {
+                              "id":null,
+                              "transactionName":selectedCharge,
+                              "invNum":invoiceNum,
+                              "transactionType":"INV",
+                              "chargedAccount":selectedAcc,
+                              "description":description,
+                              "cost":cost,
+                              "quantity":quantity,
+                              "debit":linetotal,
+                              "debitAccId":newVals[0]['debitAccId'],
+                              "debitAcc":newVals[0]['debitAcc'],
+                              "credit":0,
+                              "creditAccId":newVals[0]['creditId'],
+                              "creditAcc":newVals[0]['creditAcc'],
+                              "companyId":companyIdInView,
+                              "invoiceDate":"$invcedate" ,
+                              "invoiceDueDate":"$invcduedate",
+                            };*/
                             invceLines.add(invline);
                             setState(() {});
                           },
                         )
                       ],
                     ),
+                  ): Row(
+                    children: [
+                      Text('Edit')
+                    ],
                   )
                 ],
               ),
             ),
           ),
-          invceLines.isEmpty?SizedBox():Column(
+          if (invceLines.isEmpty) SizedBox() else Column(
             children: [
               Container(
                 constraints: BoxConstraints(maxHeight: 400,minHeight: 400),
@@ -465,9 +513,19 @@ class _NewInvoiceState extends State<NewInvoice> {
                               ),
                               GestureDetector(
                                 child: Icon(Icons.remove_circle_outline_rounded,color: Colors.red,),
-                                onTap: (){
-                                  invceLines.removeAt(index);
-                                  setState(() {});
+                                onTap: ()async{
+                                  if(invceLines[index]['id'] == null) {
+                                    if(index > invceLines.length ){
+
+                                    }else {
+                                      invceLines.removeAt(index);
+                                      setState(() {});
+                                    }
+                                  }else{
+                                    var resu = await auth.delete(invceLines[index]['id'], "/accounting/transactionentry/del");
+                                    print(resu);
+                                    getInv();
+                                  }
                                 },
                               )
                             ],
@@ -485,6 +543,9 @@ class _NewInvoiceState extends State<NewInvoice> {
                       print(resu);
                       if(resu=='success'){
                         invceLines.clear();
+                        selectedAcc = null; //= '${stdntvals[0]['admissionNo']}, ${stdntvals[0]['firstName']} ${stdntvals[0]['othernames']}';
+                        selectedAccId = null;
+                        invoiceNum = "";
                         setState(() {});
                       }
                     },

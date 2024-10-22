@@ -4,6 +4,7 @@ import '../../../Constants/Reusableswidgets/btns.dart';
 import '../../../Constants/Reusableswidgets/dropdown.dart';
 import '../../../Constants/Reusableswidgets/textfield.dart';
 import '../../../Constants/Theme.dart';
+import '../../../all_homes.dart';
 
 class AddCustomer extends StatefulWidget {
   final String? leadId;
@@ -195,7 +196,29 @@ class _AddCustomerState extends State<AddCustomer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   btns(label: 'Create Customer',color: Colors.green,onclick: ()async{
-                    var resu = await auth.createCust(id, clientName, clientEmail, clientPhone, contPersonName, contPersonPhone, referral, location, postalAdd, industry, custType,leadId,projectId);
+
+
+
+                    // var resu = await auth.createCust(id, clientName, clientEmail, clientPhone, contPersonName, contPersonPhone, referral, location, postalAdd, industry, custType,leadId,projectId);
+
+                    Map data = {
+                      "id":id,
+                      "clientName":clientName,
+                      "clientEmail":clientEmail,
+                      "clientPhone":clientPhone,
+                      "contPersonName":contPersonName,
+                      "contPersonPhone":contPersonPhone,
+                      "referral":referral,
+                      "industry":industry,
+                      "clientType":custType,
+                      "location":location,
+                      "postalAdd":postalAdd,
+                      "companyId":companyIdInView,
+                      "leadId":leadId,
+                      "projectId":projectId,
+                    };
+
+                    var resu = await auth.saveMany(data, "crm/client/add");
                     if(resu == 'success'){
                       Navigator.of(context).pop();
                     }else{

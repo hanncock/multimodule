@@ -85,17 +85,19 @@ class _AddStudentState extends State<AddStudent> {
                     Row(
                       children: [
                         forms(
-                            value: firstName,
-                            initVal: firstName,
+                            value: "firstName",
+                            initVal: firstName ?? '',
                             label: 'First Name',
                             hint: "First Name",
                             onChanged: (value){
                               setState(() {
                                 firstName = value;
                               });
+
+                              print("here is the fname $firstName");
                             }),
                         forms(
-                            value: othernames,
+                            value: "othernames",
                             initVal: othernames,
                             label: 'Other Names',
                             hint: "Other Names",
@@ -186,7 +188,8 @@ class _AddStudentState extends State<AddStudent> {
                                   gender = value;
                                 });
                               },
-                              selectedval: gender,)
+                              selectedval: gender,
+                            )
                           ],
                         ),
 
@@ -245,6 +248,8 @@ class _AddStudentState extends State<AddStudent> {
                               "stream":stream
 
                             };
+
+                            print(data);
                             var resu = await auth.saveMany(data,"/api/school/student/add");
                             print(resu);
                             if(resu == 'success'){

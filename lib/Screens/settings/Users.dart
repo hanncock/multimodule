@@ -19,7 +19,8 @@ class _UsersState extends State<Users> {
   var selected;
 
   getusers()async{
-    var resu = await auth.getUsers();
+    // var resu = await auth.getUsers();
+    var resu = await auth.getvalues("settings/user/list");
     print(resu);
     if(resu.length == 0){
       print('empty');

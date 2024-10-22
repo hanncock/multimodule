@@ -30,6 +30,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:web3/Screens/accounting/Invoices.dart';
+import 'package:web3/Screens/accounting/Payments.dart';
 import 'package:web3/Screens/accounting/chargesSetup.dart';
 import 'package:web3/Screens/accounting/chartofaccnts.dart';
 import 'package:web3/Screens/accounting/getxcontroller.dart';
@@ -86,10 +87,16 @@ class _ScreenDispState extends State<AccountsDash> with TickerProviderStateMixin
         icona: Icon(Icons.safety_divider_sharp,color: Colors.black,)
     ),
     SchlMenus(
-        title: 'Invoices',
-        // widget: Invoices(),
-        widget: DataPage(),
+        title: 'Invoices & Charges',
+        widget: Invoices(),
+        // widget: DataPage(),
         icona: Icon(Icons.checklist_rtl_rounded,color: Colors.black,)
+    ),
+    SchlMenus(
+        title: 'Payments & Receipts',
+        widget: Payments(),
+        // widget: DataPage(),
+        icona: Icon(Icons.payments_outlined,color: Colors.black,)
     ),
   ];
 

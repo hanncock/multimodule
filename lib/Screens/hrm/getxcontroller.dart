@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:web3/Screens/accounting/NewPayment.dart';
-import 'package:web3/Screens/accounting/Payments.dart';
-import 'package:web3/Screens/accounting/newInvoice.dart';
+import 'package:web3/Screens/hrm/BioUsers.dart';
 
-import 'acctsStats.dart';
-
-class TapController extends GetxController{
+class TapControllerHrm extends GetxController{
   int _x = 0;
   int get x => _x;
 
@@ -19,8 +15,7 @@ class TapController extends GetxController{
 
 
   List _openScreenstitlles = ['Dashboard'];
-  // final openScreensWidgetts = <dynamic>[AccntStats()];
-  final openScreensWidgetts = <dynamic>[NewPayment()];
+  final openScreensWidgetts = <dynamic>[BioUsers()];
 
   List get openScreenstitlles => _openScreenstitlles;
 
@@ -52,18 +47,18 @@ class TapController extends GetxController{
     update();
   }
 
-     deleteTab(value){
-      var actv = value;
-      if(_openScreenstitlles.length > 0){
-        _actvTab = value - 1;
-      }else{
-        _actvTab = 0;
-      }
-      openScreenstitlles.removeAt(value);
-      openScreensWidgetts.removeAt(value);
-      // var val = _openScreenstitlles.indexWhere((element) => element == value);
-      // _openScreenstitlles.removeWhere((element) => element == value);
-      update();
+  deleteTab(value){
+    var actv = value;
+    if(_openScreenstitlles.length > 0){
+      _actvTab = value - 1;
+    }else{
+      _actvTab = 0;
     }
+    openScreenstitlles.removeAt(value);
+    openScreensWidgetts.removeAt(value);
+    // var val = _openScreenstitlles.indexWhere((element) => element == value);
+    // _openScreenstitlles.removeWhere((element) => element == value);
+    update();
+  }
 
 }

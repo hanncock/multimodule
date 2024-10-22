@@ -1,167 +1,281 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:responsive_table/responsive_table.dart';
-// import 'package:web3/Screens/Wrapper.dart';
-// import 'package:web3/Screens/accounting/newInvoice.dart';
-//
-// import '../../Constants/Theme.dart';
-// import '../../all_homes.dart';
-// import 'getxcontroller.dart';
-//
-// class Invoices extends StatefulWidget {
-//   const Invoices({super.key});
-//
-//   @override
-//   State<Invoices> createState() => _InvoicesState();
-// }
-//
-// class _InvoicesState extends State<Invoices> {
-//   List invoices = [];
-//
-//
-//   // getInvoices()async{
-//   //   var resu = await auth.getvalues('accounting/transactionentry/list?companyId=${companyIdInView}');
-//   //   // print('here is resu${resu}'r);
-//   //   setState(() {
-//   //     invoices = resu;
-//   //   });
-//   // }
-//
-//
-//
-//
-//
-//    late List<DatatableHeader> _headers;
-//
-//   List<Map<String, dynamic>> _source = [
-//     {'name': 'soke', 'id': 1},
-//     {'name': 'soke', 'id': 2},
-//     {'name': 'soke', 'id': 3},
-//     {'name': 'soke', 'id': 4},
-//     {'name': 'soke', 'id': 5},
-//     {'name': 'soke', 'id': 6},
-//     {'name': 'soke', 'id': 7},
-//     {'name': 'soke', 'id': 8},
-//     {'name': 'soke', 'id': 9},
-//   ];
-//
-//
-//   @override
-//   void initState(){
-//     super.initState();
-//     _headers = [
-//       DatatableHeader(text: 'Name', value: 'name', show: true,
-//         sortable: true,),
-//       // DatatableHeader( show: true,
-//       //     sortable: true,text: 'Age', value: 'age'),
-//       DatatableHeader( show: true,
-//           sortable: true,text: 'Email', value: 'email'),
-//     ];
-//     // getInvoices();
-//   }
-//
-//   @override
-//   void dispose() {
-//     super.dispose();
-//   }
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     TapController tapController = Get.put(TapController());
-//
-//     return Container(
-//       child: Column(
-//         children: [
-//           GestureDetector(
-//             onTap: (){
-//               if(tapController.openScreenstitlles.contains('New Invoice')){
-//                 tapController.switchTo('New Invoice');
-//                 DefaultTabController.of(context).animateTo(tapController.actvTab);
-//               }else{
-//                 tapController.printList();
-//                 tapController.addtoList('New Invoice',NewInvoice());
-//                 tapController.switchTo('New Invoice');
-//                 DefaultTabController.of(context).animateTo(tapController.actvTab);
-//               }
-//             },
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 color: Colors.blue.withOpacity(0.9),
-//                 borderRadius: BorderRadius.circular(5),
-//                 border: Border.all(width: 1,color: Colors.transparent),
-//               ),
-//               child: Padding(
-//                 padding: const EdgeInsets.only(left: 20.0,right: 20,top: 5,bottom: 5),
-//                 child: Text('New Invoice',style: TextStyle(color: Colors.white),),
-//               ),
-//             ),
-//           ),
-//           // ResponsiveDatatable(
-//           //   headers: [
-//           //     DatatableHeader(text: 'Name', value: 'Name'),
-//           //     DatatableHeader(text: 'id', value: 'id'),
-//           //   ],
-//           //   source: [
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //     {'name':'soke','id':'id'},
-//           //   ],
-//           // )
-//
-//           Container(
-//             width: 800,
-//             height: 700,
-//             child: ResponsiveDatatable(
-//               headers: _headers,
-//               source: _source,
-//
-//               // Optional parameters
-//               // canEdit: true,
-//               // canDelete: true,
-//               // canAdd: true,
-//               // sortAscending: true,
-//               // sortColumn: 'name',
-//               // onTabChange: (value) {},
-//               // onSort: (column, ascending) {},
-//               // onChanged: (value) {},
-//               // onRowSelect: (selected) {},
-//               // onRowDeSelect: (selected) {},
-//               // onAdd: (newData) {},
-//             ),
-//           ),
-//
-//           // Column(
-//           //   children: [
-//           //     // Text('transactions'),
-//           //     // Text('${invoices}'),
-//           //     Container(
-//           //       // color: Colors.red,
-//           //       width: MediaQuery.of(context).size.width,
-//           //       height: MediaQuery.of(context).size.height * 0.7,
-//           //       child: ListView.builder(
-//           //         itemCount: invoices.length,
-//           //           shrinkWrap: true,
-//           //           itemBuilder: (context,index){
-//           //           return Text('${invoices[index]}');
-//           //       }),
-//           //     ),
-//           //   ],
-//           // )
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_table/responsive_table.dart';
+import 'package:web3/Screens/Wrapper.dart';
+import 'package:web3/Screens/accounting/newInvoice.dart';
 
-import 'dart:math';
+import '../../Constants/Theme.dart';
+import '../../all_homes.dart';
+import 'getxcontroller.dart';
+
+class Invoices extends StatefulWidget {
+  const Invoices({super.key});
+
+  @override
+  State<Invoices> createState() => _InvoicesState();
+}
+
+class _InvoicesState extends State<Invoices> {
+  List invoices = [];
+
+
+  getInvoices()async{
+    var resu = await auth.getvalues('accounting/invoices/list?companyId=${companyIdInView}');
+    // print('here is resu${resu}'r);
+    setState(() {
+      invoices = resu;
+    });
+  }
+
+
+
+
+
+
+   late List<DatatableHeader> _headers;
+
+  List<Map<String, dynamic>> _source = [
+    {'name': 'soke', 'id': 1},
+    {'name': 'soke', 'id': 2},
+    {'name': 'soke', 'id': 3},
+    {'name': 'soke', 'id': 4},
+    {'name': 'soke', 'id': 5},
+    {'name': 'soke', 'id': 6},
+    {'name': 'soke', 'id': 7},
+    {'name': 'soke', 'id': 8},
+    {'name': 'soke', 'id': 9},
+  ];
+
+
+  @override
+  void initState(){
+    super.initState();
+    _headers = [
+      DatatableHeader(text: 'Name', value: 'name', show: true,
+        sortable: true,),
+      // DatatableHeader( show: true,
+      //     sortable: true,text: 'Age', value: 'age'),
+      DatatableHeader( show: true,
+          sortable: true,text: 'Email', value: 'email'),
+    ];
+    getInvoices();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    TapController tapController = Get.put(TapController());
+
+    return Container(
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: (){
+              if(tapController.openScreenstitlles.contains('New Invoice')){
+                tapController.switchTo('New Invoice');
+                DefaultTabController.of(context).animateTo(tapController.actvTab);
+              }else{
+                tapController.printList();
+                tapController.addtoList('New Invoice',NewInvoice());
+                tapController.switchTo('New Invoice');
+                DefaultTabController.of(context).animateTo(tapController.actvTab);
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(width: 1,color: Colors.transparent),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0,right: 20,top: 5,bottom: 5),
+                child: Text('New Invoice',style: TextStyle(color: Colors.white),),
+              ),
+            ),
+          ),
+          // ResponsiveDatatable(
+          //   headers: [
+          //     DatatableHeader(text: 'Name', value: 'Name'),
+          //     DatatableHeader(text: 'id', value: 'id'),
+          //   ],
+          //   source: [
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //     {'name':'soke','id':'id'},
+          //   ],
+          // )
+
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 700,
+          child: Column(
+            children: [
+            //   ListView.builder(
+            //     shrinkWrap: true,
+            //     itemCount: invoices.length,
+            //     itemBuilder: (context,index){
+            //       return Row(
+            //         children: [
+            //           Text('${invoices[index]['invNum']}'),
+            //           Text('${invoices[index]['chargedAccount']}'),
+            //           Text('${invoices[index]['total']}'),
+            //           Text('${invoices[index]['invoiceDueDate']}'),
+            //         ],
+            //       );
+            // }),
+              invoices.isEmpty? SizedBox(): Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              showCheckboxColumn: false,
+                              headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
+                              headingRowHeight: 45,
+                              dataRowMinHeight: 53,
+                              dataRowMaxHeight: 53,
+                              dividerThickness: 0.5,
+                              // border: const TableBorder(verticalInside: BorderSide(width: .05,)),
+                              columns: [
+                                DataColumn(label: Row(
+                                  children: [
+                                    Icon(Icons.person,color: Colors.black,),
+                                    Text('Invoice Number'),
+                                  ],
+                                )),
+                                // DataColumn(label: Row(
+                                //   children: [
+                                //     Icon(Icons.app_registration,color: Colors.black,),
+                                //     SizedBox(width: 10,),
+                                //     Text('Package Name'),
+                                //   ],
+                                // )),
+                                DataColumn(label: Row(
+                                  children: [
+                                    Icon(Icons.mail,color: Colors.black,),
+                                    SizedBox(width: 10,),
+                                    Text('Charged Account'),
+                                  ],
+                                )),
+                                DataColumn(label: Row(
+                                  children: [
+                                    Icon(Icons.mail,color: Colors.black,),
+                                    SizedBox(width: 10,),
+                                    Text('Total'),
+                                  ],
+                                )),
+                                DataColumn(label: Row(
+                                  children: [
+                                    Icon(Icons.credit_card,color: Colors.black,),
+                                    SizedBox(width: 10,),
+                                    Text('Due Date'),
+                                  ],
+                                )),
+                                DataColumn(label: Text(""))
+
+                              ],
+                              rows: invoices.map((item){
+                                return DataRow(
+                                    onSelectChanged: (selected){
+
+                                      print(selected);
+                                      if(tapController.openScreenstitlles.contains('Invoice Details')){
+                                        var containIndex = tapController.openScreenstitlles.indexOf("Invoice Details");
+                                        print("here is the contained ${containIndex}");
+                                        tapController.deleteTab(containIndex);
+                                          print('switching');
+                                          tapController.addtoList('Invoice Details',NewInvoice(invNum: item['invNum'],));
+                                          tapController.switchTo('Invoice Details');
+                                          DefaultTabController.of(context).animateTo(tapController.actvTab);
+
+                                      }else{
+                                        tapController.printList();
+                                        tapController.addtoList('Invoice Details',NewInvoice(invNum: item['invNum'],));
+                                        tapController.switchTo('Invoice Details');
+                                        DefaultTabController.of(context).animateTo(tapController.actvTab);
+                                      }
+                                    },
+                                    cells: [
+                                      DataCell(Text('${item['invNum']}')),
+                                      DataCell(Text('${item['chargedAccount']}',style: TextStyle(color: Colors.blue,),)),
+                                      DataCell(Text('${item['total']}')),
+                                      DataCell(Text('${item['invoiceDueDate'] ?? ''}')),
+                                      DataCell(IconButton(
+                                        onPressed: ()async{
+                                          var resu = await auth.deleteInv(item['invNum'], "/accounting/invoices/del");
+                                          print(resu);
+                                          resu == 'success' ? getInvoices() : null;
+                                        },
+                                        icon:Icon(Icons.delete,color: Colors.redAccent,))),
+                                      // DataCell(Text('${item['chargeAmount']}',textAlign: TextAlign.start)),
+                                    ]);
+                              }).toList(),
+                            ),
+                          )
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ]
+          ),
+          /*  child: ResponsiveDatatable(
+              headers: _headers,
+              source: _source,
+
+              // Optional parameters
+              // canEdit: true,
+              // canDelete: true,
+              // canAdd: true,
+              // sortAscending: true,
+              // sortColumn: 'name',
+              // onTabChange: (value) {},
+              // onSort: (column, ascending) {},
+              // onChanged: (value) {},
+              // onRowSelect: (selected) {},
+              // onRowDeSelect: (selected) {},
+              // onAdd: (newData) {},
+            ),*/
+          ),
+
+          // Column(
+          //   children: [
+          //     // Text('transactions'),
+          //     // Text('${invoices}'),
+          //     Container(
+          //       // color: Colors.red,
+          //       width: MediaQuery.of(context).size.width,
+          //       height: MediaQuery.of(context).size.height * 0.7,
+          //       child: ListView.builder(
+          //         itemCount: invoices.length,
+          //           shrinkWrap: true,
+          //           itemBuilder: (context,index){
+          //           return Text('${invoices[index]}');
+          //       }),
+          //     ),
+          //   ],
+          // )
+        ],
+      ),
+    );
+  }
+}
+
+/*import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 
@@ -575,4 +689,79 @@ class _DataPageState extends State<DataPage> {
               ])),
     );
   }
+}*/
+
+/*import 'package:flutter/material.dart';
+import 'package:web3/all_homes.dart';
+
+import '../../Constants/Theme.dart';
+
+class Invoices extends StatefulWidget {
+  const Invoices({super.key});
+
+  @override
+  State<Invoices> createState() => _InvoicesState();
 }
+
+class _InvoicesState extends State<Invoices> {
+  late TabController controller2;
+
+  List invoices = [];
+
+  getInvoices()async{
+    var resu = await auth.getvalues("accounting/transactionentry/list?type=INV&companyId=${companyIdInView}");
+    setState(() {
+      invoices = resu;
+    });
+
+    print(invoices);
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getInvoices();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+          children: [
+
+      Container(
+      child: Column(
+      children: [
+          GestureDetector(
+          onTap: (){
+    if(tapController.openScreenstitlles.contains('New Invoice')){
+    tapController.switchTo('New Invoice');
+    DefaultTabController.of(context).animateTo(tapController.actvTab);
+    }else{
+    tapController.printList();
+    tapController.addtoList('New Invoice',NewInvoice());
+    tapController.switchTo('New Invoice');
+    DefaultTabController.of(context).animateTo(tapController.actvTab);
+    }
+    },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(width: 1,color: Colors.transparent),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0,right: 20,top: 5,bottom: 5),
+          child: Text('New Invoice',style: TextStyle(color: Colors.white),),
+        ),
+      ),
+    ))),
+
+            Text('${invoices}')
+
+          ],
+        ),
+      );
+    }
+  }*/
+

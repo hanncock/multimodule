@@ -83,8 +83,9 @@ class AuthService{
   //   return responseData;
   // }
 
-  // String url ="http://192.168.0.111:3000";
-  String url ="http://0.0.0.0:3000";
+  String url ="http://192.168.1.129:3000";
+  // String url ="http://0.0.0.0:3000";
+  // String url ="http://0.0.0.0:8080";
   // String url ="https://106e-41-209-57-162.ngrok-free.app";
 
   Map<String, String> headers = {
@@ -160,8 +161,6 @@ class AuthService{
   }
 
 
-
-
   delete(id,endpoinr)async{
     String res = "$url/api$endpoinr";
     Map data = {"id": id,};
@@ -170,7 +169,19 @@ class AuthService{
     return responseData;
   }
 
-  getUsers()async{
+
+  deleteInv(id,endpoinr)async{
+    print('deleting inv');
+    String res = "$url/api$endpoinr";
+    Map data = {"invNum": id,};
+    var response = await http.post(Uri.parse(res), body: jsonEncode(data), headers: headers);
+    var responseData = jsonDecode(response.body);
+    print(responseData);
+    return responseData;
+  }
+
+
+/*  getUsers()async{
     String getcompanies = "$url/api/settings/user/list";
     print(getcompanies);
     try{
@@ -180,9 +191,9 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
-  getcompany()async{
+/*  getcompany()async{
     String getcompanies = "$url/api/settings/company/list";
     print(getcompanies);
     try{
@@ -192,9 +203,9 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
-  createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType,leadId,projectId)async{
+  /*createCust(id,clientName,clientEmail,clientPhone,contPersonName,contPersonPhone,referral,location,postalAdd,industry,custType,leadId,projectId)async{
 
     var all = '$url/api/crm/client/add';
     Map data = {
@@ -219,10 +230,10 @@ class AuthService{
     var responseData = jsonDecode(response.body);
     print(responseData);
     return responseData;
-  }
+  }*/
 
 
-  createProj(id,projectName,projDescription,personInCharge,inchargeMail,inchargeContact,startdate,enddate,projectStatus,designation)async{
+  /*createProj(id,projectName,projDescription,personInCharge,inchargeMail,inchargeContact,startdate,enddate,projectStatus,designation)async{
 
     var all = '$url/api/crm/project/add';
     Map data = {
@@ -243,9 +254,9 @@ class AuthService{
     var response = await http.post(Uri.parse(all), body: send, headers: headers);
     var responseData = jsonDecode(response.body);
     return responseData;
-  }
+  }*/
 
-  getProjects()async{
+/*  getProjects()async{
     String getcompanies = "$url/api/crm/project/list";
     print(getcompanies);
     try{
@@ -255,9 +266,9 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
-  getRequests(endpoint)async{
+/*  getRequests(endpoint)async{
     String getcompanies = "$url/api/${endpoint}";
     print(getcompanies);
     try{
@@ -267,9 +278,9 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
-  createProjCol(id,projectColName)async{
+/*  createProjCol(id,projectColName)async{
 
     var all = '$url/api/crm/project/add';
     Map data = {
@@ -282,9 +293,9 @@ class AuthService{
     var responseData = jsonDecode(response.body);
     print(responseData);
 
-  }
+  }*/
 
-  getProjectsColumns()async{
+/*  getProjectsColumns()async{
     String getcompanies = "$url/api/crm/project/list";
     try{
       var response =  await get(Uri.parse(getcompanies));
@@ -293,9 +304,9 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
-  getStudents()async{
+/*  getStudents()async{
     // String getcompanies = "$url/api/client/list?companyId=${companyIdInView}"+projId == null ? "" :"&projectId = ${projId.toString()}" ;
     String getcompanies = "$url/api/school/student/list?companyId=${companyIdInView}";
     print("here are thr resposnses "+getcompanies);
@@ -306,7 +317,7 @@ class AuthService{
     }catch(e){
       return e.toString();
     }
-  }
+  }*/
 
 
 

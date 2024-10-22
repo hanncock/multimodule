@@ -153,7 +153,8 @@ const header2Dash = TextStyle(
 const boldfont = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 13,
-    letterSpacing: 1
+    letterSpacing: 1,
+    color: Colors.white
 );
 
 const menutitle = TextStyle(
