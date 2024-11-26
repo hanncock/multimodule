@@ -69,209 +69,178 @@ class _NewPaymentState extends State<NewPayment> {
             children: [
 
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Select Account/Customer'),
-                      ),
-                      Container(
-                          width: 300,
-                          height: 35,
-                          margin: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(width: 1,color: Colors.black)
-                          ),
-                          child: DropdownButtonHideUnderline(
-
-                            child: DropdownButton2(
-
-                                isExpanded: true,
-                                items: accountsToCharge.map((e) => DropdownMenuItem(
-                                  // value: [e['headerName'], e['id']],
-                                    value: [e],
-                                    child: Text('${e['admissionNo']}, ${e['firstName']},${e['othernames']}',style: TextStyle(fontSize: 11),)
-                                )).toList(),
-                                hint: Text("${selectedAcc?? ''}",style: boldfont,),
-                                onChanged: (e){
-                                  var stdntvals = e;
-                                  selectedAcc = '${stdntvals[0]['admissionNo']}, ${stdntvals[0]['firstName']} ${stdntvals[0]['othernames']}';
-                                  selectedAccId = stdntvals[0]['id'];
-                                  setState(() {});
-                                  getInvoices();
-                                },
-                                dropdownSearchData: DropdownSearchData(
-                                  searchInnerWidgetHeight: 100,
-                                  // searchController: textEditingController,
-                                  searchInnerWidget: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: TextFormField(
-                                        // controller: textEditingController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 8,
-                                          ),
-                                          hintText: 'Select Account...',
-                                          hintStyle: const TextStyle(fontSize: 12),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                        ),)
-                                  ),
-                                )
-                            ),
-                          )
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Select Account/Customer'),
                   ),
-                  SizedBox(height: 30,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Payment Date'),
-                      Container(
-                        width: 300,
-                        height: 35,
-                        decoration: BoxDecoration(
+                  Container(
+                      width: 200,
+                      height: 30,
+                      margin: EdgeInsets.only(left: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 1)
-                        ),
-                        child: Text("${DateTime.now()}"),
+                          border: Border.all(width: 1,color: Colors.black)
                       ),
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(width: 10,),
+                      child: DropdownButtonHideUnderline(
 
-              Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Payment Method'),
-                      ),
-                      Container(
-                        width: 300,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 1)
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2(
+                        child: DropdownButton2(
+
                             isExpanded: true,
-                            items: paymentmethods.map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text('$e'))).toList(),
-                            hint: Text(paymentmethod ?? 'Select Payment Method'),
+                            items: accountsToCharge.map((e) => DropdownMenuItem(
+                              // value: [e['headerName'], e['id']],
+                                value: [e],
+                                child: Text('${e['admissionNo']}, ${e['firstName']},${e['othernames']}',style: TextStyle(fontSize: 10),)
+                            )).toList(),
+                            hint: Text("${selectedAcc?? ''}",style: boldfont,),
                             onChanged: (e){
-                              setState(() {
-                                paymentmethod = e;
-                              });
-                              print(paymentmethod);
-                              switch(paymentmethod){
-                                case "Cash":
-                                  setState(() {
-                                    reftitile = "Reference";
-                                    paymentmethod = "CASH";
-                                  });
-                                  break;
-                                case "Cheque":
-                                  setState(() {
-                                    reftitile = "Cheque";
-                                    paymentmethod = "Cheque";
-                                  });
-                                  break;
-                                case "M-Pesa":
-                                  setState(() {
-                                    reftitile = "Transaction";
-                                    paymentmethod = "M-Pesa";
-                                  });
-                                  break;
-                              }
+                              var stdntvals = e;
+                              selectedAcc = '${stdntvals[0]['admissionNo']}, ${stdntvals[0]['firstName']} ${stdntvals[0]['othernames']}';
+                              selectedAccId = stdntvals[0]['id'];
+                              setState(() {});
+                              getInvoices();
                             },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 30,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${reftitile} Number'),
-                      Container(
-                        width: 300,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 1)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            initialValue: referenceNum.toString(),
-                            onChanged: (val){
-                              setState(() {
-                                referenceNum = val;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none
-                            ),
-                          ),
+                            dropdownSearchData: DropdownSearchData(
+                              searchInnerWidgetHeight: 100,
+                              // searchController: textEditingController,
+                              searchInnerWidget: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: TextFormField(
+                                    // controller: textEditingController,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 8,
+                                      ),
+                                      hintText: 'Select Account...',
+                                      hintStyle: const TextStyle(fontSize: 12),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),)
+                              ),
+                            )
                         ),
                       )
-                    ],
-                  )
+                  ),
+                ],
+              ),
+              SizedBox(width: 10,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Text('Payment Date'),
+                  ),
+                  Container(
+                    width: 200,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(width: 1)
+                    ),
+                    child: Text("${DateTime.now()}"),
+                  ),
+                ],
+              ),
+              SizedBox(width: 10,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Payment Method'),
+                  ),
+                  Container(
+                    width: 200,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(width: 1)
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        items: paymentmethods.map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text('$e'))).toList(),
+                        hint: Text(paymentmethod ?? 'Select Payment Method'),
+                        onChanged: (e){
+                          setState(() {
+                            paymentmethod = e;
+                          });
+                          print(paymentmethod);
+                          switch(paymentmethod){
+                            case "Cash":
+                              setState(() {
+                                reftitile = "Reference";
+                                paymentmethod = "CASH";
+                              });
+                              break;
+                            case "Cheque":
+                              setState(() {
+                                reftitile = "Cheque";
+                                paymentmethod = "Cheque";
+                              });
+                              break;
+                            case "M-Pesa":
+                              setState(() {
+                                reftitile = "Transaction";
+                                paymentmethod = "M-Pesa";
+                              });
+                              break;
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(width: 10,),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(''),
-                  SizedBox(height: 30,),
+              forms(
+                  widthh: 250,
+                  value: referenceNum.toString() ?? '',
+                  // initVal: name,
+                  label: '${reftitile} Number',
+                  hint: "ref No.",
+                  onChanged: (value){
+                    setState(() {
+                      referenceNum = value;
+                    });
+                  }),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Amount'),
-                      Container(
-                        width: 300,
-                        height: 35,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(width: 1)
+              SizedBox(width: 10,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Amount'),
+                  Container(
+                    width: 200,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(width: 1)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        initialValue: amount,
+                        onChanged: (val){
+                          setState(() {
+                            amount = val;
+                          });
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            initialValue: amount,
-                            onChanged: (val){
-                              setState(() {
-                                amount = val;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                border: InputBorder.none
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                  )
                 ],
               )
             ],

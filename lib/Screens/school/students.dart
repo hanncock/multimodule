@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,6 +6,7 @@ import 'package:web3/Screens/school/addStudent.dart';
 import 'package:web3/Screens/school/admittoclass.dart';
 import '../../Constants/ImportUI.dart';
 import '../../Constants/Reusableswidgets/btns.dart';
+import '../../Constants/Reusableswidgets/textfield.dart';
 import '../../Constants/Theme.dart';
 import '../../all_homes.dart';
 
@@ -18,6 +20,11 @@ class Students extends StatefulWidget {
 class _StudentsState extends State<Students> {
 
   List students = [];
+  var studentName;
+  List classes = [];
+  var selcls;
+  List streams = [];
+  var selStrm;
 
   getStudents()async{
     var resu = await auth.getvalues("school/student/list?companyId=${companyIdInView}");
@@ -26,9 +33,24 @@ class _StudentsState extends State<Students> {
     });
   }
 
+  getclasses()async{
+    var resu = await auth.getvalues("school/classe/list?companyId=${companyIdInView}");
+    setState(() {
+      classes = resu;
+    });
+  }
+  getStreams()async{
+    var resu = await auth.getvalues("school/stream/list?companyId=${companyIdInView}");
+    setState(() {
+      streams = resu;
+    });
+  }
+
   @override
   void initState(){
     getStudents();
+    getStreams();
+    getclasses();
     super.initState();
   }
 
@@ -87,35 +109,119 @@ class _StudentsState extends State<Students> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 300,
-                // height: 35,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(width: 1,color: Colors.black12)
+            Row(
+              children: [
+                forms(
+                    widthh: 250,
+                    value: studentName ?? '',
+                    // initVal: name,
+                    label: 'Student Name',
+                    hint: "Name of Student",
+                    onChanged: (value){
+                      setState(() {
+                        studentName = value;
+                      });
+                    }),
+                /*Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 300,
+                    // height: 35,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 1,color: Colors.black12)
+                    ),
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 14),
+                      decoration: InputDecoration(
+                        hintText: "Student Name",
+                        hintStyle: TextStyle(fontSize: 14),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),*/
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Select Class'),
+                    Container(
+                      width: 200,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(width: 0.5)
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                            isExpanded:true,
+                            hint: Text('${selcls ?? ''}',style: boldfont),
+                            items: classes.map((e) => DropdownMenuItem(
+                                value:["${e['className']}","${e['id']}"],
+                                child: Text('${e['className']}',style: boldfont,))).toList(),
+                            onChanged: (val){
+                              setState(() {
+                                var vals = val as List;
+                                selcls = vals[0].toString() ;
+                              });
+                            }
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: TextFormField(
-                  style: TextStyle(fontSize: 14),
-                  decoration: InputDecoration(
-                    hintText: "Student Name",
-                    hintStyle: TextStyle(fontSize: 14),
-                    border: InputBorder.none,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Select Stream'),
+                    Container(
+                      width: 200,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(width: 0.5)
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                            isExpanded:true,
+                            hint: Text('${selStrm ?? ''}',style: boldfont),
+                            items: streams.map((e) => DropdownMenuItem(
+                                value:["${e['streamName']}","${e['id']}"],
+                                child: Text('${e['streamName']}',style: boldfont,))).toList(),
+                            onChanged: (val){
+                              setState(() {
+                                var vals = val as List;
+                                selStrm = vals[0].toString() ;
+                              });
+                            }
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: btns(
+                    color: Colors.blueAccent,
+                    icona: Icon(Icons.search),
                   ),
                 ),
-              ),
-            ),
-            IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+                btns(
+                  color: Colors.grey,
+                  icona: Icon(Icons.lock_reset_outlined),
+                )
+                // IconButton(onPressed: (){}, icon: Icon(Icons.search)),
 
-            IconButton(
-                onPressed: (){
-                  getStudents();
-                }, icon: Icon(Icons.refresh,color: Colors.green,)
+                // IconButton(
+                //     onPressed: (){
+                //       getStudents();
+                //     }, icon: Icon(Icons.refresh,color: Colors.green,)
+                // ),
+              ],
             ),
             // Icon(Icons.refresh,color: Colors.green,),
-            Row(
+            Column(
               children: [
                 Container(
                     decoration: BoxDecoration(
@@ -128,7 +234,9 @@ class _StudentsState extends State<Students> {
                       onclick: (){
                         editDetails(null);
                         // upload(["clientName","clientEmail"],'Download');
-                      },)),
+                      },)
+                ),
+                SizedBox(height: 5,),
                 Container(
                   width: 120,
                   // height: 68,

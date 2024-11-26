@@ -470,7 +470,6 @@ class _AllHomesState extends State<AllHomes> with TickerProviderStateMixin {
           () => 'soke'
   );
 
-  // final GlobalKey<DefaultTabController> _tabController = GlobalKey();
 
   @override
   void initState() {

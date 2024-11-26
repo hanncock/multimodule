@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:web3/Screens/school/addExam.dart';
 import '../../Constants/ImportUI.dart';
 import '../../Constants/Reusableswidgets/btns.dart';
+import '../../Constants/Reusableswidgets/textfield.dart';
 import '../../Constants/Theme.dart';
 import '../../all_homes.dart';
 
@@ -17,6 +18,8 @@ class Exams extends StatefulWidget {
 class _ExamsState extends State<Exams> {
 
   List students = [];
+
+  var examName;
 
   getStudents()async{
     var resu = await auth.getvalues("school/exam/list?companyId=${companyIdInView}");
@@ -58,121 +61,137 @@ class _ExamsState extends State<Exams> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 300,
-                // height: 35,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(width: 1,color: Colors.black12)
-                ),
-                child: TextFormField(
-                  style: TextStyle(fontSize: 14),
-                  decoration: InputDecoration(
-                    hintText: "Input the values",
-                    hintStyle: TextStyle(fontSize: 14),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              // border: Border.all(width: 0.5,color: Colors.black),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  forms(
+                      widthh: 250,
+                      value: examName ?? '',
+                      // initVal: name,
+                      label: 'Exam Name',
+                      hint: "Exam Name",
+                      onChanged: (value){
+                        setState(() {
+                          examName = value;
+                        });
+                      }),
+                  /*IconButton(onPressed: (){}, icon: Icon(Icons.search)),
 
-            IconButton(
-                onPressed: (){
-                  getStudents();
-                }, icon: Icon(Icons.refresh,color: Colors.green,)
-            ),
-            // Icon(Icons.refresh,color: Colors.green,),
-            Row(
-              children: [
-                Container(
-                    decoration: BoxDecoration(
+                  IconButton(
+                      onPressed: (){
+                        getStudents();
+                      }, icon: Icon(Icons.refresh,color: Colors.green,)
+                  ),*/
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0,top: 16),
+                    child: btns(
+                      color: Colors.blueAccent,
+                      icona: Icon(Icons.search),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0,top: 16),
+                    child: btns(
+                      color: Colors.grey,
+                      icona: Icon(Icons.lock_reset_outlined),
+                    ),
+                  )
+                ],
+              ),
+              // Icon(Icons.refresh,color: Colors.green,),
+              Row(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child:btns(label:'Exam',
                         color: Colors.green,
+                        icona: Icon(Icons.add,size: 14,),
+                        onclick: (){
+                          editDetails(null);
+                          // upload(["clientName","clientEmail"],'Download');
+                        },)),
+                  Container(
+                    width: 120,
+                    // height: 68,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(10)
                     ),
-                    child:btns(label:'Exam',
-                      color: Colors.green,
-                      icona: Icon(Icons.add,size: 14,),
-                      onclick: (){
-                        editDetails(null);
-                        // upload(["clientName","clientEmail"],'Download');
-                      },)),
-                Container(
-                  width: 120,
-                  // height: 68,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(10)
-                  ),
-                  child: PopupMenuButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(
-                          width: 1,
-                          color: Colors.grey.shade200
+                    child: PopupMenuButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: BorderSide(
+                            width: 1,
+                            color: Colors.grey.shade200
+                        ),
                       ),
-                    ),
-                    // child: Text('More'),
-                    child: Row(
-                      children: [
-                        // btns(label: 'Print',icona: Icon(Icons.manage_search_sharp),),
-                        btns(label: 'More',),
-                        Icon(Icons.arrow_drop_down,)
-                      ],
-                    ),
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,
-                                    onclick:(){
+                      // child: Text('More'),
+                      child: Row(
+                        children: [
+                          // btns(label: 'Print',icona: Icon(Icons.manage_search_sharp),),
+                          btns(label: 'More',),
+                          Icon(Icons.arrow_drop_down,)
+                        ],
+                      ),
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          PopupMenuItem(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  btns(label:'Import',icona: Icon(Icons.import_export),color: Colors.brown,
+                                      onclick:(){
+                                        upload(["name","startDate","endDate","shrtfrm","companyId"],
+                                            "Import",
+                                            context,
+                                            "Exam",
+                                            "/exam/add"
+                                        );
+                                      }),
+                                  SizedBox(height: 8),
+                                  btns(label:'Export CSV',icona: Icon(Icons.comment_sharp),color: Colors.amber,onclick: (){
+                                    // downloadCSV('test');
+                                  },),
+                                  SizedBox(height: 8),
+                                  btns(label:'Export PDF',icona: Icon(Icons.picture_as_pdf_outlined),color: Colors.purple,),
+                                  SizedBox(height: 8),
+                                  btns(label:'Print',icona: Icon(Icons.print),),
+                                  SizedBox(height: 8),
+                                  btns(label:'Download Import Sheet',
+                                    color: Colors.cyan,
+                                    icona: Icon(Icons.download),
+                                    onclick: (){
+
                                       upload(["name","startDate","endDate","shrtfrm","companyId"],
-                                          "Import",
+                                          'Download',
                                           context,
                                           "Exam",
                                           "/exam/add"
                                       );
-                                    }),
-                                SizedBox(height: 8),
-                                btns(label:'Export CSV',icona: Icon(Icons.comment_sharp),color: Colors.amber,onclick: (){
-                                  // downloadCSV('test');
-                                },),
-                                SizedBox(height: 8),
-                                btns(label:'Export PDF',icona: Icon(Icons.picture_as_pdf_outlined),color: Colors.purple,),
-                                SizedBox(height: 8),
-                                btns(label:'Print',icona: Icon(Icons.print),),
-                                SizedBox(height: 8),
-                                btns(label:'Download Import Sheet',
-                                  color: Colors.cyan,
-                                  icona: Icon(Icons.download),
-                                  onclick: (){
+                                    },)
 
-                                    upload(["name","startDate","endDate","shrtfrm","companyId"],
-                                        'Download',
-                                        context,
-                                        "Exam",
-                                        "/exam/add"
-                                    );
-                                  },)
-
-                              ],
-                            )
-                        ),
-                      ];
-                    },
+                                ],
+                              )
+                          ),
+                        ];
+                      },
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
         Divider(height: 0.5,color: Colors.black12,),
         students.isEmpty ?  Center(child: Text('We have no data')):Flexible(
@@ -207,7 +226,7 @@ class _ExamsState extends State<Exams> {
                                         }),
                                         child: Container(
                                           margin: EdgeInsets.all(2),
-                                          width: (MediaQuery.of(context).size.width - 320) /4,
+                                          width: (MediaQuery.of(context).size.width - 400) /4,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10),
                                             color: Colors.white,

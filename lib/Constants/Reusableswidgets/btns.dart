@@ -8,11 +8,11 @@ class btns extends StatefulWidget {
   void Function()? onclick;
   Color? color;
 
-  final String label;
+  final String? label;
 
   btns({
     Key? key,
-    required this.label,
+    this.label,
     this.icona,
     this.onclick,
     this.color
@@ -28,22 +28,20 @@ class _btnsState extends State<btns> {
     return InkWell(
       onTap: widget.onclick,
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
         decoration: BoxDecoration(
             // color:  Theme.of(context).primaryColor,
             color: widget.color ?? Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(8)
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              widget.icona == null ? Text('') : widget.icona as Icon,
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0,right: 10),
-                child: Text('${widget.label}',style: menutitle,),
-              ),
-            ],
-          ),
+        child: Row(
+          children: [
+            widget.icona == null ? SizedBox() : widget.icona as Icon,
+            widget.label == null ? SizedBox():Padding(
+              padding: const EdgeInsets.only(left: 10.0,right: 10),
+              child: Text('${widget.label}',style: menutitle,),
+            ),
+          ],
         ),
       ),
     );

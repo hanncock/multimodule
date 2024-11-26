@@ -1,6 +1,9 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:web3/Constants/Reusableswidgets/btns.dart';
+import 'package:web3/Screens/school/PrintResults.dart';
+import 'package:web3/Screens/school/getxcontroller.dart';
 import '../../Constants/Reusableswidgets/dropdown.dart';
 import '../../Constants/Theme.dart';
 import '../../all_homes.dart';
@@ -21,6 +24,7 @@ class _ExamResultsState extends State<ExamResults> {
   var selExam;
   List classes = [];
   var selcls;
+  var selclsCode;
   List streams = [];
   var selStrm;
   List students = [];
@@ -118,6 +122,8 @@ class _ExamResultsState extends State<ExamResults> {
 
   @override
   Widget build(BuildContext context) {
+
+    TapControllerSchl tapControllerschl = Get.put(TapControllerSchl());
     return Scaffold(
       body: Column(
         children: [
@@ -146,10 +152,11 @@ class _ExamResultsState extends State<ExamResults> {
                                 child: Text('${e['examName']}',style: boldfont,))).toList(),
                             onChanged: (val){
                               setState(() {
+                                students.clear();
                                 selectedExam.clear();
                                 selectedExam = val as List;
                                 getExamined(selectedExam[0]['id']);
-                                getgrading(selectedExam[0]['gradingId']);
+                                selectedExam[0]['gradingId'] == null ?null : getgrading(selectedExam[0]['gradingId']);
                               });
                             }
                         ),
@@ -177,12 +184,15 @@ class _ExamResultsState extends State<ExamResults> {
                                 value:["${e['className']}","${e['id']}"],
                                 child: Text('${e['className']}',style: boldfont,))).toList(),
                             onChanged: (val){
+                              print(val);
                               setState(() {
                                 var vals = val as List;
                                 selcls = vals[0].toString() ;
+                                selclsCode = vals[1].toString() ;
                               });
                               getResults().whenComplete((){
-                                 getStudents();
+                                students.clear();
+                                 fndResults.isEmpty? null : getStudents();
                               });
                             }
                         ),
@@ -215,7 +225,8 @@ class _ExamResultsState extends State<ExamResults> {
                                 selStrm = vals[0].toString() ;
                               });
                               getResults().whenComplete((){
-                                getStudents();
+                                students.clear();
+                                fndResults.isEmpty? null : getStudents();
                               });
                             }
                         ),
@@ -223,25 +234,59 @@ class _ExamResultsState extends State<ExamResults> {
                     ),
                   ],
                 ),
-                btns(
-                  icona: Icon(Icons.edit),
-                  color: readonly ? Colors.green : Colors.grey,
-                  label: "",
-                  onclick: (){
-                  setState(() {
-                    readonly = !readonly;
-                  });
-                  },
-                ),
-                btns(
-                  icona: Icon(Icons.print),
-                  color: Colors.orange,
-                  label: "",
-                  onclick: (){
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0,top: 16),
+                  child: btns(
+                    icona: Icon(Icons.edit),
+                    color: readonly ? Colors.green : Colors.grey,
+                    // label: ,
+                    onclick: (){
                     setState(() {
                       readonly = !readonly;
                     });
-                  },
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0,top: 16),
+                  child: btns(
+                    icona: Icon(Icons.print),
+                    color: Colors.orange,
+                    // label: "",
+                    onclick: (){
+                      setState(() {
+                        readonly = false;
+                      });
+
+                      // onTap: (){
+
+                        if(tapControllerschl.openScreenstitlles.contains("${selectedExam[0]['examName']}")){
+                          tapControllerschl.switchTo("${selectedExam[0]['examName']}");
+                          DefaultTabController.of(context)!
+                              .animateTo(tapControllerschl.actvTab);
+                          // controller2.animateTo(tapController.actvTab);
+                        }else{
+
+                          tapControllerschl.addtoList("${selectedExam[0]['examName']}",
+                              PrintResults(examCode: selectedExam[0]['id'],
+                                subjects: subjects,
+                                classCode: selclsCode,streamcode: selStrm,
+                                examName: selectedExam[0]['examName'],
+                              ));
+
+                        }
+
+
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0,top: 16),
+                  child: btns(
+                    color: Colors.grey,
+                    icona: Icon(Icons.lock_reset_outlined),
+                  ),
                 )
 
               ],
@@ -249,137 +294,148 @@ class _ExamResultsState extends State<ExamResults> {
           ),
           Divider(height: 0.5,),
           students.isEmpty ? Text('select class') :Container(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    DataTable(columns: [
-                      DataColumn(label: Text('#')),
-                      DataColumn(label: Text('Names'))
-                    ],
-                        rows:students.map((item){
-                          return DataRow(
-                              cells: [
-                                DataCell(Text('${item['admissionNo']}',style: boldfont,)),
-                                DataCell(Text('${item['firstName']} ${item['othernames']}',style: boldfont,)),
-                              ]
-                          );}).toList()
-                    ),
-                    DataTable(
-                      columnSpacing: 0,
-                                  columns: List.generate(subjects.length, (colName) => DataColumn(label: Text('${subjects[colName]['subjectCode']}'))),
-                        rows: students.map((item){
-                          return DataRow(
-                          cells: List.generate(
-                            subjects.length,
-                                (ind) => DataCell(
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            // borderRadius: BorderRadius.circular(5),
-                                            border: readonly ? Border(
-                                              right: BorderSide( //                   <--- right side
-                                                color: Colors.black,
-                                                width: 0.5,
-                                              ),
-                                            ) :Border.all(width: 0.1)
-                                          ),
-                                          width: 80,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(3.0),
-                                            child: TextFormField(
-                                              keyboardType: TextInputType.number,
-                                              readOnly: readonly,
-                                              decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                hintText: 'Input Marks',
-                                                hintStyle: TextStyle(fontSize: 12)
-                                              ),
-                                              initialValue: fndResults.isEmpty? '0' : '${
-                                                  fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']) < 0 ? '0':
-                                                  fndResults[fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id'])]['results']
-                                              }',
-                                              onChanged: (val){
-                                                Map insertval;
-                                                var indfnd = fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']);
-                                                if(indfnd < 0){
-                                                   insertval = {
-                                                    "id":null ,
-                                                    "studentName" : "${item['firstName']} ${item['othernames']}",
-                                                    "studentId":item['id'],
-                                                    "studentAdm": item['admissionNo'],
-                                                    "examId":selectedExam[0]['id'],
-                                                    "subjectId":subjects[ind]['subjectId'],
-                                                    "subjName":subjects[ind]['subjectName'],
-                                                    "results":val,
-                                                    "classe":selcls,
-                                                    "stream":selStrm,
-                                                    "examName":selectedExam[0]['examName'],
-                                                    "year":DateTime.now().year
-                                                  };
-                                                }else{
-                                                   insertval = {
-                                                    "id":fndResults[indfnd]['id'] ,
-                                                    "studentName" : "${item['firstName']} ${item['othernames']}",
-                                                    "studentId":item['id'],
-                                                    "studentAdm": item['admissionNo'],
-                                                    "examId":selectedExam[0]['id'],
-                                                    "subjectId":subjects[ind]['subjectId'],
-                                                    "subjName":subjects[ind]['subjectName'],
-                                                    "results":val,
-                                                    "classe":selcls,
-                                                    "stream":fndResults[indfnd]['stream'],
-                                                    "examName":selectedExam[0]['examName'],
-                                                    "year":DateTime.now().year
-                                                  };
-                                                }
-                                                if(results.where((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentAdm'] == item['admissionNo']).isNotEmpty){
-                                                  var indx = results.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentAdm'] == item['admissionNo']);
-                                                      results[indx] = insertval;
-                                                }else{
-                                                  results.add(insertval);
-                                                }
-                                                setState(() {});
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text('${
-                                          getVal(fndResults.isEmpty? '0' : '${
-                                          fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']) < 0 ? '0':
-                                          fndResults[fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id'])]['results']
-                                                                    }')
-                                          }'),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                            ),
-                          ));
-                        }).toList()
-                    ),
-                  ],
-                ),
-                btns(label: 'Save Results',
-                  onclick: ()async{
-                  print(results);
-                  var resu = await auth.saveMany(results, "/api/school/examresult/add");
-                  if(resu == 'success'){
-                    getResults();
-                    readonly = true;
-                  }
-                  },
-                )
-              ],
-            ),
+            child: resultsColumn(),
           ),
         ],
       ),
     );
+  }
+
+  Column resultsColumn() {
+    return Column(
+            children: [
+              Row(
+                children: [
+                  DataTable(columns: [
+                    DataColumn(label: Text('#')),
+                    DataColumn(label: Text('Names'))
+                  ],
+                      rows:students.map((item){
+                        return DataRow(
+                            cells: [
+                              DataCell(Text('${item['admissionNo']}',style: boldfont,)),
+                              DataCell(Text('${item['firstName']} ${item['othernames']}',style: boldfont,)),
+                            ]
+                        );}).toList()
+                  ),
+                  DataTable(
+                    columnSpacing: 0,
+                                columns: List.generate(subjects.length, (colName) => DataColumn(label: Container(
+                                    width: 60,
+                                    child: Center(child: Text('${subjects[colName]['subjectCode']}'))))),
+                      rows: students.map((item){
+                        return DataRow(
+                        cells: List.generate(
+                          subjects.length,
+                              (ind) => DataCell(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          border: readonly ? Border(
+                                            right: BorderSide( //                   <--- right side
+                                              color: Colors.black,
+                                              width: 0.5,
+                                            ),
+                                          ) :Border.all(width: 0.5)
+                                        ),
+                                        width: 40,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            readOnly: readonly,
+                                            decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                              hintText: 'Input Marks',
+                                              hintStyle: TextStyle(fontSize: 12)
+                                            ),
+                                            initialValue: fndResults.isEmpty? '0' : '${
+                                                fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']) < 0 ? '0':
+                                                fndResults[fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id'])]['results']
+                                            }',
+                                            onChanged: (val){
+                                              Map insertval;
+                                              var indfnd = fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']);
+                                              if(indfnd < 0){
+                                                 insertval = {
+                                                  "id":null ,
+                                                  "studentName" : "${item['firstName']} ${item['othernames']}",
+                                                  "studentId":item['id'],
+                                                  "studentAdm": item['admissionNo'],
+                                                  "examId":selectedExam[0]['id'],
+                                                  "subjectId":subjects[ind]['subjectId'],
+                                                  "subjName":subjects[ind]['subjectName'],
+                                                  "results":val,
+                                                  "classe":selcls,
+                                                  "stream":selStrm,
+                                                  "examName":selectedExam[0]['examName'],
+                                                  "year":DateTime.now().year
+                                                };
+                                              }else{
+                                                 insertval = {
+                                                  "id":fndResults[indfnd]['id'] ,
+                                                  "studentName" : "${item['firstName']} ${item['othernames']}",
+                                                  "studentId":item['id'],
+                                                  "studentAdm": item['admissionNo'],
+                                                  "examId":selectedExam[0]['id'],
+                                                  "subjectId":subjects[ind]['subjectId'],
+                                                  "subjName":subjects[ind]['subjectName'],
+                                                  "results":val,
+                                                  "classe":selcls,
+                                                  "classeCode":selcls,
+                                                  "stream":fndResults[indfnd]['stream'],
+                                                  "examName":selectedExam[0]['examName'],
+                                                  "year":DateTime.now().year
+                                                };
+                                              }
+                                              if(results.where((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentAdm'] == item['admissionNo']).isNotEmpty){
+                                                var indx = results.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentAdm'] == item['admissionNo']);
+                                                    results[indx] = insertval;
+                                              }else{
+                                                results.add(insertval);
+                                              }
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('${
+                                        getVal(fndResults.isEmpty? '0' : '${
+                                        fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id']) < 0 ? '0':
+                                        fndResults[fndResults.indexWhere((element) => element['subjectId'] == subjects[ind]['subjectId'] && element['studentId'] == item['id'])]['results']
+                                                                  }')
+                                        }'),
+                                      )
+                                    ],
+                                  ),
+                                )
+                          ),
+                        ));
+                      }).toList()
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  btns(label: 'Save Results',
+                    onclick: ()async{
+                    print(results);
+                    var resu = await auth.saveMany(results, "/api/school/examresult/add");
+                    if(resu == 'success'){
+                      getResults();
+                      readonly = true;
+                    }
+                    },
+                  ),
+                ],
+              )
+            ],
+          );
   }
 }

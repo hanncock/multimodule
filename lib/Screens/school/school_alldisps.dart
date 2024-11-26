@@ -1,58 +1,38 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web3/Screens/school/Exam%20Results.dart';
-import 'package:web3/Screens/school/Subjects.dart';
-import 'package:web3/Screens/school/addSubject.dart';
-import 'package:web3/Screens/school/addsreams.dart';
-import 'package:web3/Screens/school/classes.dart';
-import 'package:web3/Screens/school/gradingsystem.dart';
-import 'package:web3/Screens/school/schlMenus.dart';
-import 'package:web3/Screens/school/scholarsession.dart';
-import 'package:web3/Screens/school/students.dart';
-import 'package:web3/Screens/school/teachers.dart';
-import '../../Constants/Theme.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:web3/Screens/school/getxcontroller.dart';
 import '../../all_homes.dart';
 import '../../custom_display/keepAlive.dart';
 import '../accounting/chargesSetup.dart';
-import 'addStudent.dart';
+import 'Exam Results.dart';
+import 'Subjects.dart';
+import 'addsreams.dart';
+import 'classes.dart';
 import 'exams.dart';
-import 'feesandcharges.dart';
+import 'gradingsystem.dart';
+import 'schlMenus.dart';
+import 'scholarsession.dart';
+import 'students.dart';
+import 'teachers.dart';
 
-// List openScreenstitles = ['Dashboard'];
-// final openScreensWidgets = <dynamic>[Exams()];
-// late TabController controller2;
 
 class ScreenDispSchl extends StatefulWidget {
 
   const ScreenDispSchl({
     Key? key,
-    // required this.allwindows,
-    // required this.menuwindow,
-    // this.tocall,
   }) : super(key: key);
 
   @override
   State<ScreenDispSchl> createState() => _ScreenDispState();
 }
 
-class _ScreenDispState extends State<ScreenDispSchl>
-    with TickerProviderStateMixin {
+class _ScreenDispState extends State<ScreenDispSchl> with TickerProviderStateMixin {
   late TabController controller2;
-
-  int activetab = 0;
-  int active = 0;
-
-  var actv ;
-
-  List openScreenstitles = ['Dashboard'];
-  final openScreensWidgets = <dynamic>[ExamResults()];
 
 
   late final schlMenuslst = [
-    SchlMenus(
-        title: 'Dashboard',
-        widget: Students(),
-        icona: Icon(Icons.home_max,color: Colors.black,)
-    ),
     SchlMenus(
         title: 'Students',
         widget: Students(),
@@ -115,201 +95,193 @@ class _ScreenDispState extends State<ScreenDispSchl>
     )
   ];
 
+
+
   @override
   void initState() {
     super.initState();
-    // controller2 = TabController(
-    //   length: widget.allwindows.length,
-    //   vsync: this,
-    // );
+
   }
 
   @override
   Widget build(BuildContext context) {
+
+    TapControllerSchl tapController = Get.put(TapControllerSchl());
+
     return Container(
       // color: Colors.grey.shade100.withOpacity(0.5),
-      color: Colors.white60,
-      child: Column(
-        children: [
-          DefaultTabController(
-            length: openScreenstitles.length,
-            initialIndex: 0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Column(
-                        children: [
-                          Row(
+      child: GetBuilder<TapControllerSchl>(
+          builder: (tapController) {
+            return DefaultTabController(
+              length: tapController.openScreenstitlles.length,
+              initialIndex: tapController.actvTab,
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1.5.toInt(),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
-                              Text(
-                                '${companyInView}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                children: [
+                                  Icon(Icons.compare,color: Colors.redAccent,),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text('${companyInView}',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                                  ),
+                                ],
                               ),
+                              Divider(color: Colors.black26,thickness: 1,)
+
                             ],
                           ),
-                          Text(
-                            '${module ?? ''}',
-                            style: modname,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.1,color: Colors.black),
-                          borderRadius: BorderRadius.circular(5)
-                          // color: Colors.grey
                         ),
-                        child: TabBar(
-                          dividerColor: Colors.transparent,
-                          indicator: BoxDecoration(
-                              color:  Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(5))
+                        Expanded(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                              ),
+                              child: ListView.builder(
+                                // shrinkWrap: true,
+                                  itemCount: schlMenuslst.length,
+                                  itemBuilder: (context, index){
+                                    var menuList = schlMenuslst[index];
+                                    return InkWell(
+                                        onTap: (){
+                                          tapController.printList();
+                                          if(tapController.openScreenstitlles.contains(menuList.title)){
+                                            tapController.switchTo(menuList.title);
+                                            DefaultTabController.of(context)!
+                                                .animateTo(tapController.actvTab);
+                                            // controller2.animateTo(tapController.actvTab);
+                                          }else{
+                          
+                                            tapController.addtoList(menuList.title,menuList.widget);
+                          
+                                          }
+                                        },
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(3.0),
+                                            child: Container(
+                                                padding: EdgeInsets.all(5),
+                          
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey[100],
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                        width: 1, color: Colors.black12)
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    menuList.icona,
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10.0),
+                                                      child: Text('${menuList.title}',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                        ),),
+                                                    ),
+                                                  ],
+                          
+                                                )
+                                            )
+                                        )
+                                    );
+                          
+                                  })
                           ),
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.black54,
-                          indicatorColor: Colors.purple,
-                          isScrollable: true,
-                          tabs: openScreenstitles
-                              .map(
-                                (title) => Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5,bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${title}',
-                                    style: TextStyle(
-                                      // color: Colors.white
-                                      // color: Theme.of(context).primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width -250,
+                        height: 40,
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(255, 255, 255,1),
+                            borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 5,color: Color.fromRGBO(231, 230, 247,1),)
+                        ),
+                        child: GetBuilder<TapControllerSchl>(
+                            builder: (tapController) {
+                              return TabBar(
+                                dividerColor: Colors.transparent,
+                                indicator: BoxDecoration(
+                                    color: Color.fromRGBO(231, 230, 247,5),
+                                    borderRadius: BorderRadius.all(Radius.circular(5))
+                                ),
+                                labelColor: Colors.black26,
+                                unselectedLabelColor: Colors.black,
+                                indicatorColor: Colors.purple,
+                                isScrollable: true,
+                                tabs: tapController.openScreenstitlles
+                                    .map(
+                                      (title) => Padding(
+                                    padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5,bottom: 5),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '${title}',
+                                          style: TextStyle(
+                                            // color: Colors.white
+                                            // color: Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        // openScreenstitles.where((element) => element == 'Dashboard').isNotEmpty?
+                                        title == 'Dashboard' ? Text('') :InkWell(
+                                            onTap: (){
+                                              tapController.deleteTab(tapController.actvTab);
+                                            },
+                                            child: CircleAvatar(
+                                                radius: 8,
+                                                child: Icon(Icons.close,size: 10,color: Colors.red,)))
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(width: 10,),
-                                  // openScreenstitles.where((element) => element == 'Dashboard').isNotEmpty?
-                                  title == 'Dashboard' ? Text('') :InkWell(
-                                      onTap: (){
-                                        var index = openScreenstitles.indexWhere((element) => element  == title);
-                                        print(index);
-                                        setState(() {
-                                          openScreenstitles.removeAt(index);
-                                          openScreensWidgets.removeAt(index);
-                                          // if(openScreens[index].title == settings.title){
-                                          //   currentIndex = openScreens.indexWhere((element) => settings.title == element.title);
-                                          //   openScreens.removeAt(currentIndex);
-                                          // }else{
-                                          //   currentIndex = openScreens.indexWhere((element) => openScreens[index].title == element.title);
-                                          //   openScreens.removeAt(currentIndex);
-                                          // }
-                                        });
-                                      },
-                                      child: CircleAvatar(
-                                          radius: 8,
-                                          child: Icon(Icons.close,size: 10,color: Colors.red,)))
-                                ],
+                                )
+                                    .toList(),
+                              );
+                            }
+                        ),
+                      ),
+                      Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color:  Color.fromRGBO(231, 230, 247,1),
+                              // color: Colors.grey[200]
+                            ),
+                            width: MediaQuery.of(context).size.width - 250,
+                            height: MediaQuery.of(context).size.height * 0.868,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: TabBarView(
+                                physics: NeverScrollableScrollPhysics(),
+                                children: tapController.openScreensWidgetts
+                                    .map((widget) => KeepPageAlive(child: widget),)
+                                    .toList(),
                               ),
                             ),
                           )
-                              .toList(),
-                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                        // color: Colors.grey[200],
-                        border: Border(
-                          right: BorderSide( //                   <--- right side
-                            color: Colors.black12,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      height: MediaQuery.of(context).size.height * 0.868,
-                      child: ListView.builder(
-                          itemCount: schlMenuslst.length,
-                          itemBuilder: (context, index){
-                            var menuList = schlMenuslst[index];
-                            return InkWell(
-                              onTap: (){
-                                setState(() {
-                                  actv = index;
-                                });
-                                if (openScreenstitles.contains(menuList.title)) {
-                                  var activeIndex =
-                                  openScreenstitles.indexOf(menuList.title);
-                                  DefaultTabController.of(context)!
-                                      .animateTo(activeIndex);
-                                  controller2.animateTo(activeIndex);
-                                } else {
-                                  setState(() {
-                                    openScreenstitles.add(menuList.title);
-                                    openScreensWidgets.add(menuList.widget);
-                                    var activeIndex =
-                                    openScreenstitles.indexOf(menuList.title);
-                                    DefaultTabController.of(context)!
-                                        .animateTo(activeIndex - 1);
-                                  });
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      // color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: actv == index ? Theme.of(context).primaryColor.withOpacity(0.5) : Colors.white
-                                  ),
-                                  child: SchlMenuList(schlMenus: schlMenuslst[index],),
-                                ),
-                              ),
-                            );
-                      }),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          // color: Colors.grey[200]
-                        ),
-                        width: MediaQuery.of(context).size.width - 250,
-                        height: MediaQuery.of(context).size.height * 0.868,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: TabBarView(
-                            physics: NeverScrollableScrollPhysics(),
-                            children: openScreensWidgets
-                                .map((widget) => KeepPageAlive(child: widget),).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
+                    ],
+                  )
+                ],
+              ),
+            );
+
+          }
       ),
     );
   }
 
-  @override
-  void dispose() {
-    controller2.dispose();
-    super.dispose();
-  }
 }

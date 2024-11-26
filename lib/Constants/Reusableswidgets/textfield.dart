@@ -66,10 +66,7 @@ class _formsState extends State<forms> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.label == null? SizedBox(): Padding(
-            padding: const EdgeInsets.only(left:10,bottom: 10),
-            child: Text('${widget.label}',style: boldfont,),
-          ),
+          widget.label == null? SizedBox(): Text('${widget.label}',style: boldfont,),
           Container(
             width: widget.widthh ?? 300 ,
             height: (widget.linecnt == null ?35 : null),//: widget.width,

@@ -154,7 +154,7 @@ const boldfont = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 13,
     letterSpacing: 1,
-    color: Colors.white
+    color: Colors.black
 );
 
 const menutitle = TextStyle(
